@@ -1,0 +1,91 @@
+/* eslint-disable */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* eslint-enable */
+
+/* Custom base styles */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: white;
+    color: #121212;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+}
+
+/* Custom component styles */
+@layer components {
+  .btn-primary {
+    @apply bg-charcoal text-white font-semibold px-6 py-3 rounded-none transition-all duration-300 hover:bg-gold hover:text-charcoal border border-charcoal;
+  }
+  
+  .btn-secondary {
+    @apply bg-transparent text-charcoal font-semibold border border-charcoal px-4 py-2 rounded-none transition-all duration-300 hover:bg-charcoal hover:text-white;
+  }
+  
+  .book-card {
+    @apply bg-white border border-gray-100 overflow-hidden transition-all duration-300 cursor-pointer hover:shadow-lg hover:-translate-y-1;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 border border-gray-200 rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal focus:border-charcoal;
+  }
+  
+  .nav-link {
+    @apply text-charcoal font-medium transition-colors duration-300 hover:text-gold relative;
+  }
+  
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #D4AF37;
+    transition: width 0.3s ease;
+  }
+  
+  .nav-link:hover::after {
+    width: 100%;
+  }
+}
+
+/* Custom utilities */
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .backdrop-blur-custom {
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* Additional animations for splash page */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(45deg);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(-20px) rotate(45deg);
+    opacity: 0.4;
+  }
+}
+
+.animate-float {
+  animation: float linear infinite;
+}
