@@ -255,26 +255,6 @@ const Shop = () => {
                 </select>
               </div>
 
-              {/* Price Range */}
-              <div>
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="number"
-                    placeholder="Min"
-                    value={priceRange[0]}
-                    onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-none focus:ring-1 focus:ring-charcoal focus:border-charcoal"
-                  />
-                  <span className="text-gray-500">-</span>
-                  <input
-                    type="number"
-                    placeholder="Max"
-                    value={priceRange[1]}
-                    onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 100])}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-none focus:ring-1 focus:ring-charcoal focus:border-charcoal"
-                  />
-                </div>
-              </div>
 
               {/* Sort */}
               <div>

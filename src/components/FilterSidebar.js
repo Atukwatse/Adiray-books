@@ -74,25 +74,6 @@ const FilterSidebar = ({
         </ul>
       </div>
 
-      {/* Price Range Filter */}
-      <div className="mb-8">
-        <h3 className="text-lg font-bold text-charcoal mb-4">PRICE RANGE</h3>
-        <div className="space-y-3">
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={maxPrice}
-            onChange={(e) => onPriceChange(Number(e.target.value))}
-            className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer accent-gold"
-          />
-          <div className="flex justify-between text-sm text-gray-600">
-            <span>$0</span>
-            <span className="font-semibold text-gold">${maxPrice}</span>
-            <span>$100</span>
-          </div>
-        </div>
-      </div>
 
       {/* Rating Filter */}
       <div className="mb-8">
