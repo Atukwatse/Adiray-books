@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
 import Splash from './components/Splash';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -15,12 +15,18 @@ import Orders from './pages/Orders';
 import Wishlist from './pages/Wishlist';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
+import Cart from './pages/Cart';
 import Educational from './pages/categories/Educational';
 import Inspirational from './pages/categories/Inspirational';
 import Novels from './pages/categories/Novels';
 import Childrens from './pages/categories/Childrens';
 import Business from './pages/categories/Business';
 import Technology from './pages/categories/Technology';
+import Fiction from './pages/categories/Fiction';
+import Nonfiction from './pages/categories/Nonfiction';
+import EBooks from './pages/categories/EBooks';
+import Audiobooks from './pages/categories/Audiobooks';
+import TeensYA from './pages/categories/TeensYA';
 
 // Sample book data matching the image design
 const booksData = [
@@ -115,6 +121,7 @@ const genres = [
 
 // MainLayout Component with all the global state and layout wrapper
 function MainLayout() {
+  const navigate = useNavigate();
   const [showSplash, setShowSplash] = useState(true);
   const [cart, setCart] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState(booksData);
@@ -179,6 +186,18 @@ function MainLayout() {
     showNotification(`${book.title} added to cart!`);
   };
 
+  const updateCartQuantity = (bookId, quantity) => {
+    if (quantity < 1) return;
+    setCart(prevCart => prevCart.map(item => 
+      item.id === bookId ? { ...item, quantity } : item
+    ));
+  };
+
+  const removeFromCart = (bookId) => {
+    setCart(prevCart => prevCart.filter(item => item.id !== bookId));
+    showNotification('Item removed from cart');
+  };
+
   const getCartCount = () => {
     return cart.reduce((sum, item) => sum + item.quantity, 0);
   };
@@ -229,13 +248,7 @@ function MainLayout() {
             cartCount={getCartCount()}
             cartTotal={getCartTotal()}
             onSearchOpen={openSearch}
-            onCartClick={() => {
-              if (cart.length === 0) {
-                showNotification('Your cart is empty');
-              } else {
-                showNotification(`Cart: ${getCartCount()} items - $${getCartTotal().toFixed(2)}`);
-              }
-            }}
+            onCartClick={() => navigate('/cart')}
             isMobileMenuOpen={isMobileMenuOpen}
             onMobileMenuToggle={toggleMobileMenu}
           />
@@ -266,6 +279,8 @@ function MainLayout() {
             <Outlet context={{
               filteredBooks,
               addToCart,
+              updateCartQuantity,
+              removeFromCart,
               genres,
               selectedGenres,
               maxPrice,
@@ -298,6 +313,7 @@ function App() {
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/about" element={<About />} />
@@ -314,6 +330,12 @@ function App() {
           <Route path="/categories/childrens" element={<Childrens />} />
           <Route path="/categories/business" element={<Business />} />
           <Route path="/categories/technology" element={<Technology />} />
+          <Route path="/categories/fiction" element={<Fiction />} />
+          <Route path="/categories/nonfiction" element={<Nonfiction />} />
+          <Route path="/categories/ebooks" element={<EBooks />} />
+          <Route path="/categories/audiobooks" element={<Audiobooks />} />
+          <Route path="/categories/teens-ya" element={<TeensYA />} />
+          <Route path="/categories/kids" element={<Childrens />} />
         </Route>
       </Routes>
     </Router>

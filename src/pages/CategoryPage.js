@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 
 const CategoryPage = ({ category, title, description, icon }) => {
+  const { addToCart } = useOutletContext();
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -236,6 +238,46 @@ const CategoryPage = ({ category, title, description, icon }) => {
         description: "Master cloud technologies and architecture.",
         coverColor: "from-cyan-400 to-blue-600"
       }
+    ],
+    fiction: [
+      {
+        id: 19, title: "The Midnight Garden", author: "Emma Williams", price: 19.99, originalPrice: 24.99, rating: 4.2, reviews: 312, inStock: true, description: "A beautiful fiction story.", coverColor: "from-purple-400 to-pink-600"
+      },
+      {
+        id: 20, title: "Echoes of Eternity", author: "James Peterson", price: 21.99, originalPrice: 29.99, rating: 4.8, reviews: 412, inStock: true, description: "An immersive fictional tale.", coverColor: "from-blue-400 to-cyan-600"
+      }
+    ],
+    nonfiction: [
+      {
+        id: 21, title: "History of Time", author: "Sarah Connor", price: 25.99, originalPrice: 32.99, rating: 4.6, reviews: 156, inStock: true, description: "A detailed account of historical events.", coverColor: "from-gray-400 to-gray-600"
+      },
+      {
+        id: 22, title: "The Human Mind", author: "Dr. Allen Walker", price: 22.99, originalPrice: 28.99, rating: 4.5, reviews: 298, inStock: true, description: "Understanding human psychology.", coverColor: "from-indigo-400 to-purple-600"
+      }
+    ],
+    ebooks: [
+      {
+        id: 23, title: "Digital Marketing 101", author: "Alex Turner", price: 9.99, originalPrice: 14.99, rating: 4.3, reviews: 432, inStock: true, description: "Comprehensive ebook on digital marketing.", coverColor: "from-yellow-400 to-orange-600"
+      },
+      {
+        id: 24, title: "Code Like a Pro", author: "Jane Smith", price: 12.99, originalPrice: 19.99, rating: 4.9, reviews: 890, inStock: true, description: "Advanced programming ebook.", coverColor: "from-green-400 to-teal-600"
+      }
+    ],
+    audiobooks: [
+      {
+        id: 25, title: "The Voice Within", author: "Michael Chang", price: 14.99, originalPrice: 22.99, rating: 4.7, reviews: 210, inStock: true, description: "An inspiring audiobook journey.", coverColor: "from-red-400 to-pink-600"
+      },
+      {
+        id: 26, title: "Listen and Learn: Spanish", author: "Maria Garcia", price: 19.99, originalPrice: 29.99, rating: 4.5, reviews: 345, inStock: true, description: "Learn Spanish through this interactive audiobook.", coverColor: "from-yellow-300 to-red-400"
+      }
+    ],
+    "teens-ya": [
+      {
+        id: 27, title: "The Hidden Academy", author: "Chloe Price", price: 16.99, originalPrice: 21.99, rating: 4.6, reviews: 567, inStock: true, description: "A thrilling young adult fantasy novel.", coverColor: "from-purple-400 to-indigo-600"
+      },
+      {
+        id: 28, title: "Summer of Secrets", author: "Liam Hunter", price: 15.99, originalPrice: 20.99, rating: 4.4, reviews: 432, inStock: true, description: "A touching teen romance story.", coverColor: "from-pink-300 to-rose-500"
+      }
     ]
   };
 
@@ -306,8 +348,7 @@ const CategoryPage = ({ category, title, description, icon }) => {
   };
 
   const handleAddToCart = (book) => {
-    console.log('Added to cart:', book.title);
-    alert(`Added "${book.title}" to cart!`);
+    addToCart(book);
   };
 
   const handleAddToWishlist = (book) => {
@@ -317,23 +358,7 @@ const CategoryPage = ({ category, title, description, icon }) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
-      {/* Hero Section */}
-      <section className="relative py-16 bg-gradient-to-r from-amber-700 to-orange-700 text-white">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                <i className={`fas ${icon} text-3xl`}></i>
-              </div>
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">{title}</h1>
-            <p className="text-xl md:text-2xl max-w-3xl mx-auto opacity-90">
-              {description}
-            </p>
-          </div>
-        </div>
-      </section>
+
 
       {/* Category Content */}
       <section className="py-12 px-4 sm:px-6 lg:px-8">

@@ -71,15 +71,15 @@ const Header = ({
   const subNavLinks = [
     { name: 'Home', path: '/' },
     { name: 'Books', path: '/shop' },
-    { name: 'Fiction', path: '/shop' },
-    { name: 'Nonfiction', path: '/shop' },
-    { name: 'eBooks', path: '/shop' },
-    { name: 'Audiobooks', path: '/shop' },
-    { name: 'Teens & YA', path: '/shop' },
-    { name: 'Kids', path: '/shop' },
-    { name: 'Business', path: '/shop' },
-    { name: 'Technology', path: '/shop' },
-    { name: 'Educational', path: '/shop' }
+    { name: 'Fiction', path: '/categories/fiction' },
+    { name: 'Nonfiction', path: '/categories/nonfiction' },
+    { name: 'eBooks', path: '/categories/ebooks' },
+    { name: 'Audiobooks', path: '/categories/audiobooks' },
+    { name: 'Teens & YA', path: '/categories/teens-ya' },
+    { name: 'Kids', path: '/categories/kids' },
+    { name: 'Business', path: '/categories/business' },
+    { name: 'Technology', path: '/categories/technology' },
+    { name: 'Educational', path: '/categories/educational' }
   ];
 
   const handleSearch = (e) => {
@@ -94,15 +94,7 @@ const Header = ({
       
       {/* Top Mini-Bar */}
       <div className="bg-gray-50 text-gray-500 text-[10px] sm:text-xs tracking-widest uppercase py-2 hidden lg:block border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-          <div className="flex items-center divide-x divide-gray-300">
-            <span className="pr-4 hover:text-charcoal cursor-pointer transition-colors flex items-center">
-              <i className="fas fa-map-marker-alt mr-1.5"></i> Stores & Events
-            </span>
-            <span className="px-4 hover:text-charcoal cursor-pointer transition-colors">Membership</span>
-            <span className="px-4 hover:text-charcoal cursor-pointer transition-colors">Blog</span>
-            <span className="px-4 hover:text-charcoal cursor-pointer transition-colors">Gift Cards</span>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 flex justify-end items-center">
           <div className="flex items-center divide-x divide-gray-300">
             <Link to="/about" className="pr-4 hover:text-charcoal transition-colors">About Us</Link>
             <Link to="/contact" className="px-4 hover:text-charcoal transition-colors">Contact</Link>

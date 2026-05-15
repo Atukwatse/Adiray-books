@@ -54,18 +54,25 @@ const BookCard = ({ book, onAddToCart }) => {
         
         {/* Price and Add to Cart */}
         <div className="flex items-center justify-between mt-2 pt-4 border-t border-gray-100">
-          <span className="text-xl font-bold text-charcoal">
+          <span className="text-xl font-bold text-black">
             ${book.price.toFixed(2)}
           </span>
           <button
             onClick={handleAddToCart}
-            className={`px-4 py-2 font-semibold text-xs tracking-widest transition-colors duration-200 border ${
+            className={`px-3 py-1 font-semibold text-[10px] tracking-widest transition-colors duration-200 border flex flex-col items-center justify-center leading-tight min-w-[80px] ${
               isAdded 
                 ? 'bg-green-500 text-white border-green-500' 
-                : 'bg-white text-charcoal border-charcoal hover:bg-charcoal hover:text-white'
+                : 'bg-white text-[#002B5B] border-black hover:bg-gray-50'
             }`}
           >
-            {isAdded ? 'ADDED' : 'ADD TO CART'}
+            {isAdded ? (
+              <span>ADDED</span>
+            ) : (
+              <>
+                <span>ADD TO</span>
+                <span>CART</span>
+              </>
+            )}
           </button>
         </div>
       </div>

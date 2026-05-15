@@ -81,18 +81,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
-      {/* Hero Section */}
-      <section className="relative py-16 bg-gradient-to-r from-amber-700 to-orange-700 text-white">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">My Profile</h1>
-            <p className="text-xl md:text-2xl max-w-3xl mx-auto opacity-90">
-              Manage your account and reading preferences
-            </p>
-          </div>
-        </div>
-      </section>
+
 
       {/* Profile Content */}
       <section className="py-12 px-4 sm:px-6 lg:px-8">

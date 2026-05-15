@@ -169,18 +169,7 @@ const Wishlist = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="relative py-16 bg-charcoal text-white border-b border-gray-100">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 font-serif tracking-tight">My Wishlist</h1>
-            <p className="text-xl md:text-2xl max-w-3xl mx-auto opacity-90 font-light tracking-wide">
-              Your personal collection of books to explore and purchase
-            </p>
-          </div>
-        </div>
-      </section>
+
 
       {/* Wishlist Content */}
       <section className="py-12 px-4 sm:px-6 lg:px-8">
