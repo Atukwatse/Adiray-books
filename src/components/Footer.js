@@ -26,7 +26,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="text-center text-gray-400 text-sm">
-          &copy; 2024 ADIRAY BOOKS. ALL RIGHTS RESERVED.
+          &copy; {new Date().getFullYear()} ADIRAY BOOKS. ALL RIGHTS RESERVED.
         </div>
       </div>
     </footer>
