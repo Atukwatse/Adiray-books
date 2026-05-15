@@ -11,6 +11,8 @@ const Header = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchCategory, setSearchCategory] = useState('All');
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+  const searchCategories = ['All', 'Books', 'eBooks', 'Audiobooks'];
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
   const [isAuthDropdownOpen, setIsAuthDropdownOpen] = useState(false);
@@ -33,11 +35,14 @@ const Header = ({
       if (isAuthDropdownOpen && !event.target.closest('.auth-dropdown')) {
         setIsAuthDropdownOpen(false);
       }
+      if (isSearchDropdownOpen && !event.target.closest('.search-dropdown')) {
+        setIsSearchDropdownOpen(false);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isAuthDropdownOpen]);
+  }, [isAuthDropdownOpen, isSearchDropdownOpen]);
 
   const handleLogin = () => {
     navigate('/login');
@@ -85,7 +90,12 @@ const Header = ({
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      console.log('Searching for:', searchQuery, 'in category:', searchCategory);
+      let targetPath = '/shop';
+      if (searchCategory === 'eBooks') targetPath = '/categories/ebooks';
+      if (searchCategory === 'Audiobooks') targetPath = '/categories/audiobooks';
+      
+      navigate(`${targetPath}?q=${encodeURIComponent(searchQuery)}`);
+      setIsSearchDropdownOpen(false);
     }
   };
 
@@ -159,17 +169,39 @@ const Header = ({
           {/* Search Bar (Desktop) */}
           <div className="hidden md:flex flex-1 max-w-3xl mx-8 relative">
             <form onSubmit={handleSearch} className="w-full flex border border-gray-300 focus-within:border-charcoal focus-within:ring-1 focus-within:ring-charcoal transition-all">
-              {/* Category Dropdown inside search */}
-              <select 
-                value={searchCategory}
-                onChange={(e) => setSearchCategory(e.target.value)}
-                className="bg-gray-50 border-r border-gray-300 text-gray-600 text-sm px-3 py-2 outline-none cursor-pointer hidden lg:block"
-              >
-                <option value="All">All</option>
-                <option value="Books">Books</option>
-                <option value="eBooks">eBooks</option>
-                <option value="Audiobooks">Audiobooks</option>
-              </select>
+              {/* Custom Category Dropdown inside search */}
+              <div className="relative hidden lg:block border-r border-gray-300 search-dropdown">
+                <button
+                  type="button"
+                  onClick={() => setIsSearchDropdownOpen(!isSearchDropdownOpen)}
+                  className="bg-gray-50 text-gray-600 text-sm px-4 py-2 flex items-center justify-between min-w-[100px] h-full hover:bg-gray-100 transition-colors"
+                >
+                  {searchCategory}
+                  <i className="fas fa-chevron-down text-[10px] ml-3 text-gray-500"></i>
+                </button>
+                
+                {isSearchDropdownOpen && (
+                  <div className="absolute top-full left-0 w-40 bg-white border border-gray-200 shadow-lg z-50">
+                    {searchCategories.map((cat) => (
+                      <button
+                        key={cat}
+                        type="button"
+                        className={`w-full text-left px-4 py-2 text-sm transition-colors ${
+                          cat === searchCategory 
+                            ? 'bg-gray-600 text-white' 
+                            : 'bg-white text-[#1a56db] hover:bg-gray-50'
+                        }`}
+                        onClick={() => {
+                          setSearchCategory(cat);
+                          setIsSearchDropdownOpen(false);
+                        }}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
               
               <input
                 type="text"
