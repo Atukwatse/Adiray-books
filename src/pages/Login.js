@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AppContext';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -38,6 +39,8 @@ const Login = () => {
     return newErrors;
   };
 
+  const { login } = useAuth();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
@@ -45,24 +48,10 @@ const Login = () => {
     if (Object.keys(newErrors).length === 0) {
       setIsLoading(true);
       try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        // Authenticate via central Auth Context
+        await login(formData.email, formData.password);
         
-        // Mock successful login - in real app, this would come from API
-        const userData = {
-          firstName: 'John',
-          lastName: 'Doe',
-          email: formData.email,
-          id: '1'
-        };
-        
-        // Store authentication data
-        localStorage.setItem('authToken', 'mock-jwt-token');
-        localStorage.setItem('userData', JSON.stringify(userData));
-        
-        console.log('Login successful:', userData);
-        
-        // Redirect to home page or previous page
+        // Redirect to home page
         navigate('/');
       } catch (error) {
         console.error('Login failed:', error);

@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Settings = () => {
+  useEffect(() => {
+    document.title = "Account Settings | Adiray Books";
+  }, []);
+
   const [activeTab, setActiveTab] = useState('account');
   const [settings, setSettings] = useState({
     email: 'john.doe@example.com',

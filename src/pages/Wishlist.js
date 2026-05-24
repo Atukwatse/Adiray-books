@@ -1,78 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useWishlist, useCart } from '../context/AppContext';
 
 const Wishlist = () => {
-  const [wishlist, setWishlist] = useState([
-    {
-      id: 1,
-      title: "The Silent Algorithm",
-      author: "Evelyn Reed",
-      price: 24.99,
-      originalPrice: 34.99,
-      category: "Technology",
-      rating: 4.5,
-      reviews: 234,
-      inStock: true,
-      dateAdded: "2024-01-15",
-      coverColor: "from-gray-200 to-gray-300",
-      description: "A deep dive into the world of artificial intelligence and machine learning."
-    },
-    {
-      id: 2,
-      title: "Digital Transformation",
-      author: "Marcus Chen",
-      price: 29.99,
-      originalPrice: 39.99,
-      category: "Business",
-      rating: 4.8,
-      reviews: 189,
-      inStock: true,
-      dateAdded: "2024-01-20",
-      coverColor: "from-gray-100 to-gray-200",
-      description: "Navigate the digital landscape with confidence and strategic insight."
-    },
-    {
-      id: 3,
-      title: "The Mindful Leader",
-      author: "Sarah Williams",
-      price: 19.99,
-      originalPrice: 27.99,
-      category: "Inspirational",
-      rating: 4.6,
-      reviews: 412,
-      inStock: false,
-      dateAdded: "2024-02-01",
-      coverColor: "from-gray-200 to-gray-300",
-      description: "Transform your leadership style through mindfulness and emotional intelligence."
-    },
-    {
-      id: 4,
-      title: "JavaScript Mastery",
-      author: "David Park",
-      price: 34.99,
-      originalPrice: 44.99,
-      category: "Technology",
-      rating: 4.7,
-      reviews: 567,
-      inStock: true,
-      dateAdded: "2024-02-10",
-      coverColor: "from-gray-100 to-gray-200",
-      description: "Complete guide to modern JavaScript development and best practices."
-    },
-    {
-      id: 5,
-      title: "The Creative Mind",
-      author: "Lisa Anderson",
-      price: 22.99,
-      originalPrice: 32.99,
-      category: "Inspirational",
-      rating: 4.4,
-      reviews: 298,
-      inStock: true,
-      dateAdded: "2024-02-15",
-      coverColor: "from-gray-200 to-gray-300",
-      description: "Unlock your creative potential and innovative thinking."
-    }
-  ]);
+  useEffect(() => {
+    document.title = "Your Reading Wishlist | Adiray Books";
+  }, []);
+
+  const { wishlist, removeFromWishlist, moveWishlistToCart } = useWishlist();
+  const { addToCart } = useCart();
 
   const [selectedItems, setSelectedItems] = useState([]);
   const [sortBy, setSortBy] = useState('dateAdded');
@@ -107,7 +42,7 @@ const Wishlist = () => {
   };
 
   const handleRemoveFromWishlist = (bookId) => {
-    setWishlist(prev => prev.filter(book => book.id !== bookId));
+    removeFromWishlist(bookId);
     setSelectedItems(prev => prev.filter(id => id !== bookId));
   };
 
@@ -128,17 +63,14 @@ const Wishlist = () => {
   };
 
   const handleAddSelectedToCart = () => {
-    const selectedBooks = wishlist.filter(book => selectedItems.includes(book.id));
-    console.log('Adding to cart:', selectedBooks);
-    // Add to cart logic would go here
-    alert(`Added ${selectedBooks.length} books to cart!`);
+    moveWishlistToCart(selectedItems);
     setSelectedItems([]);
   };
 
   const handleAddToCart = (book) => {
-    console.log('Adding to cart:', book.title);
-    // Add to cart logic would go here
-    alert(`Added "${book.title}" to cart!`);
+    addToCart(book);
+    removeFromWishlist(book.id);
+    setSelectedItems(prev => prev.filter(id => id !== book.id));
   };
 
   const handleShareWishlist = () => {

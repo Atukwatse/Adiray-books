@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AppContext';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -62,6 +63,8 @@ const Register = () => {
     return newErrors;
   };
 
+  const { register } = useAuth();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validateForm();
@@ -69,22 +72,12 @@ const Register = () => {
     if (Object.keys(newErrors).length === 0) {
       setIsLoading(true);
       try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Mock successful registration - in real app, this would come from API
-        const userData = {
+        // Register via central Auth Context
+        await register({
           firstName: formData.firstName,
           lastName: formData.lastName,
-          email: formData.email,
-          id: Date.now().toString()
-        };
-        
-        // Store authentication data
-        localStorage.setItem('authToken', 'mock-jwt-token');
-        localStorage.setItem('userData', JSON.stringify(userData));
-        
-        console.log('Registration successful:', userData);
+          email: formData.email
+        });
         
         // Redirect to home page
         navigate('/');

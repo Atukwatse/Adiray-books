@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth, useCart } from '../context/AppContext';
 
 const Header = ({ 
   cartCount, 
@@ -13,21 +14,15 @@ const Header = ({
   const [searchCategory, setSearchCategory] = useState('All');
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
   const searchCategories = ['All', 'Books', 'eBooks', 'Audiobooks'];
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
+  
+  // Consume Auth and Cart Contexts
+  const { user, isAuthenticated, logout } = useAuth();
+  const { cartCount: ctxCartCount } = useCart();
+  
+  const displayCartCount = cartCount !== undefined ? cartCount : ctxCartCount;
+
   const [isAuthDropdownOpen, setIsAuthDropdownOpen] = useState(false);
   const navigate = useNavigate();
-
-  // Check authentication status on mount
-  useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    const userData = localStorage.getItem('userData');
-    
-    if (token && userData) {
-      setIsAuthenticated(true);
-      setUser(JSON.parse(userData));
-    }
-  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -55,10 +50,7 @@ const Header = ({
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userData');
-    setIsAuthenticated(false);
-    setUser(null);
+    logout();
     setIsAuthDropdownOpen(false);
     navigate('/');
   };
@@ -230,9 +222,9 @@ const Header = ({
               className="relative text-charcoal hover:text-gold transition-colors duration-200 group flex items-center"
             >
               <i className="fas fa-shopping-bag text-2xl group-hover:scale-105 transition-transform"></i>
-              {cartCount > 0 && (
+              {displayCartCount > 0 && (
                 <span className="absolute -top-1.5 -right-2 bg-gold text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center border border-white">
-                  {cartCount}
+                  {displayCartCount}
                 </span>
               )}
             </button>

@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
 
 const Cart = () => {
+  useEffect(() => {
+    document.title = "Your Shopping Cart | Adiray Books";
+  }, []);
+
   const { cart, updateCartQuantity, removeFromCart } = useOutletContext();
 
   const getSubtotal = () => {
@@ -135,9 +139,9 @@ const Cart = () => {
                 </div>
               </div>
 
-              <button className="w-full bg-charcoal text-white py-4 font-semibold uppercase tracking-widest hover:bg-black transition-colors mb-4 flex items-center justify-center">
+              <Link to="/checkout" className="w-full bg-charcoal text-white py-4 font-semibold uppercase tracking-widest hover:bg-black transition-colors mb-4 flex items-center justify-center">
                 Proceed to Checkout <i className="fas fa-arrow-right ml-2"></i>
-              </button>
+              </Link>
               
               <Link to="/shop" className="block text-center text-sm text-charcoal hover:text-gold uppercase tracking-widest transition-colors">
                 Continue Shopping

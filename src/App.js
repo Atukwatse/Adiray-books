@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
+import { AppProvider, useCart, useAuth } from './context/AppContext';
+import useDebounce from './hooks/useDebounce';
 import Splash from './components/Splash';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -16,6 +18,9 @@ import Wishlist from './pages/Wishlist';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
 import Cart from './pages/Cart';
+import BookDetails from './pages/BookDetails';
+import Checkout from './pages/Checkout';
+import CheckoutSuccess from './pages/CheckoutSuccess';
 import Educational from './pages/categories/Educational';
 import Inspirational from './pages/categories/Inspirational';
 import Novels from './pages/categories/Novels';
@@ -123,9 +128,23 @@ const genres = [
 function MainLayout() {
   const navigate = useNavigate();
   const [showSplash, setShowSplash] = useState(true);
-  const [cart, setCart] = useState([]);
+  
+  // Use Centralized Cart Context
+  const { 
+    cart, 
+    cartCount, 
+    cartTotal, 
+    addToCart: ctxAddToCart, 
+    removeFromCart: ctxRemoveFromCart, 
+    updateCartQuantity: ctxUpdateCartQuantity 
+  } = useCart();
+
   const [filteredBooks, setFilteredBooks] = useState(booksData);
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // Debounce the search input by 300ms
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [maxPrice, setMaxPrice] = useState(100);
   const [sortBy, setSortBy] = useState('featured');
@@ -136,10 +155,10 @@ function MainLayout() {
   // Filter and sort books
   useEffect(() => {
     let filtered = booksData.filter(book => {
-      const matchesSearch = searchTerm === '' || 
-        book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        book.genre.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = debouncedSearchTerm === '' || 
+        book.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        book.author.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        book.genre.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
       
       const matchesGenre = selectedGenres.length === 0 || selectedGenres.includes(book.genre);
       const matchesPrice = book.price <= maxPrice;
@@ -169,42 +188,25 @@ function MainLayout() {
     }
 
     setFilteredBooks(filtered);
-  }, [searchTerm, selectedGenres, maxPrice, sortBy]);
+  }, [debouncedSearchTerm, selectedGenres, maxPrice, sortBy]);
 
-  // Cart functionality
+  // Cart functionality wrapped with notification triggers
   const addToCart = (book) => {
-    setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === book.id);
-      if (existingItem) {
-        return prevCart.map(item =>
-          item.id === book.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      } else {
-        return [...prevCart, { ...book, quantity: 1 }];
-      }
-    });
+    ctxAddToCart(book);
     showNotification(`${book.title} added to cart!`);
   };
 
   const updateCartQuantity = (bookId, quantity) => {
-    if (quantity < 1) return;
-    setCart(prevCart => prevCart.map(item => 
-      item.id === bookId ? { ...item, quantity } : item
-    ));
+    ctxUpdateCartQuantity(bookId, quantity);
   };
 
   const removeFromCart = (bookId) => {
-    setCart(prevCart => prevCart.filter(item => item.id !== bookId));
+    ctxRemoveFromCart(bookId);
     showNotification('Item removed from cart');
   };
 
-  const getCartCount = () => {
-    return cart.reduce((sum, item) => sum + item.quantity, 0);
-  };
-
-  const getCartTotal = () => {
-    return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  };
+  const getCartCount = () => cartCount;
+  const getCartTotal = () => cartTotal;
 
   // Notification system
   const showNotification = (message) => {
@@ -309,36 +311,41 @@ function MainLayout() {
 // Main App component
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/help" element={<Help />} />
-          <Route path="/categories/educational" element={<Educational />} />
-          <Route path="/categories/inspirational" element={<Inspirational />} />
-          <Route path="/categories/novels" element={<Novels />} />
-          <Route path="/categories/childrens" element={<Childrens />} />
-          <Route path="/categories/business" element={<Business />} />
-          <Route path="/categories/technology" element={<Technology />} />
-          <Route path="/categories/fiction" element={<Fiction />} />
-          <Route path="/categories/nonfiction" element={<Nonfiction />} />
-          <Route path="/categories/ebooks" element={<EBooks />} />
-          <Route path="/categories/audiobooks" element={<Audiobooks />} />
-          <Route path="/categories/teens-ya" element={<TeensYA />} />
-          <Route path="/categories/kids" element={<Childrens />} />
-        </Route>
-      </Routes>
-    </Router>
+    <AppProvider>
+      <Router>
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/help" element={<Help />} />
+            <Route path="/book/:id" element={<BookDetails />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/checkout/success" element={<CheckoutSuccess />} />
+            <Route path="/categories/educational" element={<Educational />} />
+            <Route path="/categories/inspirational" element={<Inspirational />} />
+            <Route path="/categories/novels" element={<Novels />} />
+            <Route path="/categories/childrens" element={<Childrens />} />
+            <Route path="/categories/business" element={<Business />} />
+            <Route path="/categories/technology" element={<Technology />} />
+            <Route path="/categories/fiction" element={<Fiction />} />
+            <Route path="/categories/nonfiction" element={<Nonfiction />} />
+            <Route path="/categories/ebooks" element={<EBooks />} />
+            <Route path="/categories/audiobooks" element={<Audiobooks />} />
+            <Route path="/categories/teens-ya" element={<TeensYA />} />
+            <Route path="/categories/kids" element={<Childrens />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AppProvider>
   );
 }
 

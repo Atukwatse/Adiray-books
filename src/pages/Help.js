@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Help = () => {
+  useEffect(() => {
+    document.title = "Help & Support Center | Adiray Books";
+  }, []);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
   const [expandedFaq, setExpandedFaq] = useState(null);

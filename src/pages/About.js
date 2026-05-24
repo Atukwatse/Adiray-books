@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const About = () => {
+  useEffect(() => {
+    document.title = "About Us & Our Curation Journey | Adiray Books";
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
 

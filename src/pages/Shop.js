@@ -1,11 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { useOutletContext, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { useCart, useWishlist } from '../context/AppContext';
+import useDebounce from '../hooks/useDebounce';
 
 const Shop = () => {
-  const { addToCart } = useOutletContext();
+  useEffect(() => {
+    document.title = "Browse Masterpieces & Best Sellers | Adiray Books";
+  }, []);
+
+  const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // Debounce the search input by 300ms
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [sortBy, setSortBy] = useState('featured');
@@ -165,8 +177,8 @@ const Shop = () => {
   useEffect(() => {
     // Filter books based on search, category, and price
     let filtered = books.filter(book => {
-      const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           book.author.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = book.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+                           book.author.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
       const matchesCategory = selectedCategory === 'all' || book.category === selectedCategory;
       const matchesPrice = book.price >= priceRange[0] && book.price <= priceRange[1];
       
@@ -191,15 +203,14 @@ const Shop = () => {
     });
 
     setFilteredBooks(filtered);
-  }, [books, searchTerm, selectedCategory, priceRange, sortBy]);
+  }, [books, debouncedSearchTerm, selectedCategory, priceRange, sortBy]);
 
   const handleAddToCart = (book) => {
     addToCart(book);
   };
 
   const handleAddToWishlist = (book) => {
-    console.log('Added to wishlist:', book.title);
-    // Add to wishlist logic would go here
+    toggleWishlist(book);
   };
 
   const renderStars = (rating) => {
@@ -373,9 +384,13 @@ const Shop = () => {
                       </button>
                       <button
                         onClick={() => handleAddToWishlist(book)}
-                        className="p-2 border border-gray-200 hover:border-charcoal hover:text-charcoal transition-colors text-gray-400"
+                        className={`p-2 border transition-colors ${
+                          isInWishlist(book.id)
+                            ? 'border-red-200 text-red-500 bg-red-50 hover:bg-red-100 hover:border-red-300'
+                            : 'border-gray-200 text-gray-400 hover:border-charcoal hover:text-charcoal'
+                        }`}
                       >
-                        <i className="far fa-heart"></i>
+                        <i className={`${isInWishlist(book.id) ? 'fas' : 'far'} fa-heart`}></i>
                       </button>
                     </div>
                   </div>

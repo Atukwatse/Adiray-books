@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import Hero from '../components/Hero';
 import FilterSidebar from '../components/FilterSidebar';
 import BookGrid from '../components/BookGrid';
+import AuthorSpotlight from '../components/AuthorSpotlight';
 
 const Home = () => {
+  useEffect(() => {
+    document.title = "Adiray Books | Elegant & Modern Online Bookstore";
+  }, []);
+
   const {
     filteredBooks,
     addToCart,
@@ -19,11 +24,19 @@ const Home = () => {
     setIsMobileMenuOpen
   } = useOutletContext();
 
+  const handleAuthorClick = () => {
+    const section = document.getElementById('books-section');
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <>
       <Hero />
       <main className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <AuthorSpotlight onAuthorClick={handleAuthorClick} />
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="hidden lg:block">
               <FilterSidebar

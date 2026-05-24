@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
+import { useWishlist } from '../context/AppContext';
 
 const CategoryPage = ({ category, title, description, icon }) => {
   const { addToCart } = useOutletContext();
+  const { toggleWishlist, isInWishlist } = useWishlist();
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -360,8 +362,7 @@ const CategoryPage = ({ category, title, description, icon }) => {
   };
 
   const handleAddToWishlist = (book) => {
-    console.log('Added to wishlist:', book.title);
-    alert(`Added "${book.title}" to wishlist!`);
+    toggleWishlist(book);
   };
 
   return (
@@ -465,9 +466,13 @@ const CategoryPage = ({ category, title, description, icon }) => {
                       </button>
                       <button
                         onClick={() => handleAddToWishlist(book)}
-                        className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                        className={`p-2 border rounded-lg transition-colors ${
+                          isInWishlist(book.id)
+                            ? 'border-red-200 text-red-500 bg-red-50 hover:bg-red-100 hover:border-red-300'
+                            : 'border-gray-300 text-gray-600 hover:bg-gray-50'
+                        }`}
                       >
-                        <i className="far fa-heart text-gray-600"></i>
+                        <i className={`${isInWishlist(book.id) ? 'fas' : 'far'} fa-heart`}></i>
                       </button>
                     </div>
                   </div>

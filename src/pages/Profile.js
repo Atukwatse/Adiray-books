@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Profile = () => {
+  useEffect(() => {
+    document.title = "Customer Account Profile | Adiray Books";
+  }, []);
+
   const [activeTab, setActiveTab] = useState('personal');
   const [formData, setFormData] = useState({
     firstName: 'John',

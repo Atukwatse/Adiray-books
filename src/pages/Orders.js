@@ -1,120 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useOrders } from '../context/AppContext';
 
 const Orders = () => {
+  const { orders, cancelOrder } = useOrders();
+
+  useEffect(() => {
+    document.title = "Your Order History | Adiray Books";
+  }, []);
+
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-
-  // Sample order data
-  const orders = [
-    {
-      id: 'ORD-2024-001',
-      date: '2024-01-15',
-      status: 'delivered',
-      total: 89.97,
-      items: [
-        {
-          id: 1,
-          title: 'The Silent Algorithm',
-          author: 'Evelyn Reed',
-          price: 24.99,
-          quantity: 1,
-          coverColor: 'from-blue-400 to-purple-600'
-        },
-        {
-          id: 2,
-          title: 'Digital Transformation',
-          author: 'Marcus Chen',
-          price: 29.99,
-          quantity: 1,
-          coverColor: 'from-green-400 to-blue-600'
-        },
-        {
-          id: 3,
-          title: 'The Mindful Leader',
-          author: 'Sarah Williams',
-          price: 34.99,
-          quantity: 1,
-          coverColor: 'from-purple-400 to-pink-600'
-        }
-      ],
-      shippingAddress: '123 Book Street, Reading District, RD 12345',
-      trackingNumber: 'TRK123456789',
-      estimatedDelivery: '2024-01-20'
-    },
-    {
-      id: 'ORD-2024-002',
-      date: '2024-02-03',
-      status: 'processing',
-      total: 54.98,
-      items: [
-        {
-          id: 4,
-          title: 'JavaScript Mastery',
-          author: 'David Park',
-          price: 34.99,
-          quantity: 1,
-          coverColor: 'from-yellow-400 to-orange-600'
-        },
-        {
-          id: 5,
-          title: 'The Creative Mind',
-          author: 'Lisa Anderson',
-          price: 19.99,
-          quantity: 1,
-          coverColor: 'from-pink-400 to-red-600'
-        }
-      ],
-      shippingAddress: '123 Book Street, Reading District, RD 12345',
-      trackingNumber: 'TRK987654321',
-      estimatedDelivery: '2024-02-08'
-    },
-    {
-      id: 'ORD-2024-003',
-      date: '2024-02-20',
-      status: 'shipped',
-      total: 39.99,
-      items: [
-        {
-          id: 6,
-          title: 'Data Science Fundamentals',
-          author: 'Robert Kumar',
-          price: 39.99,
-          quantity: 1,
-          coverColor: 'from-indigo-400 to-purple-600'
-        }
-      ],
-      shippingAddress: '123 Book Street, Reading District, RD 12345',
-      trackingNumber: 'TRK456789123',
-      estimatedDelivery: '2024-02-25'
-    },
-    {
-      id: 'ORD-2024-004',
-      date: '2024-03-05',
-      status: 'cancelled',
-      total: 29.98,
-      items: [
-        {
-          id: 7,
-          title: 'The Garden of Secrets',
-          author: 'Maria Rodriguez',
-          price: 16.99,
-          quantity: 1,
-          coverColor: 'from-green-400 to-teal-600'
-        },
-        {
-          id: 8,
-          title: 'Little Explorers',
-          author: 'Tom Johnson',
-          price: 12.99,
-          quantity: 1,
-          coverColor: 'from-yellow-300 to-pink-400'
-        }
-      ],
-      shippingAddress: '123 Book Street, Reading District, RD 12345',
-      trackingNumber: null,
-      estimatedDelivery: null
-    }
-  ];
 
   const filters = [
     { value: 'all', label: 'All Orders' },
@@ -177,8 +72,8 @@ const Orders = () => {
   };
 
   const handleCancelOrder = (orderId) => {
-    console.log('Cancelling order:', orderId);
-    // Cancel order logic would go here
+    cancelOrder(orderId);
+    alert(`Order ${orderId} has been successfully cancelled.`);
   };
 
   return (

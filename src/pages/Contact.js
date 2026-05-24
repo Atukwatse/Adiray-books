@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Contact = () => {
+  useEffect(() => {
+    document.title = "Get in Touch with Our Librarians | Adiray Books";
+  }, []);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
