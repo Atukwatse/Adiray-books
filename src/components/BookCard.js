@@ -1,9 +1,42 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useWishlist } from '../context/AppContext';
-import StarRating from './StarRating';
 
-const BookCard = ({ book, onAddToCart }) => {
+// Helper to convert completely uppercase strings to Title Case with minor words handled
+const toTitleCase = (str) => {
+  if (!str) return '';
+  const minorWords = ['and', 'or', 'but', 'a', 'an', 'the', 'as', 'at', 'by', 'for', 'in', 'of', 'on', 'per', 'to', 'is'];
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map((word, index) => {
+      if (index > 0 && minorWords.includes(word)) {
+        return word;
+      }
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    })
+    .join(' ');
+};
+
+// Helper to format the author field nicely
+const formatAuthor = (author) => {
+  if (!author) return '';
+  const cleanAuthor = author.replace(/^by\s+/i, '');
+  return toTitleCase(cleanAuthor);
+};
+
+const BookCard = ({
+  book,
+  onAddToCart,
+  showCheckbox = false,
+  isChecked = false,
+  onCheckboxChange = () => {},
+  showRemove = false,
+  onRemove = () => {},
+  showWishlistToggle = true,
+  showDateAdded = false,
+  dateAdded = null
+}) => {
   const [isAdded, setIsAdded] = useState(false);
   const { toggleWishlist, isInWishlist } = useWishlist();
 
@@ -19,87 +52,181 @@ const BookCard = ({ book, onAddToCart }) => {
 
   const getGenreLabel = (genre) => {
     const activeGenre = genre || book.category || 'general';
-    const genreMap = {
-      'tech': 'BUSINESS',
-      'business': 'BUSINESS',
-      'fiction': 'FICTION',
-      'psychology': 'PSYCHOLOGY',
-      'history': 'BIOGRAPHY',
-      'technology': 'TECHNOLOGY'
-    };
-    return genreMap[activeGenre.toLowerCase()] || activeGenre.toUpperCase();
+    return toTitleCase(activeGenre);
+  };
+
+  const renderStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating || 0);
+    const hasHalfStar = (rating || 0) % 1 !== 0;
+
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(
+        <i key={`full-${i}`} className="fas fa-star text-amber-400 text-sm"></i>
+      );
+    }
+    
+    if (hasHalfStar) {
+      stars.push(
+        <i key="half" className="fas fa-star-half-alt text-amber-400 text-sm"></i>
+      );
+    }
+    
+    const emptyStars = 5 - Math.ceil(rating || 0);
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(
+        <i key={`empty-${i}`} className="far fa-star text-amber-400 text-sm"></i>
+      );
+    }
+    
+    return stars;
   };
 
   return (
-    <div className="bg-white border border-gray-100 transition-all duration-300 overflow-hidden hover:-translate-y-1 hover:shadow-lg">
-      {/* Book Cover */}
-      <div className="relative">
-        <Link to={`/book/${book.id}`} className="block">
-          <img
-            src={book.cover}
-            alt={book.title}
-            className="w-full h-64 object-cover hover:opacity-90 transition-opacity"
-            loading="lazy"
+    <div className="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col h-full relative">
+      
+      {/* Checkbox (Wishlist Select) */}
+      {showCheckbox && (
+        <div className="absolute top-3 left-3 z-20">
+          <input
+            type="checkbox"
+            checked={isChecked}
+            onChange={onCheckboxChange}
+            className="w-5 h-5 text-charcoal border-gray-300 rounded focus:ring-charcoal shadow-sm cursor-pointer"
           />
+        </div>
+      )}
+
+      {/* Remove Button (Wishlist Remove) */}
+      {showRemove && (
+        <button
+          onClick={onRemove}
+          className="absolute top-3 right-3 z-20 w-8 h-8 bg-white/90 hover:bg-white flex items-center justify-center transition-colors shadow-sm rounded-full text-slate-600 hover:text-red-500"
+        >
+          <i className="fas fa-times text-sm"></i>
+        </button>
+      )}
+
+      {/* Book Cover Area */}
+      <div className="relative w-full h-56 bg-slate-50 flex-shrink-0 overflow-hidden">
+        <Link to={`/book/${book.id}`} className="block w-full h-full">
+          {book.cover ? (
+            <img
+              src={book.cover}
+              alt={book.title}
+              className="w-full h-full object-cover hover:opacity-95 transition-opacity"
+              loading="lazy"
+            />
+          ) : (
+            <div className={`w-full h-full bg-gradient-to-br ${book.coverColor || 'from-purple-500 to-pink-500'} flex items-center justify-center p-4`} />
+          )}
         </Link>
         
-        {/* Genre Badge */}
-        <div className="absolute top-2 right-2 bg-charcoal text-white text-xs font-semibold px-2 py-1 tracking-widest uppercase">
+        {/* Out of Stock Overlay */}
+        {!book.inStock && (
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-10 pointer-events-none">
+            <span className="text-white font-bold tracking-widest uppercase text-xs bg-black/60 px-3 py-1 rounded">
+              Out of Stock
+            </span>
+          </div>
+        )}
+
+        {/* Featured Badge (if no checkbox) */}
+        {!showCheckbox && book.featured && (
+          <div className="absolute top-3 left-3 bg-[#b35900] text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded shadow-sm">
+            Featured
+          </div>
+        )}
+        
+        {/* Genre / Category Badge */}
+        <div className="absolute bottom-3 right-3 bg-white text-slate-700 text-xs font-semibold px-2.5 py-1 rounded shadow-sm pointer-events-none">
           {getGenreLabel(book.genre)}
         </div>
       </div>
 
-      {/* Book Info */}
-      <div className="p-5 border-t border-gray-50">
-        <Link to={`/book/${book.id}`}>
-          <h3 className="font-bold text-lg text-charcoal mb-1 font-serif hover:text-gold transition-colors line-clamp-1">
-            {book.title}
+      {/* Book Details Info */}
+      <div className="p-5 flex flex-col flex-grow">
+        <Link to={`/book/${book.id}`} className="hover:underline">
+          <h3 className="font-serif font-bold text-lg text-slate-800 mb-1 line-clamp-1 hover:text-[#b35900] transition-colors">
+            {toTitleCase(book.title)}
           </h3>
         </Link>
-        <p className="text-gray-500 text-sm mb-3 font-light tracking-wide">
-          {book.author}
+        
+        <p className="text-slate-500 text-sm mb-3">
+          by {formatAuthor(book.author)}
         </p>
         
-        {/* Rating */}
-        <div className="mb-4">
-          <StarRating rating={book.rating} />
+        {/* Rating Stars & Count */}
+        <div className="flex items-center space-x-1 mb-3">
+          <div className="flex items-center space-x-0.5">
+            {renderStars(book.rating)}
+          </div>
+          <span className="text-slate-500 text-xs font-light">
+            ({book.reviews || 0})
+          </span>
         </div>
         
-        {/* Price and Actions */}
-        <div className="flex items-center justify-between mt-2 pt-4 border-t border-gray-100">
-          <span className="text-xl font-bold text-black">
+        {/* Price Row */}
+        <div className="flex items-center space-x-2 mb-3">
+          <span className="text-xl font-bold text-[#b35900]">
             ${book.price.toFixed(2)}
           </span>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={handleAddToCart}
-              className={`px-3 py-1 font-semibold text-[10px] tracking-widest transition-colors duration-200 border flex flex-col items-center justify-center leading-tight min-w-[80px] h-[34px] ${
-                isAdded 
-                  ? 'bg-green-500 text-white border-green-500' 
-                  : 'bg-white text-charcoal border-charcoal hover:bg-charcoal hover:text-white'
-              }`}
-            >
-              {isAdded ? (
-                <span>ADDED</span>
-              ) : (
-                <>
-                  <span>ADD TO</span>
-                  <span>CART</span>
-                </>
-              )}
-            </button>
+          {book.originalPrice > book.price && (
+            <span className="text-sm text-slate-400 line-through">
+              ${book.originalPrice.toFixed(2)}
+            </span>
+          )}
+        </div>
+
+        {/* Short Description */}
+        <p className="text-slate-600 text-sm font-light mb-4 line-clamp-2 leading-relaxed">
+          {book.description || 'A beautiful story.'}
+        </p>
+
+        {/* Date Added (Wishlist context) */}
+        {showDateAdded && dateAdded && (
+          <p className="text-[10px] text-slate-400 mb-4 tracking-wide uppercase font-medium">
+            Added on {new Date(dateAdded).toLocaleDateString()}
+          </p>
+        )}
+        
+        {/* Actions Button Bar */}
+        <div className="flex items-center space-x-2 mt-auto">
+          <button
+            onClick={handleAddToCart}
+            disabled={!book.inStock}
+            className={`flex-1 flex items-center justify-center space-x-2 py-2.5 px-4 rounded-lg font-semibold text-sm transition-all duration-200 ${
+              isAdded 
+                ? 'bg-green-600 text-white border-green-600' 
+                : !book.inStock 
+                ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                : 'bg-[#b35900] hover:bg-[#9c4d00] text-white shadow-sm hover:shadow'
+            }`}
+          >
+            {isAdded ? (
+              <span>Added</span>
+            ) : !book.inStock ? (
+              <span>Out of Stock</span>
+            ) : (
+              <>
+                <i className="fas fa-shopping-cart text-xs"></i>
+                <span>Add to Cart</span>
+              </>
+            )}
+          </button>
+          
+          {showWishlistToggle && (
             <button
               onClick={handleAddToWishlist}
-              className={`p-2 border transition-colors ${
+              className={`w-10 h-10 flex items-center justify-center border rounded-lg transition-colors flex-shrink-0 ${
                 isInWishlist(book.id)
-                  ? 'border-red-200 text-red-500 bg-red-50 hover:bg-red-100'
-                  : 'border-gray-200 text-gray-400 hover:border-charcoal hover:text-charcoal'
+                  ? 'border-red-200 text-red-500 bg-red-50 hover:bg-red-150'
+                  : 'border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-600 bg-white'
               }`}
-              style={{ height: '34px', width: '34px', display: 'flex', itemsCenter: 'center', justifyContent: 'center' }}
             >
-              <i className={`${isInWishlist(book.id) ? 'fas' : 'far'} fa-heart`}></i>
+              <i className={`${isInWishlist(book.id) ? 'fas' : 'far'} fa-heart text-base`}></i>
             </button>
-          </div>
+          )}
         </div>
       </div>
     </div>

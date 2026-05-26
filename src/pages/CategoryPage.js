@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
 import { useWishlist } from '../context/AppContext';
+import BookCard from '../components/BookCard';
 
 const CategoryPage = ({ category, title, description, icon }) => {
   const { addToCart } = useOutletContext();
@@ -419,63 +420,8 @@ const CategoryPage = ({ category, title, description, icon }) => {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredBooks.map(book => (
-                <div key={book.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow border border-amber-200">
-                  {/* Book Cover */}
-                  <div className={`h-48 bg-gradient-to-br ${book.coverColor} relative`}>
-                    <div className="absolute bottom-2 right-2 bg-white/90 px-2 py-1 rounded text-xs font-semibold text-gray-800">
-                      {category.charAt(0).toUpperCase() + category.slice(1)}
-                    </div>
-                  </div>
-
-                  {/* Book Details */}
-                  <div className="p-4">
-                    <h3 className="font-bold text-gray-900 mb-1 line-clamp-1">{book.title}</h3>
-                    <p className="text-sm text-gray-600 mb-2">by {book.author}</p>
-                    
-                    {/* Rating */}
-                    <div className="flex items-center mb-2">
-                      <div className="flex mr-2">
-                        {renderStars(book.rating)}
-                      </div>
-                      <span className="text-sm text-gray-600">({book.reviews})</span>
-                    </div>
-
-                    {/* Price */}
-                    <div className="flex items-center justify-between mb-3">
-                      <div>
-                        <span className="text-xl font-bold text-amber-700">${book.price}</span>
-                        {book.originalPrice > book.price && (
-                          <span className="text-sm text-gray-500 line-through ml-2">
-                            ${book.originalPrice}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2">{book.description}</p>
-
-                    {/* Actions */}
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => handleAddToCart(book)}
-                        className="flex-1 bg-amber-700 text-white py-2 px-3 rounded-lg font-semibold hover:bg-amber-800 transition-colors"
-                      >
-                        <i className="fas fa-shopping-cart mr-1"></i>
-                        Add to Cart
-                      </button>
-                      <button
-                        onClick={() => handleAddToWishlist(book)}
-                        className={`p-2 border rounded-lg transition-colors ${
-                          isInWishlist(book.id)
-                            ? 'border-red-200 text-red-500 bg-red-50 hover:bg-red-100 hover:border-red-300'
-                            : 'border-gray-300 text-gray-600 hover:bg-gray-50'
-                        }`}
-                      >
-                        <i className={`${isInWishlist(book.id) ? 'fas' : 'far'} fa-heart`}></i>
-                      </button>
-                    </div>
-                  </div>
+                <div key={book.id}>
+                  <BookCard book={book} onAddToCart={handleAddToCart} />
                 </div>
               ))}
             </div>

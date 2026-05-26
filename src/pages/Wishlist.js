@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useWishlist, useCart } from '../context/AppContext';
+import BookCard from '../components/BookCard';
 
 const Wishlist = () => {
   useEffect(() => {
@@ -225,86 +226,19 @@ const Wishlist = () => {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {sortedWishlist.map(book => (
-                <div key={book.id} className="bg-white border border-gray-100 transition-all duration-300 overflow-hidden hover:-translate-y-1 hover:shadow-lg relative">
-                  {/* Selection Checkbox */}
-                  <div className="absolute top-2 left-2 z-10">
-                    <input
-                      type="checkbox"
-                      checked={selectedItems.includes(book.id)}
-                      onChange={() => handleSelectItem(book.id)}
-                      className="w-5 h-5 text-charcoal border-gray-300 rounded-none focus:ring-charcoal shadow-sm"
-                    />
-                  </div>
-
-                  {/* Remove Button */}
-                  <button
-                    onClick={() => handleRemoveFromWishlist(book.id)}
-                    className="absolute top-2 right-2 z-10 w-8 h-8 bg-white/90 hover:bg-white flex items-center justify-center transition-colors shadow-sm text-charcoal hover:text-red-500"
-                  >
-                    <i className="fas fa-times"></i>
-                  </button>
-
-                  {/* Book Cover */}
-                  <div className={`h-48 bg-gradient-to-br ${book.coverColor} relative`}>
-                    {!book.inStock && (
-                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                        <span className="text-white font-semibold uppercase tracking-widest">Out of Stock</span>
-                      </div>
-                    )}
-                    <div className="absolute bottom-2 right-2 bg-white/90 px-2 py-1 text-xs font-semibold text-charcoal uppercase tracking-widest">
-                      {book.category}
-                    </div>
-                  </div>
-
-                  {/* Book Details */}
-                  <div className="p-5 border-t border-gray-50">
-                    <h3 className="font-bold text-charcoal mb-1 line-clamp-1 font-serif">{book.title}</h3>
-                    <p className="text-sm text-gray-500 mb-2 font-light tracking-wide">by {book.author}</p>
-                    
-                    {/* Rating */}
-                    <div className="flex items-center mb-2">
-                      <div className="flex mr-2">
-                        {renderStars(book.rating)}
-                      </div>
-                      <span className="text-sm text-gray-600">({book.reviews})</span>
-                    </div>
-
-                    {/* Price */}
-                    <div className="flex items-center justify-between mt-2 pt-4 border-t border-gray-100 mb-3">
-                      <div>
-                        <span className="text-xl font-bold text-charcoal">${book.price}</span>
-                        {book.originalPrice > book.price && (
-                          <span className="text-sm text-gray-500 line-through ml-2">
-                            ${book.originalPrice}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-sm text-gray-600 mb-3 line-clamp-2 font-light">{book.description}</p>
-
-                    {/* Date Added */}
-                    <p className="text-xs text-gray-400 mb-4 font-light tracking-wide uppercase">
-                      Added on {new Date(book.dateAdded).toLocaleDateString()}
-                    </p>
-
-                    {/* Actions */}
-                    <div className="flex space-x-2 mt-auto">
-                      <button
-                        onClick={() => handleAddToCart(book)}
-                        disabled={!book.inStock}
-                        className={`flex-1 py-2 px-3 text-xs tracking-widest font-semibold uppercase transition-all duration-300 border ${
-                          book.inStock
-                            ? 'bg-white text-charcoal border-charcoal hover:bg-charcoal hover:text-white'
-                            : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                        }`}
-                      >
-                        <i className="fas fa-shopping-cart mr-1"></i>
-                        {book.inStock ? 'Add to Cart' : 'Out of Stock'}
-                      </button>
-                    </div>
-                  </div>
+                <div key={book.id}>
+                  <BookCard
+                    book={book}
+                    onAddToCart={handleAddToCart}
+                    showCheckbox={true}
+                    isChecked={selectedItems.includes(book.id)}
+                    onCheckboxChange={() => handleSelectItem(book.id)}
+                    showRemove={true}
+                    onRemove={() => handleRemoveFromWishlist(book.id)}
+                    showWishlistToggle={false}
+                    showDateAdded={true}
+                    dateAdded={book.dateAdded}
+                  />
                 </div>
               ))}
             </div>

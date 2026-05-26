@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useCart, useWishlist, useBooks } from '../context/AppContext';
 import useDebounce from '../hooks/useDebounce';
+import BookCard from '../components/BookCard';
 
 const Shop = () => {
   useEffect(() => {
@@ -207,35 +208,8 @@ const Shop = () => {
     addToCart(book);
   };
 
-  const handleAddToWishlist = (book) => {
-    toggleWishlist(book);
-  };
-
-  const renderStars = (rating) => {
-    const stars = [];
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
-    
-    for (let i = 0; i < fullStars; i++) {
-      stars.push(<i key={i} className="fas fa-star text-gold"></i>);
-    }
-    
-    if (hasHalfStar) {
-      stars.push(<i key="half" className="fas fa-star-half-alt text-gold"></i>);
-    }
-    
-    const emptyStars = 5 - Math.ceil(rating);
-    for (let i = 0; i < emptyStars; i++) {
-      stars.push(<i key={`empty-${i}`} className="far fa-star text-gold"></i>);
-    }
-    
-    return stars;
-  };
-
   return (
     <div className="min-h-screen bg-white">
-
-
       {/* Shop Content */}
       <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -271,7 +245,6 @@ const Shop = () => {
                   ))}
                 </select>
               </div>
-
 
               {/* Sort */}
               <div>
@@ -320,78 +293,8 @@ const Shop = () => {
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredBooks.map(book => (
-                <div key={book.id} className="bg-white border border-gray-100 transition-all duration-300 overflow-hidden hover:-translate-y-1 hover:shadow-lg">
-                  {/* Book Cover */}
-                  <div className={`h-48 bg-gradient-to-br ${book.coverColor} relative`}>
-                    {book.featured && (
-                      <div className="absolute top-2 left-2 bg-charcoal text-white px-2 py-1 text-xs font-semibold uppercase tracking-widest">
-                        Featured
-                      </div>
-                    )}
-                    {!book.inStock && (
-                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                        <span className="text-white font-semibold tracking-widest uppercase">Out of Stock</span>
-                      </div>
-                    )}
-                    <div className="absolute bottom-2 right-2 bg-white/90 px-2 py-1 text-xs font-semibold text-charcoal uppercase tracking-widest">
-                      {book.category}
-                    </div>
-                  </div>
-
-                  {/* Book Details */}
-                  <div className="p-5 border-t border-gray-50">
-                    <h3 className="font-bold text-charcoal mb-1 line-clamp-1 font-serif">{book.title}</h3>
-                    <p className="text-sm text-gray-500 mb-2 font-light tracking-wide">by {book.author}</p>
-                    
-                    {/* Rating */}
-                    <div className="flex items-center mb-2">
-                      <div className="flex mr-2">
-                        {renderStars(book.rating)}
-                      </div>
-                      <span className="text-sm text-gray-600">({book.reviews})</span>
-                    </div>
-
-                    {/* Price */}
-                    <div className="flex items-center justify-between mt-2 pt-4 border-t border-gray-100 mb-3">
-                      <div>
-                        <span className="text-xl font-bold text-charcoal">${book.price}</span>
-                        {book.originalPrice > book.price && (
-                          <span className="text-sm text-gray-500 line-through ml-2">
-                            ${book.originalPrice}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-sm text-gray-600 mb-4 line-clamp-2 font-light">{book.description}</p>
-
-                    {/* Actions */}
-                    <div className="flex space-x-2 mt-auto">
-                      <button
-                        onClick={() => handleAddToCart(book)}
-                        disabled={!book.inStock}
-                        className={`flex-1 py-2 px-3 text-xs tracking-widest font-semibold transition-all duration-300 border ${
-                          book.inStock
-                            ? 'bg-white text-charcoal border-charcoal hover:bg-charcoal hover:text-white'
-                            : 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                        }`}
-                      >
-                        <i className="fas fa-shopping-cart mr-1"></i>
-                        {book.inStock ? 'ADD TO CART' : 'OUT OF STOCK'}
-                      </button>
-                      <button
-                        onClick={() => handleAddToWishlist(book)}
-                        className={`p-2 border transition-colors ${
-                          isInWishlist(book.id)
-                            ? 'border-red-200 text-red-500 bg-red-50 hover:bg-red-100 hover:border-red-300'
-                            : 'border-gray-200 text-gray-400 hover:border-charcoal hover:text-charcoal'
-                        }`}
-                      >
-                        <i className={`${isInWishlist(book.id) ? 'fas' : 'far'} fa-heart`}></i>
-                      </button>
-                    </div>
-                  </div>
+                <div key={book.id}>
+                  <BookCard book={book} onAddToCart={handleAddToCart} />
                 </div>
               ))}
             </div>
