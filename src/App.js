@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
-import { AppProvider, useCart, useAuth } from './context/AppContext';
+import { AppProvider, useCart, useAuth, useBooks } from './context/AppContext';
 import useDebounce from './hooks/useDebounce';
 import Splash from './components/Splash';
+import Admin from './pages/Admin';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Notification from './components/Notification';
@@ -139,7 +140,8 @@ function MainLayout() {
     updateCartQuantity: ctxUpdateCartQuantity 
   } = useCart();
 
-  const [filteredBooks, setFilteredBooks] = useState(booksData);
+  const { books } = useBooks();
+  const [filteredBooks, setFilteredBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   
   // Debounce the search input by 300ms
@@ -152,15 +154,17 @@ function MainLayout() {
   const [notification, setNotification] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Filter and sort books
+  // Keep filteredBooks in sync when books catalog updates or filters change
   useEffect(() => {
-    let filtered = booksData.filter(book => {
+    let filtered = books.filter(book => {
+      const bookGenre = (book.genre || book.category || '').toLowerCase();
       const matchesSearch = debouncedSearchTerm === '' || 
         book.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
         book.author.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-        book.genre.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+        bookGenre.includes(debouncedSearchTerm.toLowerCase());
       
-      const matchesGenre = selectedGenres.length === 0 || selectedGenres.includes(book.genre);
+      const matchesGenre = selectedGenres.length === 0 || 
+        selectedGenres.some(g => g.toLowerCase() === bookGenre);
       const matchesPrice = book.price <= maxPrice;
       
       return matchesSearch && matchesGenre && matchesPrice;
@@ -188,7 +192,7 @@ function MainLayout() {
     }
 
     setFilteredBooks(filtered);
-  }, [debouncedSearchTerm, selectedGenres, maxPrice, sortBy]);
+  }, [debouncedSearchTerm, selectedGenres, maxPrice, sortBy, books]);
 
   // Cart functionality wrapped with notification triggers
   const addToCart = (book) => {
@@ -343,6 +347,7 @@ function App() {
             <Route path="/categories/teens-ya" element={<TeensYA />} />
             <Route path="/categories/kids" element={<Childrens />} />
           </Route>
+          <Route path="/admin/*" element={<Admin />} />
         </Routes>
       </Router>
     </AppProvider>

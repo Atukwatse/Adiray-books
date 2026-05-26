@@ -18,14 +18,16 @@ const BookCard = ({ book, onAddToCart }) => {
   };
 
   const getGenreLabel = (genre) => {
+    const activeGenre = genre || book.category || 'general';
     const genreMap = {
       'tech': 'BUSINESS',
       'business': 'BUSINESS',
       'fiction': 'FICTION',
       'psychology': 'PSYCHOLOGY',
-      'history': 'BIOGRAPHY'
+      'history': 'BIOGRAPHY',
+      'technology': 'TECHNOLOGY'
     };
-    return genreMap[genre] || genre.toUpperCase();
+    return genreMap[activeGenre.toLowerCase()] || activeGenre.toUpperCase();
   };
 
   return (

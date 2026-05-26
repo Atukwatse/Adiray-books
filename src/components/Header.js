@@ -122,6 +122,9 @@ const Header = ({
                         <p className="text-xs text-gray-500">{user?.email}</p>
                       </div>
                       <div className="py-2">
+                        <button onClick={() => { navigate('/admin'); setIsAuthDropdownOpen(false); }} className="w-full text-left px-4 py-2 text-sm text-amber-600 font-bold hover:bg-gray-50 hover:text-charcoal transition-colors flex items-center">
+                          <i className="fas fa-user-shield mr-2"></i> ★ Admin Portal
+                        </button>
                         <button onClick={handleProfile} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-charcoal transition-colors">My Profile</button>
                         <button onClick={handleOrders} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-charcoal transition-colors">Order History</button>
                         <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">Sign Out</button>
@@ -299,6 +302,7 @@ const Header = ({
              {isAuthenticated ? (
                <>
                  <p className="text-sm font-bold text-charcoal mb-2">Hi, {user?.firstName}</p>
+                 <button onClick={() => { navigate('/admin'); onMobileMenuToggle(); }} className="block w-full text-left text-sm text-amber-600 font-bold hover:text-charcoal"><i className="fas fa-user-shield w-5"></i> ★ Admin Portal</button>
                  <button onClick={() => { handleProfile(); onMobileMenuToggle(); }} className="block w-full text-left text-sm text-gray-600 hover:text-charcoal"><i className="far fa-user w-5"></i> My Profile</button>
                  <button onClick={() => { handleOrders(); onMobileMenuToggle(); }} className="block w-full text-left text-sm text-gray-600 hover:text-charcoal"><i className="fas fa-box w-5"></i> Order History</button>
                  <Link to="/wishlist" onClick={onMobileMenuToggle} className="block w-full text-left text-sm text-gray-600 hover:text-charcoal"><i className="far fa-heart w-5"></i> Wishlist</Link>

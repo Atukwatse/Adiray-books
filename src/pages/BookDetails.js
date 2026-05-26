@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useCart, useWishlist } from '../context/AppContext';
+import { useCart, useWishlist, useBooks } from '../context/AppContext';
 import StarRating from '../components/StarRating';
 
 // Unified books dataset for detail retrieval
@@ -156,6 +156,7 @@ const BookDetails = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { books } = useBooks();
 
   const [book, setBook] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -165,7 +166,7 @@ const BookDetails = () => {
 
   useEffect(() => {
     // Find the book from our master dataset
-    const matchedBook = ALL_BOOKS.find(b => b.id === parseInt(id));
+    const matchedBook = books.find(b => b.id === parseInt(id));
     if (matchedBook) {
       setBook(matchedBook);
       setQuantity(1);
@@ -173,13 +174,13 @@ const BookDetails = () => {
       document.title = `${matchedBook.title} by ${matchedBook.author} | Adiray Books`;
 
       // Filter similar books of same genre
-      const filtered = ALL_BOOKS.filter(b => b.category === matchedBook.category && b.id !== matchedBook.id);
+      const filtered = books.filter(b => b.category === matchedBook.category && b.id !== matchedBook.id);
       setSimilarBooks(filtered.slice(0, 4));
     } else {
       // Fallback redirect if book not found
       navigate('/shop');
     }
-  }, [id, navigate]);
+  }, [id, navigate, books]);
 
   if (!book) {
     return (

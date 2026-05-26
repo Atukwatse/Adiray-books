@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useCart, useWishlist } from '../context/AppContext';
+import { useCart, useWishlist, useBooks } from '../context/AppContext';
 import useDebounce from '../hooks/useDebounce';
 
 const Shop = () => {
@@ -10,6 +10,7 @@ const Shop = () => {
 
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { books: dynamicBooks } = useBooks();
 
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
@@ -166,13 +167,10 @@ const Shop = () => {
   ];
 
   useEffect(() => {
-    // Simulate loading books
-    setTimeout(() => {
-      setBooks(sampleBooks);
-      setFilteredBooks(sampleBooks);
-      setLoading(false);
-    }, 1000);
-  }, []);
+    setBooks(dynamicBooks);
+    setFilteredBooks(dynamicBooks);
+    setLoading(false);
+  }, [dynamicBooks]);
 
   useEffect(() => {
     // Filter books based on search, category, and price

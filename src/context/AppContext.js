@@ -5,6 +5,305 @@ const AuthContext = createContext(null);
 const CartContext = createContext(null);
 const WishlistContext = createContext(null);
 const OrdersContext = createContext(null);
+const BooksContext = createContext(null);
+const UsersContext = createContext(null);
+
+// Default books catalog matching initial designs
+const defaultBooksCatalog = [
+  {
+    id: 1,
+    title: "THE SILENT ALGORITHM",
+    author: "EVELYN REED",
+    price: 24.99,
+    originalPrice: 34.99,
+    category: "technology",
+    rating: 4.5,
+    reviews: 234,
+    inStock: true,
+    cover: "https://picsum.photos/seed/silent-algorithm/400/600.jpg",
+    coverColor: "from-blue-600 to-indigo-900",
+    description: "A profound, highly relevant exploration of technology and artificial intelligence in modern society. Evelyn Reed analyzes the intersection of human intuition and deep algorithmic processes, asking the hard questions about where humanity is headed next.",
+    publisher: "Adiray Tech Press",
+    publishedDate: "October 2023",
+    pages: 342,
+    isbn: "978-3-16-148410-0",
+    featured: true
+  },
+  {
+    id: 2,
+    title: "QUANTUM HORIZONS",
+    author: "DR. MICHAEL CHEN",
+    price: 29.99,
+    originalPrice: 39.99,
+    category: "technology",
+    rating: 4.8,
+    reviews: 189,
+    inStock: true,
+    cover: "https://picsum.photos/seed/quantum-horizons/400/600.jpg",
+    coverColor: "from-purple-700 to-indigo-950",
+    description: "Delve into the breathtaking advancements in quantum computing and theoretical physics. Dr. Michael Chen guides both novices and engineers through qubits, entanglement, and the futuristic applications that will redefine computing platforms forever.",
+    publisher: "Scientific Horizons",
+    publishedDate: "December 2023",
+    pages: 412,
+    isbn: "978-1-23-456789-7",
+    featured: true
+  },
+  {
+    id: 3,
+    title: "THE MIDNIGHT GARDEN",
+    author: "EMMA WILLIAMS",
+    price: 19.99,
+    originalPrice: 24.99,
+    category: "fiction",
+    rating: 4.2,
+    reviews: 312,
+    inStock: true,
+    cover: "https://picsum.photos/seed/midnight-garden/400/600.jpg",
+    coverColor: "from-emerald-700 to-teal-950",
+    description: "A captivating contemporary novel set in the mystery-shrouded estate of Blackwood Hall. Emma Williams weaves a beautiful, slow-burning romance and gothic detective puzzle that will keep readers spellbound until the final pages are turned.",
+    publisher: "Elegant Lit Co",
+    publishedDate: "May 2022",
+    pages: 288,
+    isbn: "978-0-12-345678-9",
+    featured: false
+  },
+  {
+    id: 4,
+    title: "BUSINESS MASTERY",
+    author: "ROBERT ANDERSON",
+    price: 34.99,
+    originalPrice: 49.99,
+    category: "business",
+    rating: 4.6,
+    reviews: 298,
+    inStock: true,
+    cover: "https://picsum.photos/seed/business-mastery/400/600.jpg",
+    coverColor: "from-amber-600 to-yellow-800",
+    description: "The ultimate compendium of business strategies, leadership methods, and growth hacks. Robert Anderson distills decades of executive coaching and startup development into actionable tools to build highly effective businesses.",
+    publisher: "Executive Leaders Press",
+    publishedDate: "July 2023",
+    pages: 376,
+    isbn: "978-9-87-654321-0",
+    featured: true
+  },
+  {
+    id: 5,
+    title: "ANCIENT WISDOM",
+    author: "LISA MARTINEZ",
+    price: 22.50,
+    originalPrice: 28.99,
+    category: "history",
+    rating: 4.3,
+    reviews: 156,
+    inStock: true,
+    cover: "https://picsum.photos/seed/ancient-wisdom/400/600.jpg",
+    coverColor: "from-stone-600 to-neutral-900",
+    description: "Lisa Martinez takes readers on a sweeping journey through ancient philosophical frameworks, rediscovering core lessons of mindfulness, leadership, and emotional intelligence developed by historical leaders and thinkers.",
+    publisher: "Heritage Books",
+    publishedDate: "February 2023",
+    pages: 320,
+    isbn: "978-5-43-210987-6",
+    featured: false
+  },
+  {
+    id: 6,
+    title: "MINDFUL LEADERSHIP",
+    author: "DAVID THOMPSON",
+    price: 27.99,
+    originalPrice: 37.99,
+    category: "business",
+    rating: 4.7,
+    reviews: 412,
+    inStock: true,
+    cover: "https://picsum.photos/seed/mindful-leadership/400/600.jpg",
+    coverColor: "from-cyan-600 to-sky-900",
+    description: "Transform your managerial style and employee trust relationships through modern mindfulness concepts. David Thompson integrates psychological theories and practical exercises to cultivate emotional intelligence inside professional organizations.",
+    publisher: "Executive Leaders Press",
+    publishedDate: "September 2023",
+    pages: 294,
+    isbn: "978-2-34-567890-1",
+    featured: true
+  },
+  {
+    id: 7,
+    title: "ART OF CODE",
+    author: "SOPHIE LAURENT",
+    price: 31.99,
+    originalPrice: 42.99,
+    category: "technology",
+    rating: 4.4,
+    reviews: 212,
+    inStock: true,
+    cover: "https://picsum.photos/seed/art-of-code/400/600.jpg",
+    coverColor: "from-teal-600 to-indigo-900",
+    description: "Clean architecture, logical design, and artistic aesthetics combined inside software systems. Sophie Laurent teaches programming from a perspective of creative expression, illustrating beauty inside coding paradigms and elegant software designs.",
+    publisher: "Adiray Tech Press",
+    publishedDate: "January 2024",
+    pages: 456,
+    isbn: "978-8-76-543210-9",
+    featured: false
+  },
+  {
+    id: 8,
+    title: "PSYCHOLOGY TODAY",
+    author: "DR. JAMES WILSON",
+    price: 26.99,
+    originalPrice: 34.99,
+    category: "psychology",
+    rating: 4.5,
+    reviews: 245,
+    inStock: true,
+    cover: "https://picsum.photos/seed/psychology-today/400/600.jpg",
+    coverColor: "from-rose-600 to-purple-950",
+    description: "A brilliant window into the intricacies of human cognition, decision systems, and habits. Dr. James Wilson simplifies profound psychological studies to provide actionable tactics that help readers master their concentration, mindfulness, and relationships.",
+    publisher: "Mind & Health Press",
+    publishedDate: "November 2023",
+    pages: 350,
+    isbn: "978-4-56-789012-3",
+    featured: true
+  },
+  {
+    id: 9,
+    title: "DATA SCIENCE FUNDAMENTALS",
+    author: "ROBERT KUMAR",
+    price: 39.99,
+    originalPrice: 49.99,
+    category: "educational",
+    rating: 4.9,
+    reviews: 445,
+    inStock: true,
+    cover: "https://picsum.photos/seed/data-science/400/600.jpg",
+    coverColor: "from-indigo-400 to-purple-600",
+    description: "Essential concepts and practical applications in data science. Learn to visualize data, build regression models, and deploy machine learning pipelines.",
+    publisher: "Adiray Tech Press",
+    publishedDate: "January 2023",
+    pages: 480,
+    isbn: "978-0-12-345001-9",
+    featured: false
+  },
+  {
+    id: 10,
+    title: "ADVANCED MATHEMATICS",
+    author: "DR. SARAH MITCHELL",
+    price: 45.99,
+    originalPrice: 59.99,
+    category: "educational",
+    rating: 4.7,
+    reviews: 234,
+    inStock: true,
+    cover: "https://picsum.photos/seed/advanced-math/400/600.jpg",
+    coverColor: "from-blue-400 to-cyan-600",
+    description: "A comprehensive guide to advanced mathematical concepts, from differential equations to complex analysis.",
+    publisher: "Academic Press",
+    publishedDate: "March 2023",
+    pages: 512,
+    isbn: "978-0-12-345002-6",
+    featured: false
+  },
+  {
+    id: 11,
+    title: "THE CREATIVE MIND",
+    author: "LISA ANDERSON",
+    price: 22.99,
+    originalPrice: 32.99,
+    category: "inspirational",
+    rating: 4.4,
+    reviews: 298,
+    inStock: true,
+    cover: "https://picsum.photos/seed/creative-mind/400/600.jpg",
+    coverColor: "from-pink-400 to-red-600",
+    description: "Unlock your creative potential and innovative thinking with techniques backed by cognitive neuroscience.",
+    publisher: "Mind & Health Press",
+    publishedDate: "August 2022",
+    pages: 260,
+    isbn: "978-0-12-345005-7",
+    featured: false
+  },
+  {
+    id: 12,
+    title: "THE GARDEN OF SECRETS",
+    author: "MARIA RODRIGUEZ",
+    price: 16.99,
+    originalPrice: 24.99,
+    category: "novels",
+    rating: 4.3,
+    reviews: 178,
+    inStock: true,
+    cover: "https://picsum.photos/seed/garden-secrets/400/600.jpg",
+    coverColor: "from-green-400 to-teal-600",
+    description: "A mystery set in a historical estate, where the gardener uncovers letters that will change her family's future forever.",
+    publisher: "Elegant Lit Co",
+    publishedDate: "June 2021",
+    pages: 340,
+    isbn: "978-0-12-345007-1",
+    featured: false
+  },
+  {
+    id: 13,
+    title: "LITTLE EXPLORERS",
+    author: "TOM JOHNSON",
+    price: 12.99,
+    originalPrice: 18.99,
+    category: "childrens",
+    rating: 4.8,
+    reviews: 523,
+    inStock: true,
+    cover: "https://picsum.photos/seed/little-explorers/400/600.jpg",
+    coverColor: "from-yellow-300 to-pink-400",
+    description: "An exciting adventure book for young readers, following three brave kids on a mission to map the unknown forest.",
+    publisher: "Heritage Books",
+    publishedDate: "November 2022",
+    pages: 120,
+    isbn: "978-0-12-345010-1",
+    featured: false
+  },
+  {
+    id: 14,
+    title: "DIGITAL TRANSFORMATION",
+    author: "MARCUS CHEN",
+    price: 29.99,
+    originalPrice: 39.99,
+    category: "business",
+    rating: 4.8,
+    reviews: 189,
+    inStock: true,
+    cover: "https://picsum.photos/seed/digital-transform/400/600.jpg",
+    coverColor: "from-green-400 to-blue-600",
+    description: "Navigate the digital landscape with confidence and strategic insights from the world's most successful tech companies.",
+    publisher: "Executive Leaders Press",
+    publishedDate: "May 2023",
+    pages: 310,
+    isbn: "978-0-12-345013-2",
+    featured: false
+  },
+  {
+    id: 15,
+    title: "JAVASCRIPT MASTERY",
+    author: "DAVID PARK",
+    price: 34.99,
+    originalPrice: 44.99,
+    category: "technology",
+    rating: 4.7,
+    reviews: 567,
+    inStock: true,
+    cover: "https://picsum.photos/seed/js-mastery/400/600.jpg",
+    coverColor: "from-yellow-400 to-orange-600",
+    description: "A comprehensive guide to modern JavaScript, covering ESNext, async programming, design patterns, and architectural principles.",
+    publisher: "Adiray Tech Press",
+    publishedDate: "December 2023",
+    pages: 580,
+    isbn: "978-0-12-345017-0",
+    featured: false
+  }
+];
+
+// Default users base for dynamic management
+const defaultUsers = [
+  { id: '1', firstName: 'John', lastName: 'Doe', email: 'john@example.com', role: 'Customer', ordersCount: 4, totalSpent: 184.94, joinedDate: '2024-01-10' },
+  { id: '2', firstName: 'Evelyn', lastName: 'Reed', email: 'evelyn@example.com', role: 'Customer', ordersCount: 1, totalSpent: 24.99, joinedDate: '2024-01-15' },
+  { id: '3', firstName: 'Marcus', lastName: 'Chen', email: 'marcus@example.com', role: 'Manager', ordersCount: 12, totalSpent: 849.20, joinedDate: '2023-11-05' },
+  { id: '4', firstName: 'Adiray', lastName: 'Admin', email: 'admin@adiraybooks.com', role: 'Admin', ordersCount: 0, totalSpent: 0.00, joinedDate: '2023-09-01' }
+];
 
 // Default wishlist items matching initial mock state
 const defaultWishlist = [
@@ -14,12 +313,12 @@ const defaultWishlist = [
     author: "Evelyn Reed",
     price: 24.99,
     originalPrice: 34.99,
-    category: "Technology",
+    category: "technology",
     rating: 4.5,
     reviews: 234,
     inStock: true,
     dateAdded: "2024-01-15",
-    coverColor: "from-gray-200 to-gray-300",
+    coverColor: "from-blue-600 to-indigo-900",
     description: "A deep dive into the world of artificial intelligence and machine learning."
   },
   {
@@ -28,27 +327,13 @@ const defaultWishlist = [
     author: "Marcus Chen",
     price: 29.99,
     originalPrice: 39.99,
-    category: "Business",
+    category: "business",
     rating: 4.8,
     reviews: 189,
     inStock: true,
     dateAdded: "2024-01-20",
-    coverColor: "from-gray-100 to-gray-200",
+    coverColor: "from-green-400 to-blue-600",
     description: "Navigate the digital landscape with confidence and strategic insight."
-  },
-  {
-    id: 3,
-    title: "The Mindful Leader",
-    author: "Sarah Williams",
-    price: 19.99,
-    originalPrice: 27.99,
-    category: "Inspirational",
-    rating: 4.6,
-    reviews: 412,
-    inStock: false,
-    dateAdded: "2024-02-01",
-    coverColor: "from-gray-200 to-gray-300",
-    description: "Transform your leadership style through mindfulness and emotional intelligence."
   }
 ];
 
@@ -65,7 +350,7 @@ const defaultOrders = [
         author: 'Evelyn Reed',
         price: 24.99,
         quantity: 1,
-        coverColor: 'from-blue-400 to-purple-600'
+        coverColor: 'from-blue-600 to-indigo-900'
       },
       {
         id: 2,
@@ -76,17 +361,19 @@ const defaultOrders = [
         coverColor: 'from-green-400 to-blue-600'
       },
       {
-        id: 3,
-        title: 'The Mindful Leader',
-        author: 'Sarah Williams',
+        id: 6,
+        title: 'Mindful Leadership',
+        author: 'David Thompson',
         price: 34.99,
         quantity: 1,
-        coverColor: 'from-purple-400 to-pink-600'
+        coverColor: 'from-cyan-600 to-sky-900'
       }
     ],
     shippingAddress: '123 Book Street, Reading District, RD 12345',
     trackingNumber: 'TRK123456789',
-    estimatedDelivery: '2024-01-20'
+    estimatedDelivery: '2024-01-20',
+    customerName: 'John Doe',
+    customerEmail: 'john@example.com'
   },
   {
     id: 'ORD-2024-002',
@@ -95,7 +382,7 @@ const defaultOrders = [
     total: 54.98,
     items: [
       {
-        id: 4,
+        id: 15,
         title: 'JavaScript Mastery',
         author: 'David Park',
         price: 34.99,
@@ -103,7 +390,7 @@ const defaultOrders = [
         coverColor: 'from-yellow-400 to-orange-600'
       },
       {
-        id: 5,
+        id: 11,
         title: 'The Creative Mind',
         author: 'Lisa Anderson',
         price: 19.99,
@@ -113,7 +400,9 @@ const defaultOrders = [
     ],
     shippingAddress: '123 Book Street, Reading District, RD 12345',
     trackingNumber: 'TRK987654321',
-    estimatedDelivery: '2024-02-08'
+    estimatedDelivery: '2024-02-08',
+    customerName: 'John Doe',
+    customerEmail: 'john@example.com'
   },
   {
     id: 'ORD-2024-003',
@@ -122,7 +411,7 @@ const defaultOrders = [
     total: 39.99,
     items: [
       {
-        id: 6,
+        id: 9,
         title: 'Data Science Fundamentals',
         author: 'Robert Kumar',
         price: 39.99,
@@ -130,42 +419,81 @@ const defaultOrders = [
         coverColor: 'from-indigo-400 to-purple-600'
       }
     ],
-    shippingAddress: '123 Book Street, Reading District, RD 12345',
+    shippingAddress: '456 Tech Lane, Silicon Valley, CA 94025',
     trackingNumber: 'TRK456789123',
-    estimatedDelivery: '2024-02-25'
-  },
-  {
-    id: 'ORD-2024-004',
-    date: '2024-03-05',
-    status: 'cancelled',
-    total: 29.98,
-    items: [
-      {
-        id: 7,
-        title: 'The Garden of Secrets',
-        author: 'Maria Rodriguez',
-        price: 16.99,
-        quantity: 1,
-        coverColor: 'from-green-400 to-teal-600'
-      },
-      {
-        id: 8,
-        title: 'Little Explorers',
-        author: 'Tom Johnson',
-        price: 12.99,
-        quantity: 1,
-        coverColor: 'from-yellow-300 to-pink-400'
-      }
-    ],
-    shippingAddress: '123 Book Street, Reading District, RD 12345',
-    trackingNumber: null,
-    estimatedDelivery: null
+    estimatedDelivery: '2024-02-25',
+    customerName: 'Marcus Chen',
+    customerEmail: 'marcus@example.com'
   }
 ];
 
 export const AppProvider = ({ children }) => {
   // ==========================================
-  // 1. Authentication State
+  // 1. Dynamic Books Catalog State
+  // ==========================================
+  const [books, setBooks] = useState(() => {
+    const savedBooks = localStorage.getItem('adiray_books');
+    return savedBooks ? JSON.parse(savedBooks) : defaultBooksCatalog;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('adiray_books', JSON.stringify(books));
+  }, [books]);
+
+  const addBook = (newBook) => {
+    const bookWithId = {
+      ...newBook,
+      id: books.length > 0 ? Math.max(...books.map(b => b.id)) + 1 : 1,
+      rating: parseFloat(newBook.rating) || 4.5,
+      reviews: parseInt(newBook.reviews) || 0,
+      inStock: newBook.inStock !== false
+    };
+    setBooks(prev => [bookWithId, ...prev]);
+    return bookWithId;
+  };
+
+  const updateBook = (updatedBook) => {
+    setBooks(prev => prev.map(b => b.id === updatedBook.id ? { ...b, ...updatedBook } : b));
+  };
+
+  const deleteBook = (bookId) => {
+    setBooks(prev => prev.filter(b => b.id !== bookId));
+  };
+
+  // ==========================================
+  // 2. Users / Customers Database State
+  // ==========================================
+  const [users, setUsers] = useState(() => {
+    const savedUsers = localStorage.getItem('adiray_users');
+    return savedUsers ? JSON.parse(savedUsers) : defaultUsers;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('adiray_users', JSON.stringify(users));
+  }, [users]);
+
+  const addUser = (userData) => {
+    const newUser = {
+      ...userData,
+      id: String(users.length > 0 ? Math.max(...users.map(u => parseInt(u.id))) + 1 : 1),
+      ordersCount: 0,
+      totalSpent: 0.00,
+      joinedDate: new Date().toISOString().split('T')[0]
+    };
+    setUsers(prev => [...prev, newUser]);
+    return newUser;
+  };
+
+  const updateUserRole = (userId, newRole) => {
+    setUsers(prev => prev.map(u => u.id === userId ? { ...u, role: newRole } : u));
+  };
+
+  const deleteUser = (userId) => {
+    setUsers(prev => prev.filter(u => u.id !== userId));
+  };
+
+  // ==========================================
+  // 3. Authentication State
   // ==========================================
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -182,12 +510,35 @@ export const AppProvider = ({ children }) => {
   const login = async (email, password) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 800));
-    const userData = {
-      firstName: 'John',
-      lastName: 'Doe',
+    
+    // Find if user already exists in dynamic database
+    const existingUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    
+    const userData = existingUser ? {
+      firstName: existingUser.firstName,
+      lastName: existingUser.lastName,
+      email: existingUser.email,
+      id: existingUser.id,
+      role: existingUser.role
+    } : {
+      firstName: email.split('@')[0],
+      lastName: 'User',
       email: email,
-      id: '1'
+      id: '99',
+      role: email.toLowerCase() === 'admin@adiraybooks.com' ? 'Admin' : 'Customer'
     };
+
+    // Auto-register user in dynamic database if they don't exist
+    if (!existingUser) {
+      const addedUser = addUser({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        role: userData.role
+      });
+      userData.id = addedUser.id;
+    }
+
     localStorage.setItem('authToken', 'mock-jwt-token');
     localStorage.setItem('userData', JSON.stringify(userData));
     setUser(userData);
@@ -198,12 +549,22 @@ export const AppProvider = ({ children }) => {
   const register = async (userData) => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 800));
-    const formattedUser = {
+    
+    const addedUser = addUser({
       firstName: userData.firstName,
       lastName: userData.lastName,
       email: userData.email,
-      id: String(Date.now())
+      role: 'Customer'
+    });
+
+    const formattedUser = {
+      firstName: addedUser.firstName,
+      lastName: addedUser.lastName,
+      email: addedUser.email,
+      id: addedUser.id,
+      role: addedUser.role
     };
+
     localStorage.setItem('authToken', 'mock-jwt-token');
     localStorage.setItem('userData', JSON.stringify(formattedUser));
     setUser(formattedUser);
@@ -219,7 +580,7 @@ export const AppProvider = ({ children }) => {
   };
 
   // ==========================================
-  // 2. Shopping Cart State
+  // 4. Shopping Cart State
   // ==========================================
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem('adiray_cart');
@@ -262,7 +623,7 @@ export const AppProvider = ({ children }) => {
   const cartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   // ==========================================
-  // 3. Wishlist State
+  // 5. Wishlist State
   // ==========================================
   const [wishlist, setWishlist] = useState(() => {
     const savedWishlist = localStorage.getItem('adiray_wishlist');
@@ -308,7 +669,7 @@ export const AppProvider = ({ children }) => {
   };
 
   // ==========================================
-  // 4. Orders State
+  // 6. Orders State
   // ==========================================
   const [orders, setOrders] = useState(() => {
     const savedOrders = localStorage.getItem('adiray_orders');
@@ -320,7 +681,21 @@ export const AppProvider = ({ children }) => {
   }, [orders]);
 
   const addOrder = (order) => {
-    setOrders(prev => [order, ...prev]);
+    const newOrder = {
+      ...order,
+      customerName: user ? `${user.firstName} ${user.lastName}` : 'Guest Customer',
+      customerEmail: user ? user.email : 'guest@example.com'
+    };
+    setOrders(prev => [newOrder, ...prev]);
+
+    // Update dynamic stats for the ordering user
+    if (user) {
+      setUsers(prevUsers => prevUsers.map(u => 
+        u.id === user.id 
+          ? { ...u, ordersCount: u.ordersCount + 1, totalSpent: parseFloat((u.totalSpent + order.total).toFixed(2)) }
+          : u
+      ));
+    }
   };
 
   const cancelOrder = (orderId) => {
@@ -329,15 +704,35 @@ export const AppProvider = ({ children }) => {
     ));
   };
 
+  const updateOrderStatus = (orderId, newStatus) => {
+    setOrders(prev => prev.map(order => 
+      order.id === orderId ? { ...order, status: newStatus } : order
+    ));
+  };
+
+  const updateOrderTracking = (orderId, trackingNumber) => {
+    setOrders(prev => prev.map(order => 
+      order.id === orderId ? { ...order, trackingNumber } : order
+    ));
+  };
+
+  const deleteOrder = (orderId) => {
+    setOrders(prev => prev.filter(order => order.id !== orderId));
+  };
+
   return (
     <AuthContext.Provider value={{ user, isAuthenticated, login, register, logout }}>
-      <CartContext.Provider value={{ cart, cartCount, cartTotal, addToCart, removeFromCart, updateCartQuantity, clearCart }}>
-        <WishlistContext.Provider value={{ wishlist, addToWishlist, removeFromWishlist, isInWishlist, toggleWishlist, moveWishlistToCart }}>
-          <OrdersContext.Provider value={{ orders, addOrder, cancelOrder }}>
-            {children}
-          </OrdersContext.Provider>
-        </WishlistContext.Provider>
-      </CartContext.Provider>
+      <BooksContext.Provider value={{ books, addBook, updateBook, deleteBook }}>
+        <UsersContext.Provider value={{ users, addUser, updateUserRole, deleteUser }}>
+          <CartContext.Provider value={{ cart, cartCount, cartTotal, addToCart, removeFromCart, updateCartQuantity, clearCart }}>
+            <WishlistContext.Provider value={{ wishlist, addToWishlist, removeFromWishlist, isInWishlist, toggleWishlist, moveWishlistToCart }}>
+              <OrdersContext.Provider value={{ orders, addOrder, cancelOrder, updateOrderStatus, updateOrderTracking, deleteOrder }}>
+                {children}
+              </OrdersContext.Provider>
+            </WishlistContext.Provider>
+          </CartContext.Provider>
+        </UsersContext.Provider>
+      </BooksContext.Provider>
     </AuthContext.Provider>
   );
 };
@@ -346,6 +741,18 @@ export const AppProvider = ({ children }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) throw new Error('useAuth must be used within an AppProvider');
+  return context;
+};
+
+export const useBooks = () => {
+  const context = useContext(BooksContext);
+  if (!context) throw new Error('useBooks must be used within an AppProvider');
+  return context;
+};
+
+export const useUsers = () => {
+  const context = useContext(UsersContext);
+  if (!context) throw new Error('useUsers must be used within an AppProvider');
   return context;
 };
 
