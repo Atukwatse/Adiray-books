@@ -1,29 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useWishlist } from '../context/AppContext';
-
-// Helper to convert completely uppercase strings to Title Case with minor words handled
-const toTitleCase = (str) => {
-  if (!str) return '';
-  const minorWords = ['and', 'or', 'but', 'a', 'an', 'the', 'as', 'at', 'by', 'for', 'in', 'of', 'on', 'per', 'to', 'is'];
-  return str
-    .toLowerCase()
-    .split(' ')
-    .map((word, index) => {
-      if (index > 0 && minorWords.includes(word)) {
-        return word;
-      }
-      return word.charAt(0).toUpperCase() + word.slice(1);
-    })
-    .join(' ');
-};
-
-// Helper to format the author field nicely
-const formatAuthor = (author) => {
-  if (!author) return '';
-  const cleanAuthor = author.replace(/^by\s+/i, '');
-  return toTitleCase(cleanAuthor);
-};
+import { toTitleCase, formatAuthor, getBookCover } from '../utils/coverGenerator';
 
 const BookCard = ({
   book,
@@ -110,16 +88,12 @@ const BookCard = ({
       {/* Book Cover Area */}
       <div className="relative w-full h-56 bg-slate-50 flex-shrink-0 overflow-hidden">
         <Link to={`/book/${book.id}`} className="block w-full h-full">
-          {book.cover ? (
-            <img
-              src={book.cover}
-              alt={book.title}
-              className="w-full h-full object-cover hover:opacity-95 transition-opacity"
-              loading="lazy"
-            />
-          ) : (
-            <div className={`w-full h-full bg-gradient-to-br ${book.coverColor || 'from-purple-500 to-pink-500'} flex items-center justify-center p-4`} />
-          )}
+          <img
+            src={getBookCover(book)}
+            alt={book.title}
+            className="w-full h-full object-cover hover:opacity-95 transition-opacity"
+            loading="lazy"
+          />
         </Link>
         
         {/* Out of Stock Overlay */}

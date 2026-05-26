@@ -7,7 +7,7 @@ const AuthorSpotlight = ({ onAuthorClick }) => {
         {/* Author Image */}
         <div className="flex-shrink-0">
           <img
-            src="https://picsum.photos/seed/author1/150/150.jpg"
+            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&h=300&q=80"
             alt="Featured Author"
             className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-white shadow-medium"
           />

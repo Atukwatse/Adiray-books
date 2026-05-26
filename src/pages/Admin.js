@@ -88,7 +88,8 @@ const Admin = () => {
     publishedDate: '2024',
     pages: '300',
     isbn: '978-0-00-000000-0',
-    featured: false
+    featured: false,
+    cover: ''
   });
 
   // Orders State & Forms
@@ -226,7 +227,8 @@ const Admin = () => {
       publishedDate: '2024',
       pages: '280',
       isbn: `978-${Math.floor(1000000000 + Math.random() * 9000000000)}`,
-      featured: false
+      featured: false,
+      cover: ''
     });
     setShowBookModal(true);
   };
@@ -248,7 +250,8 @@ const Admin = () => {
       publishedDate: book.publishedDate || '2023',
       pages: String(book.pages || '300'),
       isbn: book.isbn || '978-0-00-000000-0',
-      featured: book.featured === true
+      featured: book.featured === true,
+      cover: book.cover || ''
     });
     setShowBookModal(true);
   };
@@ -262,6 +265,21 @@ const Admin = () => {
 
     const priceNum = parseFloat(bookForm.price);
     const originalPriceNum = parseFloat(bookForm.originalPrice) || priceNum;
+
+    const getCategoryFallbackCover = (cat) => {
+      const mappings = {
+        technology: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=400&q=80',
+        business: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=400&q=80',
+        fiction: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80',
+        history: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=400&q=80',
+        educational: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=400&q=80',
+        inspirational: 'https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&w=400&q=80',
+        childrens: 'https://images.unsplash.com/photo-1489065604198-8a379f7273eb?auto=format&fit=crop&w=400&q=80',
+        psychology: 'https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?auto=format&fit=crop&w=400&q=80',
+        novels: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=400&q=80'
+      };
+      return mappings[cat] || 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&q=80';
+    };
 
     const bookData = {
       title: bookForm.title.toUpperCase(),
@@ -279,7 +297,9 @@ const Admin = () => {
       pages: parseInt(bookForm.pages) || 300,
       isbn: bookForm.isbn,
       featured: bookForm.featured,
-      cover: `https://picsum.photos/seed/${encodeURIComponent(bookForm.title.toLowerCase())}/400/600.jpg`
+      cover: bookForm.cover && bookForm.cover.trim() !== '' 
+        ? bookForm.cover.trim() 
+        : getCategoryFallbackCover(bookForm.category)
     };
 
     if (editingBook) {
@@ -809,11 +829,17 @@ const Admin = () => {
                         filteredBooks.map(b => (
                           <tr key={b.id} className="hover:bg-gray-50 transition-colors group">
                             <td className="p-4">
-                              <div className={`w-9 h-12 bg-gradient-to-br ${b.coverColor || 'from-gray-700 to-gray-900'} rounded-none border border-white/10 shadow-sm flex items-center justify-center p-1 overflow-hidden relative`}>
-                                <div className="absolute top-0 left-0 w-1.5 h-full bg-black/20"></div>
-                                <span className="text-[6px] text-white uppercase text-center font-serif leading-none font-extrabold line-clamp-2">
-                                  {b.title}
-                                </span>
+                              <div className={`w-9 h-12 bg-gradient-to-br ${b.coverColor || 'from-gray-700 to-gray-900'} rounded-none border border-white/10 shadow-sm flex items-center justify-center overflow-hidden relative`}>
+                                {b.cover ? (
+                                  <img src={b.cover} alt="" className="w-full h-full object-cover" />
+                                ) : (
+                                  <>
+                                    <div className="absolute top-0 left-0 w-1.5 h-full bg-black/20"></div>
+                                    <span className="text-[6px] text-white uppercase text-center font-serif leading-none font-extrabold line-clamp-2 p-1">
+                                      {b.title}
+                                    </span>
+                                  </>
+                                )}
                               </div>
                             </td>
                             <td className="p-4">
@@ -1233,27 +1259,34 @@ const Admin = () => {
               {/* Left visual cover preview */}
               <div className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-none border border-gray-200">
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Masterpiece Preview</span>
-                
-                {/* Visual cover card */}
-                <div className={`relative w-40 h-56 bg-gradient-to-br ${bookForm.coverColor} rounded-none shadow-md flex flex-col justify-between items-center p-3 border border-white/10 text-white`}>
-                  <div className="absolute inset-0 bg-black/5 mix-blend-overlay"></div>
-                  <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-r from-black/20 via-white/5 to-transparent"></div>
+                            {/* Visual cover card */}
+                <div className={`relative w-40 h-56 bg-gradient-to-br ${bookForm.coverColor} rounded-none shadow-md flex flex-col justify-between items-center p-3 border border-white/10 text-white overflow-hidden`}>
+                  {bookForm.cover && (
+                    <img 
+                      src={bookForm.cover} 
+                      alt="Cover Preview" 
+                      className="absolute inset-0 w-full h-full object-cover z-0 opacity-80"
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-black/20 mix-blend-overlay z-10"></div>
+                  <div className="absolute top-0 left-0 w-2.5 h-full bg-gradient-to-r from-black/20 via-white/5 to-transparent z-10"></div>
                   
-                  <span className="text-[7px] tracking-widest uppercase opacity-75 font-semibold text-center mt-2 leading-none">
+                  <span className="text-[7px] tracking-widest uppercase opacity-75 font-semibold text-center mt-2 leading-none z-20">
                     {bookForm.category}
                   </span>
                   
-                  <div className="text-center">
-                    <h4 className="text-[11px] font-serif font-bold tracking-tight uppercase leading-tight line-clamp-3">
+                  <div className="text-center z-20">
+                    <h4 className="text-[11px] font-serif font-bold tracking-tight uppercase leading-tight line-clamp-3 bg-black/40 px-1 py-0.5 rounded">
                       {bookForm.title || 'NEW BOOK TITLE'}
                     </h4>
                     <div className="w-6 h-0.5 bg-yellow-400 mx-auto my-1.5"></div>
-                    <p className="text-[8px] font-light tracking-wide uppercase line-clamp-1 opacity-90">
+                    <p className="text-[8px] font-light tracking-wide uppercase line-clamp-1 opacity-90 bg-black/40 px-1 py-0.5 rounded">
                       {bookForm.author || 'AUTHOR NAME'}
                     </p>
                   </div>
 
-                  <span className="text-[6px] tracking-wider opacity-60 font-mono mb-2">
+                  <span className="text-[6px] tracking-wider opacity-60 font-mono mb-2 z-20">
                     ADIRAY LIBRARY
                   </span>
                 </div>
@@ -1410,6 +1443,17 @@ const Admin = () => {
                     value={bookForm.publisher}
                     onChange={(e) => setBookForm(prev => ({ ...prev, publisher: e.target.value }))}
                     className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-xs text-charcoal outline-none focus:border-charcoal"
+                  />
+                </div>
+
+                <div className="sm:col-span-2 space-y-1">
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Cover Image URL (Optional)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. https://images.unsplash.com/photo-... or leave blank for a dynamic themed cover"
+                    value={bookForm.cover}
+                    onChange={(e) => setBookForm(prev => ({ ...prev, cover: e.target.value }))}
+                    className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-xs text-charcoal placeholder-gray-400 outline-none focus:border-charcoal"
                   />
                 </div>
 
