@@ -306,3 +306,14 @@
     background-position: -200% 0;
   }
 }
+
+/* Fixed Header Spacer Offsets */
+.main-content-offset {
+  padding-top: 80px; /* Mobile header height */
+}
+
+@media (min-width: 992px) {
+  .main-content-offset {
+    padding-top: 168px; /* Desktop header height */
+  }
+}

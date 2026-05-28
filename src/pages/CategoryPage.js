@@ -447,51 +447,7 @@ const CategoryPage = ({ category, title, description, icon }) => {
         </div>
       </section>
 
-      {/* Related Categories */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-amber-900 mb-4">Explore Other Categories</h2>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-              Discover books in other popular categories
-            </p>
-          </div>
 
-          <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {Object.keys(categoryBooks).map(cat => (
-              <a
-                key={cat}
-                href={`/categories/${cat}`}
-                className={`group p-6 rounded-xl border-2 transition-all ${
-                  cat === category 
-                    ? 'border-amber-500 bg-amber-50' 
-                    : 'border-gray-200 hover:border-amber-300 hover:bg-amber-50'
-                }`}
-              >
-                <div className="text-center">
-                  <div className={`w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center ${
-                    cat === category ? 'bg-amber-600 text-white' : 'bg-amber-100 text-amber-700'
-                  }`}>
-                    <i className={`fas ${
-                      cat === 'educational' ? 'fa-graduation-cap' :
-                      cat === 'inspirational' ? 'fa-heart' :
-                      cat === 'novels' ? 'fa-book' :
-                      cat === 'childrens' ? 'fa-child' :
-                      cat === 'business' ? 'fa-briefcase' :
-                      'fa-laptop-code'
-                    }`}></i>
-                  </div>
-                  <p className={`font-semibold ${
-                    cat === category ? 'text-amber-900' : 'text-gray-700'
-                  }`}>
-                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                  </p>
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   );
 };

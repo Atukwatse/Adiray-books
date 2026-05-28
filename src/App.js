@@ -218,7 +218,7 @@ function MainLayout() {
               </div>
             )}
 
-            <div className="flex-grow">
+            <div className="flex-grow main-content-offset">
               <Outlet context={{
                 filteredBooks,
                 addToCart,

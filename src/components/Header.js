@@ -13,6 +13,8 @@ const Header = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [searchCategory, setSearchCategory] = useState('All');
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const searchCategories = ['All', 'Books', 'eBooks', 'Audiobooks'];
   
   // Consume Auth and Cart Contexts
@@ -38,6 +40,19 @@ const Header = ({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isAuthDropdownOpen, isSearchDropdownOpen]);
+
+  // Handle scroll detection for sticky header effects
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleLogin = () => {
     navigate('/login');
@@ -92,10 +107,16 @@ const Header = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 flex flex-col w-full shadow-sm bg-white font-sans">
+    <header className={`fixed top-0 left-0 w-full z-50 flex flex-col transition-all duration-300 font-sans ${
+      isScrolled 
+        ? 'bg-white/95 backdrop-blur-md shadow-md' 
+        : 'bg-white shadow-sm'
+    }`}>
       
       {/* Top Mini-Bar */}
-      <div className="bg-gray-50 text-gray-500 text-[10px] sm:text-xs tracking-widest uppercase py-2 hide-under-992 border-b border-gray-100">
+      <div className={`text-gray-500 text-[10px] sm:text-xs tracking-widest uppercase py-2 hidden md:block border-b border-gray-100 transition-all duration-300 ${
+        isScrolled ? 'bg-gray-50/80 backdrop-blur-sm' : 'bg-gray-50'
+      }`}>
         <div className="responsive-container flex justify-end items-center">
           <div className="flex items-center divide-x divide-gray-300">
             <Link to="/about" className="pr-4 hover:text-charcoal transition-colors">About Us</Link>
@@ -148,21 +169,23 @@ const Header = ({
       </div>
 
       {/* Main Bar */}
-      <div className="bg-white text-charcoal border-b border-gray-200 relative z-30">
+      <div className={`text-charcoal border-b border-gray-200 relative z-30 transition-all duration-300 ${
+        isScrolled ? 'bg-transparent' : 'bg-white'
+      }`}>
         <div className="responsive-container h-20 flex items-center justify-between">
           
           {/* Logo */}
-          <div className="flex items-center space-x-3 shrink-0">
-            <div className="w-10 h-10 bg-charcoal flex items-center justify-center">
-              <span className="text-white font-bold text-lg font-serif">AB</span>
+          <div className="flex items-center space-x-2 md:space-x-3 shrink-0">
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-charcoal flex items-center justify-center">
+              <span className="text-white font-bold text-sm md:text-lg font-serif">AB</span>
             </div>
-            <h1 className="text-2xl lg:text-3xl font-bold text-charcoal font-serif tracking-tight uppercase">
+            <h1 className="text-base sm:text-2xl md:text-3xl font-bold text-charcoal font-serif tracking-tight uppercase">
               Adiray <span className="text-gold font-light">&</span> Books
             </h1>
           </div>
 
           {/* Search Bar (Desktop) */}
-          <div className="hide-under-992-flex flex-1 max-w-3xl mx-8 relative">
+          <div className="hidden md:flex flex-1 max-w-3xl mx-4 lg:mx-8 relative">
             <form onSubmit={handleSearch} className="w-full flex border border-gray-300 focus-within:border-charcoal focus-within:ring-1 focus-within:ring-charcoal transition-all">
               {/* Custom Category Dropdown inside search */}
               <div className="relative hidden lg:block border-r border-gray-300 search-dropdown">
@@ -212,19 +235,22 @@ const Header = ({
           </div>
 
           {/* Action Icons */}
-          <div className="flex items-center space-x-6 shrink-0">
+          <div className="flex items-center space-x-3 sm:space-x-6 shrink-0">
             
             {/* Mobile Search Toggle */}
-            <button className="show-under-992 text-charcoal hover:text-gold transition-colors">
-              <i className="fas fa-search text-xl"></i>
+            <button 
+              onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+              className="md:hidden text-charcoal hover:text-gold transition-colors p-1"
+            >
+              <i className={`fas ${isMobileSearchOpen ? 'fa-times font-semibold' : 'fa-search'} text-xl`}></i>
             </button>
 
             {/* Shopping Cart */}
             <button
               onClick={onCartClick}
-              className="relative text-charcoal hover:text-gold transition-colors duration-200 group flex items-center"
+              className="relative text-charcoal hover:text-gold transition-colors duration-200 group flex items-center p-1"
             >
-              <i className="fas fa-shopping-bag text-2xl group-hover:scale-105 transition-transform"></i>
+              <i className="fas fa-shopping-bag text-xl sm:text-2xl group-hover:scale-105 transition-transform"></i>
               {displayCartCount > 0 && (
                 <span className="absolute -top-1.5 -right-2 bg-gold text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center border border-white">
                   {displayCartCount}
@@ -235,7 +261,7 @@ const Header = ({
             {/* Mobile Menu Button */}
             <button
               onClick={onMobileMenuToggle}
-              className="show-under-992 text-charcoal hover:text-gold transition-colors duration-200"
+              className="md:hidden text-charcoal hover:text-gold transition-colors duration-200 p-1"
             >
               <i className={`fas ${isMobileMenuOpen ? 'fa-times' : 'fa-bars'} text-xl`}></i>
             </button>
@@ -243,8 +269,28 @@ const Header = ({
         </div>
       </div>
 
+      {/* Mobile Search Bar Expansion */}
+      {isMobileSearchOpen && (
+        <div className="md:hidden w-full bg-gray-50 border-b border-gray-200 px-4 py-3 z-20 transition-all duration-300">
+          <form onSubmit={handleSearch} className="w-full flex border border-gray-300 bg-white focus-within:border-charcoal focus-within:ring-1 focus-within:ring-charcoal">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search for books, authors, ISBN..."
+              className="flex-1 px-4 py-2 text-sm text-charcoal placeholder-gray-400 outline-none"
+            />
+            <button type="submit" className="bg-charcoal text-white px-5 hover:bg-black transition-colors flex items-center justify-center">
+              <i className="fas fa-search text-sm"></i>
+            </button>
+          </form>
+        </div>
+      )}
+
       {/* Category Sub-Bar */}
-      <div className="bg-white border-b border-gray-200 py-3 hide-under-992 shadow-sm relative z-20">
+      <div className={`border-b border-gray-200 py-3 hidden md:block relative z-20 transition-all duration-300 ${
+        isScrolled ? 'bg-transparent' : 'bg-white shadow-sm'
+      }`}>
         <div className="responsive-container">
           <nav className="flex items-center justify-center">
             <div className="flex items-center divide-x divide-gray-300">
@@ -264,9 +310,9 @@ const Header = ({
 
       {/* Mobile Navigation Dropdown */}
       {isMobileMenuOpen && (
-        <div className="show-under-992 bg-white border-b border-gray-200 absolute top-full left-0 w-full z-50 shadow-xl">
+        <div className="md:hidden bg-white border-b border-gray-200 absolute top-full left-0 w-full z-50 shadow-xl">
           {/* Mobile Search Input if opened */}
-          <div className="p-4 border-b border-gray-100 bg-gray-50 show-under-992">
+          <div className="p-4 border-b border-gray-100 bg-gray-50 md:hidden">
              <form onSubmit={handleSearch} className="flex border border-gray-300">
               <input
                 type="text"

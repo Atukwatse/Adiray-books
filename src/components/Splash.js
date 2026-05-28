@@ -8,10 +8,10 @@ const Splash = ({ onComplete }) => {
 
   useEffect(() => {
     const stages = [
-      { name: 'initializing', duration: 800 },
-      { name: 'discovering', duration: 600 },
-      { name: 'curating', duration: 700 },
-      { name: 'finalizing', duration: 500 }
+      { name: 'initializing', duration: 1800 },
+      { name: 'discovering', duration: 1500 },
+      { name: 'curating', duration: 1600 },
+      { name: 'finalizing', duration: 1200 }
     ];
 
     let currentStage = 0;
@@ -149,21 +149,6 @@ const Splash = ({ onComplete }) => {
             </div>
           </div>
         </div>
-
-        {/* Elegant Skip Button */}
-        <button
-          onClick={() => {
-            setFadeOut(true);
-            setTimeout(() => {
-              setIsLoading(false);
-              onComplete();
-            }, 600);
-          }}
-          className="px-8 py-3 border border-gold/30 text-gold/70 rounded-full text-sm font-medium tracking-wide hover:bg-gold hover:text-charcoal hover:border-gold transition-all duration-300 animate-fade-in-up hover:scale-105"
-          style={{ animationDelay: '0.9s' }}
-        >
-          Skip
-        </button>
       </div>
 
       {/* Custom Styles */}

@@ -38,7 +38,9 @@ const FilterSidebar = ({
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
+    <div className={`bg-white p-6 rounded-lg shadow-md ${
+      !isMobile ? 'lg:sticky lg:top-[196px] z-10 transition-all duration-300' : ''
+    }`}>
       {/* Mobile Close Button */}
       {isMobile && onClose && (
         <div className="flex justify-between items-center mb-6">
