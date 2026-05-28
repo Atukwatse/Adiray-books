@@ -1,0 +1,89 @@
+[
+  {
+    "id": "ORD-2024-001",
+    "date": "2024-01-15",
+    "status": "delivered",
+    "total": 89.97,
+    "items": [
+      {
+        "id": 1,
+        "title": "The Silent Algorithm",
+        "author": "Evelyn Reed",
+        "price": 24.99,
+        "quantity": 1,
+        "coverColor": "from-blue-600 to-indigo-900"
+      },
+      {
+        "id": 2,
+        "title": "Digital Transformation",
+        "author": "Marcus Chen",
+        "price": 29.99,
+        "quantity": 1,
+        "coverColor": "from-green-400 to-blue-600"
+      },
+      {
+        "id": 6,
+        "title": "Mindful Leadership",
+        "author": "David Thompson",
+        "price": 34.99,
+        "quantity": 1,
+        "coverColor": "from-cyan-600 to-sky-900"
+      }
+    ],
+    "shippingAddress": "123 Book Street, Reading District, RD 12345",
+    "trackingNumber": "TRK123456789",
+    "estimatedDelivery": "2024-01-20",
+    "customerName": "John Doe",
+    "customerEmail": "john@example.com"
+  },
+  {
+    "id": "ORD-2024-002",
+    "date": "2024-02-03",
+    "status": "processing",
+    "total": 54.98,
+    "items": [
+      {
+        "id": 15,
+        "title": "JavaScript Mastery",
+        "author": "David Park",
+        "price": 34.99,
+        "quantity": 1,
+        "coverColor": "from-yellow-400 to-orange-600"
+      },
+      {
+        "id": 11,
+        "title": "The Creative Mind",
+        "author": "Lisa Anderson",
+        "price": 19.99,
+        "quantity": 1,
+        "coverColor": "from-pink-400 to-red-600"
+      }
+    ],
+    "shippingAddress": "123 Book Street, Reading District, RD 12345",
+    "trackingNumber": "TRK987654321",
+    "estimatedDelivery": "2024-02-08",
+    "customerName": "John Doe",
+    "customerEmail": "john@example.com"
+  },
+  {
+    "id": "ORD-2024-003",
+    "date": "2024-02-20",
+    "status": "shipped",
+    "total": 39.99,
+    "items": [
+      {
+        "id": 9,
+        "title": "Data Science Fundamentals",
+        "author": "Robert Kumar",
+        "price": 39.99,
+        "quantity": 1,
+        "coverColor": "from-indigo-400 to-purple-600"
+      }
+    ],
+    "shippingAddress": "456 Tech Lane, Silicon Valley, CA 94025",
+    "trackingNumber": "TRK456789123",
+    "estimatedDelivery": "2024-02-25",
+    "customerName": "Marcus Chen",
+    "customerEmail": "marcus@example.com"
+  }
+]

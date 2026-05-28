@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth, useCart } from '../context/AppContext';
 
 const Header = ({ 
@@ -16,6 +16,14 @@ const Header = ({
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const searchCategories = ['All', 'Books', 'eBooks', 'Audiobooks'];
+  
+  const location = useLocation();
+  const isActive = (path) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname === path || location.pathname.startsWith(path + '/');
+  };
   
   // Consume Auth and Cart Contexts
   const { user, isAuthenticated, logout } = useAuth();
@@ -119,8 +127,22 @@ const Header = ({
       }`}>
         <div className="responsive-container flex justify-end items-center">
           <div className="flex items-center divide-x divide-gray-300">
-            <Link to="/about" className="pr-4 hover:text-charcoal transition-colors">About Us</Link>
-            <Link to="/contact" className="px-4 hover:text-charcoal transition-colors">Contact</Link>
+            <Link 
+              to="/about" 
+              className={`pr-4 transition-colors ${
+                isActive('/about') ? 'text-orange-600 font-bold' : 'hover:text-orange-600 text-gray-500'
+              }`}
+            >
+              About Us
+            </Link>
+            <Link 
+              to="/contact" 
+              className={`px-4 transition-colors ${
+                isActive('/contact') ? 'text-orange-600 font-bold' : 'hover:text-orange-600 text-gray-500'
+              }`}
+            >
+              Contact
+            </Link>
             
             {/* Auth User / My Account Top Link */}
             <div className="px-4 relative auth-dropdown">
@@ -161,8 +183,13 @@ const Header = ({
               )}
             </div>
             
-            <Link to="/wishlist" className="pl-4 hover:text-charcoal transition-colors flex items-center">
-              <i className="far fa-heart mr-1.5"></i> Wishlist
+            <Link 
+              to="/wishlist" 
+              className={`pl-4 transition-colors flex items-center ${
+                isActive('/wishlist') ? 'text-orange-600 font-bold' : 'hover:text-orange-600 text-gray-500'
+              }`}
+            >
+              <i className={`${isActive('/wishlist') ? 'fas' : 'far'} fa-heart mr-1.5`}></i> Wishlist
             </Link>
           </div>
         </div>
@@ -240,7 +267,7 @@ const Header = ({
             {/* Mobile Search Toggle */}
             <button 
               onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
-              className="md:hidden text-charcoal hover:text-gold transition-colors p-1"
+              className="md:hidden text-charcoal hover:text-orange-600 transition-colors p-1"
             >
               <i className={`fas ${isMobileSearchOpen ? 'fa-times font-semibold' : 'fa-search'} text-xl`}></i>
             </button>
@@ -248,11 +275,13 @@ const Header = ({
             {/* Shopping Cart */}
             <button
               onClick={onCartClick}
-              className="relative text-charcoal hover:text-gold transition-colors duration-200 group flex items-center p-1"
+              className={`relative transition-colors duration-200 group flex items-center p-1 ${
+                isActive('/cart') ? 'text-orange-600' : 'text-charcoal hover:text-orange-600'
+              }`}
             >
               <i className="fas fa-shopping-bag text-xl sm:text-2xl group-hover:scale-105 transition-transform"></i>
               {displayCartCount > 0 && (
-                <span className="absolute -top-1.5 -right-2 bg-gold text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center border border-white">
+                <span className="absolute -top-1.5 -right-2 bg-orange-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center border border-white">
                   {displayCartCount}
                 </span>
               )}
@@ -261,7 +290,7 @@ const Header = ({
             {/* Mobile Menu Button */}
             <button
               onClick={onMobileMenuToggle}
-              className="md:hidden text-charcoal hover:text-gold transition-colors duration-200 p-1"
+              className="md:hidden text-charcoal hover:text-orange-600 transition-colors duration-200 p-1"
             >
               <i className={`fas ${isMobileMenuOpen ? 'fa-times' : 'fa-bars'} text-xl`}></i>
             </button>
@@ -294,15 +323,29 @@ const Header = ({
         <div className="responsive-container">
           <nav className="flex items-center justify-center">
             <div className="flex items-center divide-x divide-gray-300">
-              {subNavLinks.map((cat, idx) => (
-                <Link 
-                  key={cat.name} 
-                  to={cat.path} 
-                  className={`px-4 xl:px-5 text-[15px] font-serif text-charcoal hover:text-gold transition-colors whitespace-nowrap ${idx === 0 ? 'pl-0' : ''} ${idx === subNavLinks.length - 1 ? 'pr-0' : ''}`}
-                >
-                  {cat.name}
-                </Link>
-              ))}
+              {subNavLinks.map((cat, idx) => {
+                const active = isActive(cat.path);
+                const isFirst = idx === 0;
+                const isLast = idx === subNavLinks.length - 1;
+                
+                let underlineClass = 'after:left-4 after:right-4';
+                if (isFirst) underlineClass = 'after:left-0 after:right-4';
+                if (isLast) underlineClass = 'after:left-4 after:right-0';
+                
+                return (
+                  <Link 
+                    key={cat.name} 
+                    to={cat.path} 
+                    className={`px-4 xl:px-5 text-[15px] font-serif transition-colors whitespace-nowrap relative py-1 ${isFirst ? 'pl-0' : ''} ${isLast ? 'pr-0' : ''} ${
+                      active 
+                        ? `text-orange-600 font-bold after:absolute after:bottom-[-8px] ${underlineClass} after:h-[3px] after:bg-orange-600 after:rounded-full` 
+                        : 'text-charcoal hover:text-orange-600 font-medium'
+                    }`}
+                  >
+                    {cat.name}
+                  </Link>
+                );
+              })}
             </div>
           </nav>
         </div>
@@ -331,16 +374,23 @@ const Header = ({
             <div className="px-4 py-2 bg-gray-50 border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-widest">
               Categories
             </div>
-            {subNavLinks.map((cat) => (
-              <Link 
-                key={cat.name} 
-                to={cat.path} 
-                className="block px-6 py-3 text-charcoal hover:bg-gray-50 hover:text-gold font-serif border-b border-gray-50 last:border-0"
-                onClick={onMobileMenuToggle}
-              >
-                {cat.name}
-              </Link>
-            ))}
+            {subNavLinks.map((cat) => {
+              const active = isActive(cat.path);
+              return (
+                <Link 
+                  key={cat.name} 
+                  to={cat.path} 
+                  className={`block px-6 py-3 font-serif border-b border-gray-50 last:border-0 transition-all duration-200 ${
+                    active 
+                      ? 'text-orange-600 bg-orange-50/30 font-bold border-l-4 border-orange-600 pl-5' 
+                      : 'text-charcoal hover:bg-gray-50 hover:text-orange-600'
+                  }`}
+                  onClick={onMobileMenuToggle}
+                >
+                  {cat.name}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Mobile Auth / Utility Links */}

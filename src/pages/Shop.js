@@ -237,26 +237,6 @@ const Shop = () => {
           )}
         </div>
       </section>
-
-      {/* Newsletter Section */}
-      <section className="py-16 bg-charcoal text-white border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4 font-serif">Stay Updated</h2>
-          <p className="text-xl mb-8 opacity-90 font-light tracking-wide">
-            Get the latest book recommendations and exclusive offers delivered to your inbox
-          </p>
-          <div className="max-w-md mx-auto flex">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-3 rounded-none text-charcoal focus:outline-none focus:ring-1 focus:ring-gold"
-            />
-            <button className="bg-gold text-charcoal hover:bg-white px-6 py-3 font-semibold transition-colors uppercase tracking-widest text-sm">
-              Subscribe
-            </button>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };

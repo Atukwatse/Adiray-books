@@ -12,7 +12,7 @@
   
   body {
     font-family: 'Inter', sans-serif;
-    background-color: #FAF9F6;
+    background-color: #F5F2EB;
     color: #121212;
     line-height: 1.6;
     overflow-x: hidden;
@@ -28,7 +28,7 @@
 /* Custom component styles */
 @layer components {
   .btn-primary {
-    @apply bg-charcoal text-white font-semibold px-6 py-3 rounded-none transition-all duration-300 hover:bg-gold hover:text-charcoal border border-charcoal;
+    @apply bg-charcoal text-white font-semibold px-6 py-3 rounded-none transition-all duration-300 hover:bg-orange-accent hover:text-white border border-charcoal hover:border-orange-accent;
   }
   
   .btn-secondary {
@@ -44,7 +44,7 @@
   }
   
   .nav-link {
-    @apply text-charcoal font-medium transition-colors duration-300 hover:text-gold relative;
+    @apply text-charcoal font-medium transition-colors duration-300 hover:text-orange-accent relative;
   }
   
   .nav-link::after {
@@ -54,7 +54,7 @@
     left: 0;
     width: 0;
     height: 2px;
-    background-color: #D4AF37;
+    background-color: #E65F2B;
     transition: width 0.3s ease;
   }
   
@@ -211,9 +211,9 @@
   .hero-img-wrapper {
     position: relative;
     padding: 0.5rem;
-    background-color: #ffffff;
+    background-color: #F5F2EB;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border: 1px solid #F3F4F6;
+    border: 1px solid #EBE6DC;
     width: 100%;
   }
 
@@ -278,7 +278,7 @@
   height: 100%;
   min-height: 100vh;
   z-index: 50;
-  background-color: #FAF9F6;
+  background-color: #F5F2EB;
   pointer-events: none;
   transition: opacity 0.8s ease-in-out;
 }

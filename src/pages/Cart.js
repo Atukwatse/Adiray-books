@@ -1,7 +1,11 @@
 import React, { useEffect } from 'react';
-import { useOutletContext, Link } from 'react-router-dom';
+import { useOutletContext, Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AppContext';
 
 const Cart = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
   useEffect(() => {
     document.title = "Your Shopping Cart | Adiray Books";
   }, []);
@@ -17,6 +21,15 @@ const Cart = () => {
   const shipping = subtotal > 50 || subtotal === 0 ? 0 : 5.99;
   const tax = subtotal * 0.08; // 8% estimated tax
   const total = subtotal + shipping + tax;
+
+  const handleProceedToCheckout = (e) => {
+    e.preventDefault();
+    if (isAuthenticated) {
+      navigate('/checkout');
+    } else {
+      navigate('/login?redirect=checkout');
+    }
+  };
 
   if (cart.length === 0) {
     return (
@@ -139,9 +152,12 @@ const Cart = () => {
                 </div>
               </div>
 
-              <Link to="/checkout" className="w-full bg-charcoal text-white py-4 font-semibold uppercase tracking-widest hover:bg-black transition-colors mb-4 flex items-center justify-center">
+              <button 
+                onClick={handleProceedToCheckout} 
+                className="w-full bg-charcoal text-white py-4 font-semibold uppercase tracking-widest hover:bg-orange-accent hover:text-white transition-colors mb-4 flex items-center justify-center border border-charcoal hover:border-orange-accent"
+              >
                 Proceed to Checkout <i className="fas fa-arrow-right ml-2"></i>
-              </Link>
+              </button>
               
               <Link to="/shop" className="block text-center text-sm text-charcoal hover:text-gold uppercase tracking-widest transition-colors">
                 Continue Shopping

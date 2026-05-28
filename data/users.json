@@ -1,0 +1,42 @@
+[
+  {
+    "id": "1",
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john@example.com",
+    "role": "Customer",
+    "ordersCount": 4,
+    "totalSpent": 184.94,
+    "joinedDate": "2024-01-10"
+  },
+  {
+    "id": "2",
+    "firstName": "Evelyn",
+    "lastName": "Reed",
+    "email": "evelyn@example.com",
+    "role": "Customer",
+    "ordersCount": 1,
+    "totalSpent": 24.99,
+    "joinedDate": "2024-01-15"
+  },
+  {
+    "id": "3",
+    "firstName": "Marcus",
+    "lastName": "Chen",
+    "email": "marcus@example.com",
+    "role": "Manager",
+    "ordersCount": 12,
+    "totalSpent": 849.20,
+    "joinedDate": "2023-11-05"
+  },
+  {
+    "id": "4",
+    "firstName": "Adiray",
+    "lastName": "Admin",
+    "email": "admin@adiraybooks.com",
+    "role": "Admin",
+    "ordersCount": 0,
+    "totalSpent": 0.0,
+    "joinedDate": "2023-09-01"
+  }
+]

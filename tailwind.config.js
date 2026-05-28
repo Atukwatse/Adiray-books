@@ -7,14 +7,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'white': '#FAF9F6', // elegant cream white
-        'cream': '#FAF9F6',
+        'white': '#F5F2EB', // elegant eye-friendly cream
+        'cream': '#F5F2EB',
         'gold': '#EEDC82', // subtle yellow
         'charcoal': '#0A0A0A', // sharp black
         'mustard': '#EEDC82',
-        'light-gray': '#FAF9F6',
+        'light-gray': '#EBE6DC', // elegant warm border/gray
         'medium-gray': '#6C757D',
-        'dark-gray': '#343A40'
+        'dark-gray': '#343A40',
+        'orange-accent': '#E65F2B'
       },
       fontFamily: {
         'serif': ['Playfair Display', 'serif'],

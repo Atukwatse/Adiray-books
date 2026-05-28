@@ -91,9 +91,6 @@ const Hero = () => {
                 {/* Left Content - Typography */}
                 <div className="hero-text-col">
                   <div className="space-y-6">
-                    <p className="text-gold font-semibold tracking-widest uppercase text-sm">
-                      Curated Physical Books
-                    </p>
                     <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-charcoal leading-tight font-serif">
                       {slide.title}
                       <span className="block italic font-light mt-2 text-gray-800">{slide.subtitle}</span>

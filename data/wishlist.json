@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "title": "The Silent Algorithm",
+    "author": "Evelyn Reed",
+    "price": 24.99,
+    "originalPrice": 34.99,
+    "category": "technology",
+    "rating": 4.5,
+    "reviews": 234,
+    "inStock": true,
+    "dateAdded": "2024-01-15",
+    "coverColor": "from-blue-600 to-indigo-900",
+    "description": "A deep dive into the world of artificial intelligence and machine learning."
+  },
+  {
+    "id": 2,
+    "title": "Digital Transformation",
+    "author": "Marcus Chen",
+    "price": 29.99,
+    "originalPrice": 39.99,
+    "category": "business",
+    "rating": 4.8,
+    "reviews": 189,
+    "inStock": true,
+    "dateAdded": "2024-01-20",
+    "coverColor": "from-green-400 to-blue-600",
+    "description": "Navigate the digital landscape with confidence and strategic insight."
+  }
+]
