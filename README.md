@@ -2,16 +2,16 @@
 
 A high-fidelity, component-based online bookstore built with React.js and Tailwind CSS, featuring a minimalist design with bold mustard yellow (#FBBF24) and deep charcoal black (#121212) color scheme.
 
-## 🚀 Features
+##  Features
 
-### 🎨 Design & Architecture
+### Design & Architecture
 - **Component-Based**: Fully modular React architecture with reusable components
 - **Color Palette**: Bold Mustard Yellow (#FBBF24) and Deep Charcoal Black (#121212)
 - **Typography**: Elegant serif (Playfair Display) for headings, clean sans-serif (Inter) for body
 - **Responsive**: Mobile-first design with seamless tablet and desktop experiences
 - **Modern Stack**: React 18, Tailwind CSS 3, Webpack 5
 
-### 🏗️ Component Structure
+### Component Structure
 ```
 src/
 ├── components/
@@ -28,7 +28,7 @@ src/
 └── index.css              # Tailwind CSS with custom utilities
 ```
 
-### ⚡ Interactive Features
+### Interactive Features
 - **Advanced Search**: Real-time search with overlay interface (Ctrl+/)
 - **Dynamic Filtering**: Genre checkboxes and price range slider
 - **Smart Sorting**: Featured, price (low/high), and alphabetical sorting
@@ -37,12 +37,12 @@ src/
 - **Smooth Animations**: Hover effects, transitions, and micro-interactions
 - **Keyboard Navigation**: Full keyboard accessibility support
 
-### 📱 Responsive Design
+###  Responsive Design
 - **Mobile** (< 768px): Single column, collapsible navigation, slide-out filters
 - **Tablet** (768px - 1024px): Two-column grid, repositioned sidebar
 - **Desktop** (> 1024px): Four-column grid, fixed sidebar, full navigation
 
-## 🛠️ Technologies Used
+##  Technologies Used
 
 ### Core Dependencies
 - **React 18.2.0**: Modern React with hooks and concurrent features
@@ -58,8 +58,7 @@ src/
 - **Font Awesome 6.4.0**: Icon library
 - **Picsum Photos**: Placeholder image service
 
-## 📦 Installation & Setup
-
+##  Installation & Setup
 ### Prerequisites
 - Node.js 16+ and npm installed
 - Modern web browser (Chrome, Firefox, Safari, Edge)
@@ -84,7 +83,7 @@ src/
 npm run build
 ```
 
-## 🎯 Component Architecture
+##  Component Architecture
 
 ### App Component (Root)
 - **State Management**: Cart, filters, search, UI state
@@ -112,7 +111,7 @@ npm run build
 - **Empty State**: User-friendly no-results message
 - **Animation**: Staggered fade-in animations
 
-## 🎨 Customization
+##  Customization
 
 ### Colors
 Modify `tailwind.config.js`:
@@ -138,7 +137,7 @@ Custom component classes are defined in `src/index.css` using Tailwind's @layer 
 - `.book-card`: Book container styling
 - `.nav-link`: Navigation link with hover effect
 
-## 📊 State Management
+##  State Management
 
 ### Local State (useState)
 - **Cart**: Array of book objects with quantities
@@ -155,7 +154,7 @@ Custom component classes are defined in `src/index.css` using Tailwind's @layer 
 App (State) → Props → Components → Events → App (State Update)
 ```
 
-## 🔧 Development Workflow
+##  Development Workflow
 
 ### Component Development
 1. Create component in `src/components/`
@@ -173,7 +172,7 @@ App (State) → Props → Components → Events → App (State Update)
 - **Lifting State**: Parent components manage shared state
 - **Props Drilling**: Pass data and callbacks down to children
 
-## 🌐 Browser Support
+##  Browser Support
 
 - ✅ Chrome 90+
 - ✅ Firefox 88+
@@ -181,7 +180,7 @@ App (State) → Props → Components → Events → App (State Update)
 - ✅ Edge 90+
 - ✅ Mobile Safari/Chrome
 
-## ⚡ Performance Features
+##  Performance Features
 
 - **Code Splitting**: Webpack automatically splits bundles
 - **Tree Shaking**: Unused code eliminated in production
@@ -189,7 +188,7 @@ App (State) → Props → Components → Events → App (State Update)
 - **CSS Purging**: Tailwind removes unused utilities in production
 - **React.memo**: Components optimized for re-rendering
 
-## 🎯 Key Interactions
+##  Key Interactions
 
 ### Search System
 - **Keyboard Shortcut**: Ctrl+/ opens search overlay
