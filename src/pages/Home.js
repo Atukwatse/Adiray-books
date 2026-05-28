@@ -27,7 +27,7 @@ const Home = () => {
     <>
       <Hero />
       <main className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="responsive-container">
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="hidden lg:block">
               <FilterSidebar

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useCart, useWishlist, useBooks } from '../context/AppContext';
 import useDebounce from '../hooks/useDebounce';
-import BookCard from '../components/BookCard';
+import BookCard, { BookCardSkeleton } from '../components/BookCard';
 
 const Shop = () => {
   useEffect(() => {
@@ -24,6 +24,8 @@ const Shop = () => {
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [sortBy, setSortBy] = useState('featured');
   const [loading, setLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(8);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
@@ -90,8 +92,22 @@ const Shop = () => {
     setFilteredBooks(filtered);
   }, [books, debouncedSearchTerm, selectedCategory, priceRange, sortBy]);
 
+  // Reset pagination batch count when search, category, or sorting filters update
+  useEffect(() => {
+    setVisibleCount(8);
+  }, [debouncedSearchTerm, selectedCategory, priceRange, sortBy]);
+
   const handleAddToCart = (book) => {
     addToCart(book);
+  };
+
+  const handleLoadMore = () => {
+    setIsLoadingMore(true);
+    // Simulate server side query latency
+    setTimeout(() => {
+      setVisibleCount(prev => prev + 4);
+      setIsLoadingMore(false);
+    }, 800);
   };
 
   return (
@@ -177,12 +193,46 @@ const Shop = () => {
               <p className="text-gray-500 font-light tracking-wide">Try adjusting your filters or search terms</p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredBooks.map(book => (
-                <div key={book.id}>
-                  <BookCard book={book} onAddToCart={handleAddToCart} />
-                </div>
-              ))}
+            <div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {filteredBooks.slice(0, visibleCount).map(book => (
+                  <div key={book.id}>
+                    <BookCard book={book} onAddToCart={handleAddToCart} />
+                  </div>
+                ))}
+                {isLoadingMore && (
+                  <>
+                    <BookCardSkeleton />
+                    <BookCardSkeleton />
+                    <BookCardSkeleton />
+                    <BookCardSkeleton />
+                  </>
+                )}
+              </div>
+
+              {/* Load More Button System */}
+              <div className="flex flex-col items-center justify-center mt-12 mb-4">
+                {visibleCount < filteredBooks.length ? (
+                  <button
+                    onClick={handleLoadMore}
+                    disabled={isLoadingMore}
+                    className="btn-primary py-3.5 px-10 text-xs sm:text-sm tracking-widest uppercase font-semibold transition-all hover:scale-[1.03] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-w-[200px]"
+                  >
+                    {isLoadingMore ? (
+                      <span className="flex items-center justify-center">
+                        <i className="fas fa-spinner animate-spin mr-2"></i>
+                        Loading...
+                      </span>
+                    ) : (
+                      'Load More'
+                    )}
+                  </button>
+                ) : filteredBooks.length > 0 ? (
+                  <p className="text-gray-500 font-light italic tracking-wider text-sm">
+                    You've viewed all products.
+                  </p>
+                ) : null}
+              </div>
             </div>
           )}
         </div>

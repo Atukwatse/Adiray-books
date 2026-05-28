@@ -95,8 +95,8 @@ const Header = ({
     <header className="sticky top-0 z-40 flex flex-col w-full shadow-sm bg-white font-sans">
       
       {/* Top Mini-Bar */}
-      <div className="bg-gray-50 text-gray-500 text-[10px] sm:text-xs tracking-widest uppercase py-2 hidden lg:block border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 flex justify-end items-center">
+      <div className="bg-gray-50 text-gray-500 text-[10px] sm:text-xs tracking-widest uppercase py-2 hide-under-992 border-b border-gray-100">
+        <div className="responsive-container flex justify-end items-center">
           <div className="flex items-center divide-x divide-gray-300">
             <Link to="/about" className="pr-4 hover:text-charcoal transition-colors">About Us</Link>
             <Link to="/contact" className="px-4 hover:text-charcoal transition-colors">Contact</Link>
@@ -149,7 +149,7 @@ const Header = ({
 
       {/* Main Bar */}
       <div className="bg-white text-charcoal border-b border-gray-200 relative z-30">
-        <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+        <div className="responsive-container h-20 flex items-center justify-between">
           
           {/* Logo */}
           <div className="flex items-center space-x-3 shrink-0">
@@ -162,7 +162,7 @@ const Header = ({
           </div>
 
           {/* Search Bar (Desktop) */}
-          <div className="hidden md:flex flex-1 max-w-3xl mx-8 relative">
+          <div className="hide-under-992-flex flex-1 max-w-3xl mx-8 relative">
             <form onSubmit={handleSearch} className="w-full flex border border-gray-300 focus-within:border-charcoal focus-within:ring-1 focus-within:ring-charcoal transition-all">
               {/* Custom Category Dropdown inside search */}
               <div className="relative hidden lg:block border-r border-gray-300 search-dropdown">
@@ -215,7 +215,7 @@ const Header = ({
           <div className="flex items-center space-x-6 shrink-0">
             
             {/* Mobile Search Toggle */}
-            <button className="md:hidden text-charcoal hover:text-gold transition-colors">
+            <button className="show-under-992 text-charcoal hover:text-gold transition-colors">
               <i className="fas fa-search text-xl"></i>
             </button>
 
@@ -235,7 +235,7 @@ const Header = ({
             {/* Mobile Menu Button */}
             <button
               onClick={onMobileMenuToggle}
-              className="lg:hidden text-charcoal hover:text-gold transition-colors duration-200"
+              className="show-under-992 text-charcoal hover:text-gold transition-colors duration-200"
             >
               <i className={`fas ${isMobileMenuOpen ? 'fa-times' : 'fa-bars'} text-xl`}></i>
             </button>
@@ -244,8 +244,8 @@ const Header = ({
       </div>
 
       {/* Category Sub-Bar */}
-      <div className="bg-white border-b border-gray-200 py-3 hidden lg:block shadow-sm relative z-20">
-        <div className="max-w-7xl mx-auto px-4">
+      <div className="bg-white border-b border-gray-200 py-3 hide-under-992 shadow-sm relative z-20">
+        <div className="responsive-container">
           <nav className="flex items-center justify-center">
             <div className="flex items-center divide-x divide-gray-300">
               {subNavLinks.map((cat, idx) => (
@@ -264,9 +264,9 @@ const Header = ({
 
       {/* Mobile Navigation Dropdown */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white border-b border-gray-200 absolute top-full left-0 w-full z-50 shadow-xl">
+        <div className="show-under-992 bg-white border-b border-gray-200 absolute top-full left-0 w-full z-50 shadow-xl">
           {/* Mobile Search Input if opened */}
-          <div className="p-4 border-b border-gray-100 bg-gray-50 md:hidden">
+          <div className="p-4 border-b border-gray-100 bg-gray-50 show-under-992">
              <form onSubmit={handleSearch} className="flex border border-gray-300">
               <input
                 type="text"

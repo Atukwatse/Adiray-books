@@ -7,10 +7,12 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        'white': '#FAF9F6', // elegant cream white
+        'cream': '#FAF9F6',
         'gold': '#EEDC82', // subtle yellow
         'charcoal': '#0A0A0A', // sharp black
         'mustard': '#EEDC82',
-        'light-gray': '#F8F9FA',
+        'light-gray': '#FAF9F6',
         'medium-gray': '#6C757D',
         'dark-gray': '#343A40'
       },

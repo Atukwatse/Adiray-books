@@ -7,6 +7,7 @@ import Admin from './pages/Admin';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Notification from './components/Notification';
+import SkeletonLayout from './components/SkeletonLayout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -47,6 +48,17 @@ const genres = [
 function MainLayout() {
   const navigate = useNavigate();
   const [showSplash, setShowSplash] = useState(true);
+  const [isAppLoading, setIsAppLoading] = useState(true);
+
+  useEffect(() => {
+    if (!showSplash) {
+      // Simulate network request delay to showcase skeleton loading screens
+      const timer = setTimeout(() => {
+        setIsAppLoading(false);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [showSplash]);
   
   // Use Centralized Cart Context
   const { 
@@ -167,58 +179,66 @@ function MainLayout() {
       
       {/* Main App */}
       {!showSplash && (
-        <div className="min-h-screen bg-white flex flex-col">
-          <Header
-            cartCount={getCartCount()}
-            cartTotal={getCartTotal()}
-            onSearchOpen={openSearch}
-            onCartClick={() => navigate('/cart')}
-            isMobileMenuOpen={isMobileMenuOpen}
-            onMobileMenuToggle={toggleMobileMenu}
-          />
+        <div className="min-h-screen bg-white flex flex-col relative overflow-hidden">
+          {/* Skeleton loading overlay */}
+          <SkeletonLayout isLoading={isAppLoading} />
 
-          {/* Search Overlay */}
-          {isSearchOpen && (
-            <div className="fixed inset-0 bg-charcoal bg-opacity-95 z-50 flex items-center justify-center">
-              <div className="relative w-full max-w-2xl px-4">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search for books, authors, or genres..."
-                  className="w-full px-6 py-4 text-lg bg-transparent border-b-2 border-mustard text-white placeholder-gray-400 outline-none"
-                  autoFocus
-                />
-                <button
-                  onClick={closeSearch}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-2xl hover:text-mustard transition-colors"
-                >
-                  <i className="fas fa-times"></i>
-                </button>
+          {/* Actual content container with cross-fade transition */}
+          <div className={`min-h-screen flex flex-col transition-opacity duration-700 ease-in-out ${
+            isAppLoading ? 'opacity-0' : 'opacity-100'
+          }`}>
+            <Header
+              cartCount={getCartCount()}
+              cartTotal={getCartTotal()}
+              onSearchOpen={openSearch}
+              onCartClick={() => navigate('/cart')}
+              isMobileMenuOpen={isMobileMenuOpen}
+              onMobileMenuToggle={toggleMobileMenu}
+            />
+
+            {/* Search Overlay */}
+            {isSearchOpen && (
+              <div className="fixed inset-0 bg-charcoal bg-opacity-95 z-50 flex items-center justify-center">
+                <div className="relative w-full max-w-2xl px-4">
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search for books, authors, or genres..."
+                    className="w-full px-6 py-4 text-lg bg-transparent border-b-2 border-mustard text-white placeholder-gray-400 outline-none"
+                    autoFocus
+                  />
+                  <button
+                    onClick={closeSearch}
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-2xl hover:text-mustard transition-colors"
+                  >
+                    <i className="fas fa-times"></i>
+                  </button>
+                </div>
               </div>
+            )}
+
+            <div className="flex-grow">
+              <Outlet context={{
+                filteredBooks,
+                addToCart,
+                updateCartQuantity,
+                removeFromCart,
+                genres,
+                selectedGenres,
+                maxPrice,
+                sortBy,
+                handleGenreChange,
+                setMaxPrice,
+                setSortBy,
+                isMobileMenuOpen,
+                setIsMobileMenuOpen,
+                cart
+              }} />
             </div>
-          )}
 
-          <div className="flex-grow">
-            <Outlet context={{
-              filteredBooks,
-              addToCart,
-              updateCartQuantity,
-              removeFromCart,
-              genres,
-              selectedGenres,
-              maxPrice,
-              sortBy,
-              handleGenreChange,
-              setMaxPrice,
-              setSortBy,
-              isMobileMenuOpen,
-              setIsMobileMenuOpen,
-              cart
-            }} />
+            <Footer />
           </div>
-
-          <Footer />
 
           {/* Notification */}
           {notification && (

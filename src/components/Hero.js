@@ -78,7 +78,7 @@ const Hero = () => {
       </button>
 
       {/* Slide Content */}
-      <div className="relative max-w-7xl mx-auto px-12 sm:px-16 lg:px-20 w-full z-10 h-[600px] lg:h-[550px]">
+      <div className="hero-content-container responsive-container">
         <div className="relative w-full h-full">
           {slides.map((slide, index) => (
             <div 
@@ -87,10 +87,10 @@ const Hero = () => {
                 index === currentSlide ? 'opacity-100 z-20 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'
               }`}
             >
-              <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center w-full h-full">
+              <div className="hero-grid">
                 {/* Left Content - Typography */}
-                <div className="space-y-8 text-center">
-                  <div className="space-y-6 transform transition-all duration-700 translate-y-0 opacity-100">
+                <div className="hero-text-col">
+                  <div className="space-y-6">
                     <p className="text-gold font-semibold tracking-widest uppercase text-sm">
                       Curated Physical Books
                     </p>
@@ -98,12 +98,12 @@ const Hero = () => {
                       {slide.title}
                       <span className="block italic font-light mt-2 text-gray-800">{slide.subtitle}</span>
                     </h1>
-                    <p className="text-base sm:text-lg text-gray-600 max-w-xl mx-auto font-light leading-relaxed">
+                    <p className="hero-desc">
                       {slide.description}
                     </p>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <div className="hero-actions">
                     <Link to={slide.primaryLink} className="bg-charcoal text-white border border-charcoal py-3 px-8 font-semibold tracking-widest text-sm uppercase hover:bg-white hover:text-charcoal transition-all text-center">
                       {slide.primaryText}
                     </Link>
@@ -114,12 +114,12 @@ const Hero = () => {
                 </div>
 
                 {/* Right Content - Generated Image */}
-                <div className="relative mx-auto w-full max-w-lg lg:max-w-none h-full flex items-center">
-                  <div className="relative p-2 sm:p-4 bg-white shadow-xl border border-gray-100 w-full">
+                <div className="hero-img-col">
+                  <div className="hero-img-wrapper">
                     <img 
                       src={slide.image}
                       alt={slide.title}
-                      className="w-full h-[400px] lg:h-[500px] object-cover"
+                      className="hero-img"
                     />
                     {/* Decorative accents */}
                     <div className={`absolute -bottom-6 -left-6 w-32 h-32 ${slide.accent} -z-10`}></div>

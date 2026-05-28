@@ -12,7 +12,7 @@
   
   body {
     font-family: 'Inter', sans-serif;
-    background-color: white;
+    background-color: #FAF9F6;
     color: #121212;
     line-height: 1.6;
     overflow-x: hidden;
@@ -61,6 +61,185 @@
   .nav-link:hover::after {
     width: 100%;
   }
+
+  /* Responsive content container spanning full width with small responsive padding */
+  .responsive-container {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 3vw;
+    padding-right: 3vw;
+  }
+
+  /* Responsive visibility helper classes for 992px breakpoint */
+  @media (max-width: 991.98px) {
+    .hide-under-992 {
+      display: none !important;
+    }
+    .show-under-992 {
+      display: block !important;
+    }
+    .show-under-992-flex {
+      display: flex !important;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .show-under-992,
+    .show-under-992-flex {
+      display: none !important;
+    }
+    .hide-under-992-flex {
+      display: flex !important;
+    }
+  }
+
+  /* Hero grid & slide styling */
+  .hero-content-container {
+    position: relative;
+    width: 100%;
+    z-index: 10;
+    height: 780px;
+  }
+
+  @media (min-width: 480px) {
+    .hero-content-container {
+      height: 720px;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .hero-content-container {
+      height: 760px;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .hero-content-container {
+      height: 550px;
+    }
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (min-width: 992px) {
+    .hero-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+  }
+
+  .hero-text-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+    align-items: center;
+  }
+
+  @media (min-width: 992px) {
+    .hero-text-col {
+      text-align: left;
+      align-items: flex-start;
+    }
+  }
+
+  .hero-desc {
+    font-size: 1rem;
+    color: #4B5563;
+    font-weight: 300;
+    line-height: 1.625;
+    max-width: 36rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (min-width: 992px) {
+    .hero-desc {
+      margin-left: 0;
+      margin-right: 0;
+      font-size: 1.125rem;
+    }
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  @media (min-width: 576px) {
+    .hero-actions {
+      flex-direction: row;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .hero-actions {
+      justify-content: flex-start;
+      width: auto;
+    }
+  }
+
+  .hero-img-col {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 32rem;
+    display: flex;
+    align-items: center;
+  }
+
+  @media (min-width: 992px) {
+    .hero-img-col {
+      max-width: none;
+      height: 100%;
+    }
+  }
+
+  .hero-img-wrapper {
+    position: relative;
+    padding: 0.5rem;
+    background-color: #ffffff;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid #F3F4F6;
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .hero-img-wrapper {
+      padding: 1rem;
+    }
+  }
+
+  .hero-img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+  }
+
+  @media (min-width: 576px) {
+    .hero-img {
+      height: 400px;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .hero-img {
+      height: 500px;
+    }
+  }
 }
 
 /* Custom utilities */
@@ -88,4 +267,42 @@
 
 .animate-float {
   animation: float linear infinite;
+}
+
+/* Skeleton Loaders and Shimmer Effect */
+.skeleton-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  z-index: 50;
+  background-color: #FAF9F6;
+  pointer-events: none;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.skeleton-block {
+  background: linear-gradient(
+    90deg,
+    #e2e8f0 25%,
+    #cbd5e1 50%,
+    #e2e8f0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-animation 1.5s infinite linear;
+}
+
+.skeleton-img-box {
+  border-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+@keyframes shimmer-animation {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }

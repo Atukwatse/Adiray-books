@@ -162,12 +162,12 @@ const Splash = ({ onComplete }) => {
           className="px-8 py-3 border border-gold/30 text-gold/70 rounded-full text-sm font-medium tracking-wide hover:bg-gold hover:text-charcoal hover:border-gold transition-all duration-300 animate-fade-in-up hover:scale-105"
           style={{ animationDelay: '0.9s' }}
         >
-          Enter Library
+          Skip
         </button>
       </div>
 
       {/* Custom Styles */}
-      <style jsx>{`
+      <style>{`
         @keyframes float-slow {
           0%, 100% {
             transform: translateY(0px) translateX(0px) rotate(12deg);

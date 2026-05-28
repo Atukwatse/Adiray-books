@@ -207,4 +207,35 @@ const BookCard = ({
   );
 };
 
+export const BookCardSkeleton = () => {
+  return (
+    <div className="bg-white border border-slate-100 rounded-xl overflow-hidden shadow-sm flex flex-col h-full relative min-h-[420px]">
+      {/* Book Cover Area Placeholder */}
+      <div className="relative w-full h-56 skeleton-block flex-shrink-0"></div>
+      
+      {/* Book Details Info Placeholder */}
+      <div className="p-5 flex flex-col flex-grow space-y-4">
+        {/* Title */}
+        <div className="skeleton-block w-3/4 h-5 rounded"></div>
+        {/* Author */}
+        <div className="skeleton-block w-1/2 h-4 rounded"></div>
+        {/* Rating */}
+        <div className="skeleton-block w-1/3 h-3 rounded"></div>
+        {/* Price */}
+        <div className="skeleton-block w-1/4 h-6 rounded mt-2"></div>
+        {/* Description lines */}
+        <div className="space-y-2 mt-2 flex-grow">
+          <div className="skeleton-block w-full h-3 rounded"></div>
+          <div className="skeleton-block w-5/6 h-3 rounded"></div>
+        </div>
+        {/* Actions Button Bar */}
+        <div className="flex items-center space-x-2 mt-auto pt-4">
+          <div className="skeleton-block flex-grow h-10 rounded-lg"></div>
+          <div className="skeleton-block w-10 h-10 rounded-lg"></div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default BookCard;

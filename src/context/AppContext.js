@@ -77,7 +77,7 @@ const defaultBooksCatalog = [
     rating: 4.6,
     reviews: 298,
     inStock: true,
-    cover: "https://images-na.ssl-images-amazon.com/images/I/711yL-E3nFL.jpg",
+    cover: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=400&q=80",
     coverColor: "from-amber-600 to-yellow-800",
     description: "The ultimate compendium of business strategies, leadership methods, and growth hacks. Robert Anderson distills decades of executive coaching and startup development into actionable tools to build highly effective businesses.",
     publisher: "Executive Leaders Press",
@@ -172,7 +172,7 @@ const defaultBooksCatalog = [
     rating: 4.9,
     reviews: 445,
     inStock: true,
-    cover: "https://images-na.ssl-images-amazon.com/images/I/71mLG6A4TFL.jpg",
+    cover: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=80",
     coverColor: "from-indigo-400 to-purple-600",
     description: "Essential concepts and practical applications in data science. Learn to visualize data, build regression models, and deploy machine learning pipelines.",
     publisher: "Adiray Tech Press",
@@ -191,7 +191,7 @@ const defaultBooksCatalog = [
     rating: 4.7,
     reviews: 234,
     inStock: true,
-    cover: "https://images-na.ssl-images-amazon.com/images/I/815b-9GjS4L.jpg",
+    cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=400&q=80",
     coverColor: "from-blue-400 to-cyan-600",
     description: "A comprehensive guide to advanced mathematical concepts, from differential equations to complex analysis.",
     publisher: "Academic Press",
@@ -437,7 +437,25 @@ export const AppProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    localStorage.setItem('adiray_books', JSON.stringify(books));
+    // Migration: automatically replace legacy broken Amazon cover URLs in local storage
+    let migrated = false;
+    const migratedBooks = books.map(book => {
+      if (book.cover && book.cover.includes('amazon.com')) {
+        migrated = true;
+        const defaultBook = defaultBooksCatalog.find(b => b.id === book.id);
+        if (defaultBook) {
+          return { ...book, cover: defaultBook.cover };
+        }
+      }
+      return book;
+    });
+    
+    if (migrated) {
+      setBooks(migratedBooks);
+      localStorage.setItem('adiray_books', JSON.stringify(migratedBooks));
+    } else {
+      localStorage.setItem('adiray_books', JSON.stringify(books));
+    }
   }, [books]);
 
   const addBook = (newBook) => {
