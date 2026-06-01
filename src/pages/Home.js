@@ -31,8 +31,8 @@ const Home = () => {
       <Hero />
       <main className="py-16">
         <div className="responsive-container">
-          <div className="flex flex-col lg:flex-row gap-8">
-            <div className="hidden lg:block">
+          <div className="flex flex-col lg:flex-row lg:gap-8 lg:items-start">
+            <aside className="hidden lg:block lg:w-60 xl:w-64 lg:shrink-0 lg:sticky lg:top-[200px] lg:z-30">
               <FilterSidebar
                 genres={genres}
                 selectedGenres={selectedGenres}
@@ -42,8 +42,8 @@ const Home = () => {
                 onPriceChange={setMaxPrice}
                 onSortChange={setSortBy}
               />
-            </div>
-            <div className="flex-grow">
+            </aside>
+            <div className="flex-grow min-w-0">
               <div className="lg:hidden mb-6">
                 <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

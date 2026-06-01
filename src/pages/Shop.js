@@ -183,8 +183,10 @@ const Shop = () => {
 
           {/* Books Grid */}
           {loading ? (
-            <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-charcoal"></div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <BookCardSkeleton key={index} />
+              ))}
             </div>
           ) : filteredBooks.length === 0 ? (
             <div className="text-center py-20">

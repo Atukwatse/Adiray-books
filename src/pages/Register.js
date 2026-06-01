@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AppContext';
+import { requestGoogleProfile } from '../utils/googleAuth';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -63,7 +64,8 @@ const Register = () => {
     return newErrors;
   };
 
-  const { register } = useAuth();
+  const { register, loginWithGoogle } = useAuth();
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,6 +91,22 @@ const Register = () => {
       }
     } else {
       setErrors(newErrors);
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    setErrors({});
+    setIsGoogleLoading(true);
+
+    try {
+      const googleProfile = await requestGoogleProfile();
+      await loginWithGoogle(googleProfile);
+      navigate('/');
+    } catch (error) {
+      console.error('Google sign-up failed:', error);
+      setErrors({ general: error.message || 'Google sign-up failed. Please try again.' });
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 
@@ -307,10 +325,14 @@ const Register = () => {
             <div className="grid grid-cols-2 gap-4">
               <button
                 type="button"
-                className="w-full inline-flex justify-center items-center py-2.5 px-4 border border-gray-200 rounded-none bg-white text-xs font-semibold uppercase tracking-wider text-charcoal hover:bg-gray-50 hover:border-charcoal transition-colors duration-200"
+                onClick={handleGoogleSignUp}
+                disabled={isGoogleLoading}
+                className={`w-full inline-flex justify-center items-center py-2.5 px-4 border border-gray-200 rounded-none bg-white text-xs font-semibold uppercase tracking-wider text-charcoal transition-colors duration-200 ${
+                  isGoogleLoading ? 'cursor-not-allowed opacity-60' : 'hover:bg-gray-50 hover:border-charcoal'
+                }`}
               >
-                <i className="fab fa-google text-red-500 mr-2.5"></i>
-                Google
+                <i className={`fab ${isGoogleLoading ? 'fa-spinner fa-spin' : 'fa-google'} text-red-500 mr-2.5`}></i>
+                {isGoogleLoading ? 'Connecting' : 'Google'}
               </button>
 
               <button

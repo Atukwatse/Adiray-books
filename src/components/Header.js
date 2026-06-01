@@ -78,16 +78,6 @@ const Header = ({
     navigate('/');
   };
 
-  const handleProfile = () => {
-    navigate('/profile');
-    setIsAuthDropdownOpen(false);
-  };
-
-  const handleOrders = () => {
-    navigate('/orders');
-    setIsAuthDropdownOpen(false);
-  };
-
   const subNavLinks = [
     { name: 'Home', path: '/' },
     { name: 'Books', path: '/shop' },
@@ -122,7 +112,7 @@ const Header = ({
     }`}>
       
       {/* Top Mini-Bar */}
-      <div className={`text-gray-500 text-[10px] sm:text-xs tracking-widest uppercase py-2 hidden md:block border-b border-gray-100 transition-all duration-300 ${
+      <div className={`relative z-[80] text-gray-500 text-[10px] sm:text-xs tracking-widest uppercase py-2 hidden md:block border-b border-gray-100 transition-all duration-300 ${
         isScrolled ? 'bg-gray-50/80 backdrop-blur-sm' : 'bg-gray-50'
       }`}>
         <div className="responsive-container flex justify-end items-center">
@@ -149,6 +139,8 @@ const Header = ({
               <button 
                 onClick={() => setIsAuthDropdownOpen(!isAuthDropdownOpen)}
                 className="hover:text-charcoal transition-colors flex items-center"
+                aria-expanded={isAuthDropdownOpen}
+                aria-haspopup="menu"
               >
                 <i className="far fa-user mr-1.5"></i> 
                 {isAuthenticated ? `Hi, ${user?.firstName}` : 'My Account'}
@@ -157,21 +149,35 @@ const Header = ({
 
               {/* Auth Dropdown Menu */}
               {isAuthDropdownOpen && (
-                <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-gray-200 shadow-xl z-50 normal-case tracking-normal">
+                <div className="absolute top-full right-0 mt-3 w-72 bg-white border border-gray-200 shadow-2xl z-[100] normal-case tracking-normal">
                   {isAuthenticated ? (
-                    <div>
-                      <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
-                        <p className="text-sm font-bold text-charcoal">{user?.firstName} {user?.lastName}</p>
-                        <p className="text-xs text-gray-500">{user?.email}</p>
+                    <div className="p-4">
+                      <div className="flex items-center gap-3 pb-4 border-b border-gray-100">
+                        {user?.picture ? (
+                          <img
+                            src={user.picture}
+                            alt={`${user?.firstName || 'Account'} profile`}
+                            className="w-11 h-11 rounded-full object-cover border border-gray-200"
+                          />
+                        ) : (
+                          <div className="w-11 h-11 rounded-full bg-charcoal text-white flex items-center justify-center font-bold text-sm">
+                            {(user?.firstName || 'A').charAt(0)}
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold text-charcoal truncate">
+                            {user?.firstName} {user?.lastName}
+                          </p>
+                          <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                        </div>
                       </div>
-                      <div className="py-2">
-                        <button onClick={() => { navigate('/admin'); setIsAuthDropdownOpen(false); }} className="w-full text-left px-4 py-2 text-sm text-amber-600 font-bold hover:bg-gray-50 hover:text-charcoal transition-colors flex items-center">
-                          <i className="fas fa-user-shield mr-2"></i> ★ Admin Portal
-                        </button>
-                        <button onClick={handleProfile} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-charcoal transition-colors">My Profile</button>
-                        <button onClick={handleOrders} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-charcoal transition-colors">Order History</button>
-                        <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">Sign Out</button>
-                      </div>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full mt-4 flex items-center justify-center gap-2 bg-charcoal text-white py-2.5 text-xs font-bold uppercase tracking-widest hover:bg-red-600 transition-colors"
+                      >
+                        <i className="fas fa-sign-out-alt"></i>
+                        Logout
+                      </button>
                     </div>
                   ) : (
                     <div className="p-4">
@@ -398,11 +404,8 @@ const Header = ({
              {isAuthenticated ? (
                <>
                  <p className="text-sm font-bold text-charcoal mb-2">Hi, {user?.firstName}</p>
-                 <button onClick={() => { navigate('/admin'); onMobileMenuToggle(); }} className="block w-full text-left text-sm text-amber-600 font-bold hover:text-charcoal"><i className="fas fa-user-shield w-5"></i> ★ Admin Portal</button>
-                 <button onClick={() => { handleProfile(); onMobileMenuToggle(); }} className="block w-full text-left text-sm text-gray-600 hover:text-charcoal"><i className="far fa-user w-5"></i> My Profile</button>
-                 <button onClick={() => { handleOrders(); onMobileMenuToggle(); }} className="block w-full text-left text-sm text-gray-600 hover:text-charcoal"><i className="fas fa-box w-5"></i> Order History</button>
                  <Link to="/wishlist" onClick={onMobileMenuToggle} className="block w-full text-left text-sm text-gray-600 hover:text-charcoal"><i className="far fa-heart w-5"></i> Wishlist</Link>
-                 <button onClick={() => { handleLogout(); onMobileMenuToggle(); }} className="block w-full text-left text-sm text-red-600 mt-4"><i className="fas fa-sign-out-alt w-5"></i> Sign Out</button>
+                 <button onClick={() => { handleLogout(); onMobileMenuToggle(); }} className="block w-full text-left text-sm text-red-600 mt-4"><i className="fas fa-sign-out-alt w-5"></i> Logout</button>
                </>
              ) : (
                <>

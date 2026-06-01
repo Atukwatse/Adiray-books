@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { useWishlist } from '../context/AppContext';
+import { useCart, useWishlist } from '../context/AppContext';
 import { toTitleCase, formatAuthor, getBookCover } from '../utils/coverGenerator';
 
 const BookCard = ({
@@ -15,13 +15,28 @@ const BookCard = ({
   showDateAdded = false,
   dateAdded = null
 }) => {
-  const [isAdded, setIsAdded] = useState(false);
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { cart, addToCart, updateCartQuantity, removeFromCart } = useCart();
+  const cartItem = cart.find(item => item.id === book.id);
+  const cartQuantity = cartItem?.quantity || 0;
 
   const handleAddToCart = () => {
-    onAddToCart(book);
-    setIsAdded(true);
-    setTimeout(() => setIsAdded(false), 1500);
+    if (!book.inStock) return;
+
+    if (onAddToCart) {
+      onAddToCart(book);
+    } else {
+      addToCart(book);
+    }
+  };
+
+  const handleDecreaseCartQuantity = () => {
+    if (cartQuantity <= 1) {
+      removeFromCart(book.id);
+      return;
+    }
+
+    updateCartQuantity(book.id, cartQuantity - 1);
   };
 
   const handleAddToWishlist = () => {
@@ -166,28 +181,48 @@ const BookCard = ({
         
         {/* Actions Button Bar */}
         <div className="flex items-center space-x-2 mt-auto">
-          <button
-            onClick={handleAddToCart}
-            disabled={!book.inStock}
-            className={`flex-1 flex items-center justify-center space-x-2 py-2.5 px-4 rounded-lg font-semibold text-sm transition-all duration-200 ${
-              isAdded 
-                ? 'bg-green-600 text-white border-green-600' 
-                : !book.inStock 
-                ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                : 'bg-[#b35900] hover:bg-[#9c4d00] text-white shadow-sm hover:shadow'
-            }`}
-          >
-            {isAdded ? (
-              <span>Added</span>
-            ) : !book.inStock ? (
+          {!book.inStock ? (
+            <button
+              type="button"
+              disabled
+              className="flex-1 flex items-center justify-center py-2.5 px-4 rounded-lg font-semibold text-sm bg-slate-100 text-slate-400 cursor-not-allowed"
+            >
               <span>Out of Stock</span>
-            ) : (
+            </button>
+          ) : cartQuantity > 0 ? (
+            <div className="flex-1 h-10 grid grid-cols-[42px_1fr_42px] items-center overflow-hidden rounded-lg bg-green-600 text-white shadow-sm">
+              <button
+                type="button"
+                onClick={handleDecreaseCartQuantity}
+                className="h-full flex items-center justify-center bg-green-700 hover:bg-green-800 transition-colors"
+                aria-label={`Remove one ${book.title} from cart`}
+              >
+                <i className="fas fa-minus text-xs"></i>
+              </button>
+              <span className="text-center text-sm font-bold tracking-wide">
+                {cartQuantity} in Cart
+              </span>
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                className="h-full flex items-center justify-center bg-green-700 hover:bg-green-800 transition-colors"
+                aria-label={`Add one more ${book.title} to cart`}
+              >
+                <i className="fas fa-plus text-xs"></i>
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              className="flex-1 flex items-center justify-center space-x-2 py-2.5 px-4 rounded-lg font-semibold text-sm transition-all duration-200 bg-[#b35900] hover:bg-[#9c4d00] text-white shadow-sm hover:shadow"
+            >
               <>
                 <i className="fas fa-shopping-cart text-xs"></i>
                 <span>Add to Cart</span>
               </>
-            )}
-          </button>
+            </button>
+          )}
           
           {showWishlistToggle && (
             <button

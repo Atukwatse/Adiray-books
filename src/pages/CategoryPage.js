@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext, useSearchParams } from 'react-router-dom';
 import { useWishlist } from '../context/AppContext';
-import BookCard from '../components/BookCard';
+import BookCard, { BookCardSkeleton } from '../components/BookCard';
 
 const CategoryPage = ({ category, title, description, icon }) => {
   const { addToCart } = useOutletContext();
@@ -426,8 +426,10 @@ const CategoryPage = ({ category, title, description, icon }) => {
 
           {/* Books Grid */}
           {loading ? (
-            <div className="flex justify-center items-center py-20">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-700"></div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <BookCardSkeleton key={index} />
+              ))}
             </div>
           ) : filteredBooks.length === 0 ? (
             <div className="text-center py-20">

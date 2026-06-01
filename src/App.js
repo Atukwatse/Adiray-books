@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Outlet, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AppProvider, useCart, useAuth, useBooks } from './context/AppContext';
 import useDebounce from './hooks/useDebounce';
 import Splash from './components/Splash';
 import Admin from './pages/Admin';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Notification from './components/Notification';
 import SkeletonLayout from './components/SkeletonLayout';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -35,8 +34,6 @@ import EBooks from './pages/categories/EBooks';
 import Audiobooks from './pages/categories/Audiobooks';
 import TeensYA from './pages/categories/TeensYA';
 
-
-
 const genres = [
   { id: 'fiction', label: 'Fiction' },
   { id: 'technology', label: 'Technology' },
@@ -47,18 +44,31 @@ const genres = [
 // MainLayout Component with all the global state and layout wrapper
 function MainLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showSplash, setShowSplash] = useState(true);
   const [isAppLoading, setIsAppLoading] = useState(true);
 
+  // Track location changes during the render phase to set isAppLoading = true immediately,
+  // preventing visual flashing of the page content before the loader appears.
+  const currentKey = location.pathname + location.search;
+  const [prevKey, setPrevKey] = useState(currentKey);
+
+  if (currentKey !== prevKey) {
+    setPrevKey(currentKey);
+    setIsAppLoading(true);
+  }
+
   useEffect(() => {
-    if (!showSplash) {
-      // Simulate network request delay to showcase skeleton loading screens
-      const timer = setTimeout(() => {
-        setIsAppLoading(false);
-      }, 1500);
-      return () => clearTimeout(timer);
+    if (showSplash) {
+      return undefined;
     }
-  }, [showSplash]);
+
+    const timer = setTimeout(() => {
+      setIsAppLoading(false);
+    }, 750);
+
+    return () => clearTimeout(timer);
+  }, [currentKey, showSplash]);
   
   // Use Centralized Cart Context
   const { 
@@ -81,7 +91,6 @@ function MainLayout() {
   const [maxPrice, setMaxPrice] = useState(100);
   const [sortBy, setSortBy] = useState('featured');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [notification, setNotification] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Keep filteredBooks in sync when books catalog updates or filters change
@@ -124,10 +133,9 @@ function MainLayout() {
     setFilteredBooks(filtered);
   }, [debouncedSearchTerm, selectedGenres, maxPrice, sortBy, books]);
 
-  // Cart functionality wrapped with notification triggers
+  // Cart functionality
   const addToCart = (book) => {
     ctxAddToCart(book);
-    showNotification(`${book.title} added to cart!`);
   };
 
   const updateCartQuantity = (bookId, quantity) => {
@@ -136,17 +144,10 @@ function MainLayout() {
 
   const removeFromCart = (bookId) => {
     ctxRemoveFromCart(bookId);
-    showNotification('Item removed from cart');
   };
 
   const getCartCount = () => cartCount;
   const getCartTotal = () => cartTotal;
-
-  // Notification system
-  const showNotification = (message) => {
-    setNotification(message);
-    setTimeout(() => setNotification(null), 3000);
-  };
 
   // Genre filter handlers
   const handleGenreChange = (genreId) => {
@@ -172,80 +173,77 @@ function MainLayout() {
     setShowSplash(false);
   };
 
+  const skeletonVariant = location.pathname === '/' ? 'home' : 'catalog';
+
   return (
     <>
       {/* Splash Page */}
       {showSplash && <Splash onComplete={handleSplashComplete} />}
       
       {/* Main App */}
-      {!showSplash && (
-        <div className="min-h-screen bg-white flex flex-col relative overflow-hidden">
-          {/* Skeleton loading overlay */}
-          <SkeletonLayout isLoading={isAppLoading} />
+      <div className="min-h-screen bg-[#F5F2EB] flex flex-col relative">
+        {/* Skeleton loading overlay */}
+        <SkeletonLayout isLoading={isAppLoading} variant={skeletonVariant} />
 
-          {/* Actual content container with cross-fade transition */}
-          <div className={`min-h-screen flex flex-col transition-opacity duration-700 ease-in-out ${
-            isAppLoading ? 'opacity-0' : 'opacity-100'
-          }`}>
-            <Header
-              cartCount={getCartCount()}
-              cartTotal={getCartTotal()}
-              onSearchOpen={openSearch}
-              onCartClick={() => navigate('/cart')}
-              isMobileMenuOpen={isMobileMenuOpen}
-              onMobileMenuToggle={toggleMobileMenu}
-            />
+        {/* Actual content container with cross-fade transition */}
+        <div className={`min-h-screen flex flex-col ${
+          isAppLoading 
+            ? 'opacity-0 pointer-events-none' 
+            : 'opacity-100 transition-opacity duration-700 ease-in-out'
+        }`}>
+          <Header
+            cartCount={getCartCount()}
+            cartTotal={getCartTotal()}
+            onSearchOpen={openSearch}
+            onCartClick={() => navigate('/cart')}
+            isMobileMenuOpen={isMobileMenuOpen}
+            onMobileMenuToggle={toggleMobileMenu}
+          />
 
-            {/* Search Overlay */}
-            {isSearchOpen && (
-              <div className="fixed inset-0 bg-charcoal bg-opacity-95 z-50 flex items-center justify-center">
-                <div className="relative w-full max-w-2xl px-4">
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search for books, authors, or genres..."
-                    className="w-full px-6 py-4 text-lg bg-transparent border-b-2 border-mustard text-white placeholder-gray-400 outline-none"
-                    autoFocus
-                  />
-                  <button
-                    onClick={closeSearch}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-2xl hover:text-mustard transition-colors"
-                  >
-                    <i className="fas fa-times"></i>
-                  </button>
-                </div>
+          {/* Search Overlay */}
+          {isSearchOpen && (
+            <div className="fixed inset-0 bg-charcoal bg-opacity-95 z-50 flex items-center justify-center">
+              <div className="relative w-full max-w-2xl px-4">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search for books, authors, or genres..."
+                  className="w-full px-6 py-4 text-lg bg-transparent border-b-2 border-mustard text-white placeholder-gray-400 outline-none"
+                  autoFocus
+                />
+                <button
+                  onClick={closeSearch}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-2xl hover:text-mustard transition-colors"
+                >
+                  <i className="fas fa-times"></i>
+                </button>
               </div>
-            )}
-
-            <div className="flex-grow main-content-offset">
-              <Outlet context={{
-                filteredBooks,
-                addToCart,
-                updateCartQuantity,
-                removeFromCart,
-                genres,
-                selectedGenres,
-                maxPrice,
-                sortBy,
-                handleGenreChange,
-                setMaxPrice,
-                setSortBy,
-                isMobileMenuOpen,
-                setIsMobileMenuOpen,
-                cart
-              }} />
             </div>
+          )}
 
-            <Footer />
+          <div className="flex-grow main-content-offset">
+            <Outlet context={{
+              filteredBooks,
+              addToCart,
+              updateCartQuantity,
+              removeFromCart,
+              genres,
+              selectedGenres,
+              maxPrice,
+              sortBy,
+              handleGenreChange,
+              setMaxPrice,
+              setSortBy,
+              isMobileMenuOpen,
+              setIsMobileMenuOpen,
+              cart
+            }} />
           </div>
 
-          {/* Notification */}
-          {notification && (
-            <Notification message={notification} />
-          )}
+          <Footer />
         </div>
-      )}
+      </div>
     </>
   );
 }

@@ -177,6 +177,43 @@ export const AppProvider = ({ children }) => {
     return formattedUser;
   };
 
+  const loginWithGoogle = async (googleProfile) => {
+    if (!googleProfile || !googleProfile.email) {
+      throw new Error('Google account did not provide an email address.');
+    }
+
+    const existingUser = users.find(u => u.email.toLowerCase() === googleProfile.email.toLowerCase());
+
+    const userData = existingUser ? {
+      firstName: existingUser.firstName,
+      lastName: existingUser.lastName,
+      email: existingUser.email,
+      id: existingUser.id,
+      role: existingUser.role,
+      picture: googleProfile.picture,
+      provider: 'google'
+    } : {
+      firstName: googleProfile.firstName || googleProfile.email.split('@')[0],
+      lastName: googleProfile.lastName || 'User',
+      email: googleProfile.email,
+      role: 'Customer',
+      picture: googleProfile.picture,
+      provider: 'google',
+      googleId: googleProfile.googleId
+    };
+
+    if (!existingUser) {
+      const addedUser = addUser(userData);
+      userData.id = addedUser.id;
+    }
+
+    localStorage.setItem('authToken', 'google-oauth-session');
+    localStorage.setItem('userData', JSON.stringify(userData));
+    setUser(userData);
+    setIsAuthenticated(true);
+    return userData;
+  };
+
   const logout = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
@@ -326,7 +363,7 @@ export const AppProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, register, loginWithGoogle, logout }}>
       <BooksContext.Provider value={{ books, addBook, updateBook, deleteBook }}>
         <UsersContext.Provider value={{ users, addUser, updateUserRole, deleteUser }}>
           <CartContext.Provider value={{ cart, cartCount, cartTotal, addToCart, removeFromCart, updateCartQuantity, clearCart }}>
