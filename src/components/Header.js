@@ -181,8 +181,7 @@ const Header = ({
                     </div>
                   ) : (
                     <div className="p-4">
-                      <button onClick={handleLogin} className="w-full bg-charcoal text-white py-2 text-sm font-semibold uppercase tracking-widest hover:bg-black transition-colors mb-3">Sign In</button>
-                      <button onClick={handleRegister} className="w-full border border-charcoal text-charcoal py-2 text-sm font-semibold uppercase tracking-widest hover:bg-charcoal hover:text-white transition-colors">Create Account</button>
+                      <button onClick={handleLogin} className="w-full bg-charcoal text-white py-2 text-sm font-semibold uppercase tracking-widest hover:bg-black transition-colors">Sign In</button>
                     </div>
                   )}
                 </div>
@@ -410,7 +409,6 @@ const Header = ({
              ) : (
                <>
                  <button onClick={() => { handleLogin(); onMobileMenuToggle(); }} className="w-full bg-charcoal text-white py-2 text-sm font-semibold uppercase tracking-widest">Sign In</button>
-                 <button onClick={() => { handleRegister(); onMobileMenuToggle(); }} className="w-full border border-charcoal text-charcoal py-2 text-sm font-semibold uppercase tracking-widest">Create Account</button>
                </>
              )}
           </div>
