@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCart, useWishlist, useBooks } from '../context/AppContext';
 import StarRating from '../components/StarRating';
 import BookCard from '../components/BookCard';
-import { getBookCover } from '../utils/coverGenerator';
+import { getBookCover, handleBookCoverError } from '../utils/coverGenerator';
 
 
 
@@ -75,6 +75,7 @@ const BookDetails = () => {
                 src={getBookCover(book)}
                 alt={book.title}
                 className="w-full h-full object-cover"
+                onError={handleBookCoverError}
               />
 
               {/* Wishlist Icon Overlay */}

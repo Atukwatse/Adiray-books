@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useOutletContext, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AppContext';
+import { getBookCover, handleBookCoverError } from '../utils/coverGenerator';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -70,10 +71,11 @@ const Cart = () => {
               {cart.map((item) => (
                 <div key={item.id} className="py-6 flex flex-col sm:grid sm:grid-cols-12 gap-4 items-center">
                   <div className="col-span-6 flex items-center w-full">
-                    <img 
-                      src={item.cover} 
+                    <img
+                      src={getBookCover(item)}
                       alt={item.title} 
                       className="w-20 sm:w-24 object-cover shadow-sm mr-6"
+                      onError={handleBookCoverError}
                     />
                     <div className="flex-1">
                       <h3 className="font-bold text-charcoal text-lg mb-1">{item.title}</h3>

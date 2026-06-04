@@ -1,25 +1,26 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useBooks, useOrders, useUsers, useAuth } from '../context/AppContext';
 
+const DEFAULT_STORE_SETTINGS = {
+  storeName: 'Adiray Books',
+  contactEmail: 'contact@adiraybooks.com',
+  currency: 'USD',
+  taxRate: 8.5,
+  maintenanceMode: false,
+  themeAccent: 'gold'
+};
+
 const Admin = () => {
-  const navigate = useNavigate();
   const { books, addBook, updateBook, deleteBook } = useBooks();
   const { orders, updateOrderStatus, updateOrderTracking, deleteOrder } = useOrders();
   const { users, addUser, updateUserRole, deleteUser } = useUsers();
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
 
   // Settings state stored in localStorage for persistence
   const [storeSettings, setStoreSettings] = useState(() => {
     const saved = localStorage.getItem('adiray_admin_settings');
-    return saved ? JSON.parse(saved) : {
-      storeName: 'Adiray Books',
-      contactEmail: 'contact@adiraybooks.com',
-      currency: 'USD',
-      taxRate: 8.5,
-      maintenanceMode: false,
-      themeAccent: 'gold' // gold (default brand accent), charcoal, bronze
-    };
+    return saved ? JSON.parse(saved) : DEFAULT_STORE_SETTINGS;
   });
 
   useEffect(() => {
@@ -65,6 +66,13 @@ const Admin = () => {
     { id: 3, text: 'Customer review report: 5 stars on "Silent Algorithm"', type: 'info', time: '3h ago' }
   ]);
   const [showNotifications, setShowNotifications] = useState(false);
+
+  const pushNotification = (text, type = 'info') => {
+    setNotifications(prev => [
+      { id: Date.now(), text, type, time: 'Just now' },
+      ...prev
+    ]);
+  };
 
   // Books State & Forms
   const [bookSearch, setBookSearch] = useState('');
@@ -209,6 +217,16 @@ const Admin = () => {
     });
   }, [users, customerSearch]);
 
+  const selectedOrder = useMemo(() => {
+    if (!selectedOrderDetails) return null;
+    return orders.find(order => order.id === selectedOrderDetails.id) || selectedOrderDetails;
+  }, [orders, selectedOrderDetails]);
+
+  const handleClearNotifications = () => {
+    setNotifications([]);
+    setShowNotifications(false);
+  };
+
   // Books CRUD handlers
   const handleOpenAddBook = () => {
     setEditingBook(null);
@@ -304,16 +322,10 @@ const Admin = () => {
 
     if (editingBook) {
       updateBook({ ...bookData, id: editingBook.id });
-      setNotifications(prev => [
-        { id: Date.now(), text: `Book "${bookData.title}" details updated successfully`, type: 'info', time: 'Just now' },
-        ...prev
-      ]);
+      pushNotification(`Book "${bookData.title}" details updated successfully`, 'info');
     } else {
       addBook(bookData);
-      setNotifications(prev => [
-        { id: Date.now(), text: `New masterpiece "${bookData.title}" cataloged`, type: 'success', time: 'Just now' },
-        ...prev
-      ]);
+      pushNotification(`New masterpiece "${bookData.title}" cataloged`, 'success');
     }
     setShowBookModal(false);
   };
@@ -321,11 +333,38 @@ const Admin = () => {
   const handleDeleteBook = (id, title) => {
     if (window.confirm(`Are you sure you want to remove "${title}" from the catalog?`)) {
       deleteBook(id);
-      setNotifications(prev => [
-        { id: Date.now(), text: `Removed "${title}" from catalog`, type: 'warning', time: 'Just now' },
-        ...prev
-      ]);
+      pushNotification(`Removed "${title}" from catalog`, 'warning');
     }
+  };
+
+  const handleOpenOrderDetails = (order) => {
+    setSelectedOrderDetails(order);
+  };
+
+  const handleDeleteOrder = (order) => {
+    if (window.confirm(`Delete order ${order.id} permanently?`)) {
+      deleteOrder(order.id);
+      if (selectedOrderDetails?.id === order.id) {
+        setSelectedOrderDetails(null);
+      }
+      pushNotification(`Deleted transaction record ${order.id}`, 'warning');
+    }
+  };
+
+  const handleUpdateOrderTracking = (orderId, trackingNumber) => {
+    updateOrderTracking(orderId, trackingNumber);
+    setSelectedOrderDetails(prev => prev ? { ...prev, trackingNumber } : prev);
+  };
+
+  const handleUpdateOrderStatus = (orderId, status) => {
+    updateOrderStatus(orderId, status);
+    setSelectedOrderDetails(prev => prev ? { ...prev, status } : prev);
+    pushNotification(`Order ${orderId} moved to ${status}`, 'info');
+  };
+
+  const handleChangeUserRole = (profile, role) => {
+    updateUserRole(profile.id, role);
+    pushNotification(`${profile.firstName} ${profile.lastName} role changed to ${role}`, 'info');
   };
 
   const handleSaveCustomer = (e) => {
@@ -342,10 +381,7 @@ const Admin = () => {
       role: customerForm.role
     });
 
-    setNotifications(prev => [
-      { id: Date.now(), text: `Created dynamic user account for ${customerForm.firstName}`, type: 'success', time: 'Just now' },
-      ...prev
-    ]);
+    pushNotification(`Created dynamic user account for ${customerForm.firstName}`, 'success');
 
     setShowCustomerModal(false);
   };
@@ -353,11 +389,31 @@ const Admin = () => {
   const handleDeleteUser = (id, name) => {
     if (window.confirm(`Are you sure you want to terminate ${name}'s account?`)) {
       deleteUser(id);
-      setNotifications(prev => [
-        { id: Date.now(), text: `Deleted user profile for ${name}`, type: 'warning', time: 'Just now' },
-        ...prev
-      ]);
+      pushNotification(`Deleted user profile for ${name}`, 'warning');
     }
+  };
+
+  const handleToggleMaintenanceMode = () => {
+    const maintenanceMode = !storeSettings.maintenanceMode;
+    setStoreSettings(prev => ({ ...prev, maintenanceMode }));
+    pushNotification(`Maintenance mode ${maintenanceMode ? 'enabled' : 'disabled'}`, maintenanceMode ? 'warning' : 'success');
+  };
+
+  const handleSetAccentTheme = (themeId, themeLabel) => {
+    setStoreSettings(prev => ({ ...prev, themeAccent: themeId }));
+    pushNotification(`Portal accent switched to ${themeLabel}`, 'info');
+  };
+
+  const handleResetSettings = () => {
+    if (window.confirm('Reset store settings to the default Adiray Books configuration?')) {
+      setStoreSettings(DEFAULT_STORE_SETTINGS);
+      pushNotification('Store settings reset to defaults', 'warning');
+    }
+  };
+
+  const handleSaveSettings = () => {
+    localStorage.setItem('adiray_admin_settings', JSON.stringify(storeSettings));
+    pushNotification('Store settings saved successfully', 'success');
   };
 
   const gradientColors = [
@@ -473,7 +529,7 @@ const Admin = () => {
                   <div className="flex justify-between items-center pb-2 border-b border-gray-150 mb-2">
                     <span className="text-xs font-bold text-charcoal uppercase tracking-widest">Syslog Alerts</span>
                     <button 
-                      onClick={() => setNotifications([])}
+                      onClick={handleClearNotifications}
                       className="text-[10px] text-gray-400 hover:text-charcoal uppercase font-bold"
                     >
                       Clear All
@@ -703,14 +759,18 @@ const Admin = () => {
                             <td className="py-3.5 font-light text-gray-500">{o.date}</td>
                             <td className="py-3.5 font-bold font-mono text-charcoal">${o.total.toFixed(2)}</td>
                             <td className="py-3.5 text-right">
-                              <span className={`px-2.5 py-0.5 rounded-none text-[10px] font-bold uppercase ${
-                                o.status === 'delivered' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' :
-                                o.status === 'processing' ? 'bg-amber-50 text-amber-800 border border-amber-200' :
-                                o.status === 'shipped' ? 'bg-blue-50 text-blue-800 border border-blue-200' :
-                                'bg-red-50 text-red-800 border border-red-200'
-                              }`}>
+                              <button
+                                onClick={() => handleOpenOrderDetails(o)}
+                                className={`px-2.5 py-0.5 rounded-none text-[10px] font-bold uppercase ${
+                                  o.status === 'delivered' ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100' :
+                                  o.status === 'processing' ? 'bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100' :
+                                  o.status === 'shipped' ? 'bg-blue-50 text-blue-800 border border-blue-200 hover:bg-blue-100' :
+                                  'bg-red-50 text-red-800 border border-red-200 hover:bg-red-100'
+                                }`}
+                                title="Open order details"
+                              >
                                 {o.status}
-                              </span>
+                              </button>
                             </td>
                           </tr>
                         ))}
@@ -982,17 +1042,13 @@ const Admin = () => {
                             <td className="p-4 text-right">
                               <div className="flex justify-end items-center space-x-2">
                                 <button
-                                  onClick={() => setSelectedOrderDetails(o)}
+                                  onClick={() => handleOpenOrderDetails(o)}
                                   className="px-3 py-1.5 rounded-none bg-white border border-charcoal hover:bg-charcoal hover:text-white text-charcoal font-bold uppercase tracking-wider text-[10px] transition-all duration-300"
                                 >
                                   Details
                                 </button>
                                 <button
-                                  onClick={() => {
-                                    if (window.confirm(`Delete order ${o.id} permanently?`)) {
-                                      deleteOrder(o.id);
-                                    }
-                                  }}
+                                  onClick={() => handleDeleteOrder(o)}
                                   className="w-8 h-8 rounded-none bg-white border border-gray-200 hover:bg-red-50 hover:border-red-200 flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors"
                                   title="Delete record"
                                 >
@@ -1085,8 +1141,11 @@ const Admin = () => {
                             <div className="flex justify-end items-center space-x-2">
                               <select
                                 value={u.role}
-                                onChange={(e) => updateUserRole(u.id, e.target.value)}
-                                className="bg-white border border-gray-200 rounded px-2 py-1 text-[10px] text-gray-500 outline-none focus:border-charcoal"
+                                onChange={(e) => handleChangeUserRole(u, e.target.value)}
+                                disabled={u.email === 'admin@adiraybooks.com'}
+                                className={`bg-white border border-gray-200 rounded px-2 py-1 text-[10px] outline-none focus:border-charcoal ${
+                                  u.email === 'admin@adiraybooks.com' ? 'text-gray-300 cursor-not-allowed' : 'text-gray-500'
+                                }`}
                               >
                                 <option value="Customer">Customer</option>
                                 <option value="Manager">Manager</option>
@@ -1180,7 +1239,7 @@ const Admin = () => {
                       <p className="text-[10px] text-gray-400 mt-1">Locks storefront access and alerts users to backend operations</p>
                     </div>
                     <button
-                      onClick={() => setStoreSettings(prev => ({ ...prev, maintenanceMode: !prev.maintenanceMode }))}
+                      onClick={handleToggleMaintenanceMode}
                       className={`w-12 h-6 rounded-full p-1 transition-colors ${storeSettings.maintenanceMode ? 'bg-red-600' : 'bg-gray-300'}`}
                     >
                       <div className={`w-4 h-4 bg-white rounded-full transition-transform ${storeSettings.maintenanceMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
@@ -1208,7 +1267,7 @@ const Admin = () => {
                       return (
                         <button
                           key={theme.id}
-                          onClick={() => setStoreSettings(prev => ({ ...prev, themeAccent: theme.id }))}
+                          onClick={() => handleSetAccentTheme(theme.id, theme.label)}
                           className={`p-4 rounded-none border text-center font-bold tracking-wide transition-all ${
                             isSelected 
                               ? theme.border + ' shadow-sm border-2' 
@@ -1225,6 +1284,21 @@ const Admin = () => {
                   <div className="p-4 bg-gray-50 border border-gray-200 rounded-none text-xs leading-relaxed text-gray-500 font-light">
                     <h4 className="font-bold text-charcoal uppercase tracking-wide mb-1 text-[10px] font-serif">Theme Integration Note</h4>
                     Setting a highlights accent color directly adjusts the system glowing badges, border highlights, interactive SVG line slopes, progress status meters, and context buttons inside this Admin Portal.
+                  </div>
+
+                  <div className="flex justify-end gap-3 pt-2">
+                    <button
+                      onClick={handleResetSettings}
+                      className="px-4 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-xs font-bold uppercase tracking-wider rounded-none text-gray-600 transition-colors"
+                    >
+                      Reset Defaults
+                    </button>
+                    <button
+                      onClick={handleSaveSettings}
+                      className={`px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-none shadow-sm ${accentBg}`}
+                    >
+                      Save Settings
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1605,7 +1679,7 @@ const Admin = () => {
       {/* ========================================================== */}
       {/* DIALOG DRAWERS: ORDER DETAIL INVOICE & ACTION */}
       {/* ========================================================== */}
-      {selectedOrderDetails && (
+      {selectedOrder && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
           <div className="bg-white border border-gray-200 rounded-none w-full max-w-2xl p-6 shadow-xl animate-scaleUp">
             
@@ -1613,9 +1687,9 @@ const Admin = () => {
             <div className="flex justify-between items-center pb-4 border-b border-gray-250 mb-4">
               <div>
                 <h3 className="text-base font-bold font-serif uppercase tracking-widest text-charcoal">
-                  Invoice: {selectedOrderDetails.id}
+                  Invoice: {selectedOrder.id}
                 </h3>
-                <span className="text-[10px] text-gray-400 font-mono mt-0.5 block">Placed on {selectedOrderDetails.date}</span>
+                <span className="text-[10px] text-gray-400 font-mono mt-0.5 block">Placed on {selectedOrder.date}</span>
               </div>
               <button 
                 onClick={() => setSelectedOrderDetails(null)}
@@ -1632,12 +1706,12 @@ const Admin = () => {
               <div className="grid grid-cols-2 gap-6 text-xs bg-gray-50 p-4 border border-gray-200">
                 <div>
                   <h4 className="font-bold text-gray-400 uppercase tracking-wider mb-2">Customer Profile</h4>
-                  <span className="block font-bold text-charcoal">{selectedOrderDetails.customerName}</span>
-                  <span className="block text-gray-500 mt-1 font-mono">{selectedOrderDetails.customerEmail}</span>
+                  <span className="block font-bold text-charcoal">{selectedOrder.customerName}</span>
+                  <span className="block text-gray-500 mt-1 font-mono">{selectedOrder.customerEmail}</span>
                 </div>
                 <div>
                   <h4 className="font-bold text-gray-400 uppercase tracking-wider mb-2">Shipping Destination</h4>
-                  <p className="text-gray-600 font-light leading-relaxed">{selectedOrderDetails.shippingAddress}</p>
+                  <p className="text-gray-600 font-light leading-relaxed">{selectedOrder.shippingAddress}</p>
                 </div>
               </div>
 
@@ -1645,7 +1719,7 @@ const Admin = () => {
               <div>
                 <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Items Purchased</h4>
                 <div className="space-y-2 max-h-40 overflow-y-auto pr-2">
-                  {selectedOrderDetails.items.map((item, idx) => (
+                  {selectedOrder.items.map((item, idx) => (
                     <div key={idx} className="flex justify-between items-center p-2.5 bg-gray-50 border border-gray-150 text-xs">
                       <div className="flex items-center space-x-3 min-w-0">
                         <div className={`w-6 h-8 bg-gradient-to-br ${item.coverColor || 'from-gray-700 to-gray-900'} rounded-none border border-white/10 shrink-0 flex items-center justify-center p-0.5 overflow-hidden`}>
@@ -1672,24 +1746,21 @@ const Admin = () => {
                 <div className="space-y-1.5">
                   <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tracking Number</label>
                   <div className="flex space-x-2">
-                    <input
-                      type="text"
-                      placeholder="TRK000000000"
-                      value={selectedOrderDetails.trackingNumber || ''}
-                      onChange={(e) => updateOrderTracking(selectedOrderDetails.id, e.target.value)}
-                      className="bg-white border border-gray-300 rounded px-2.5 py-1.5 text-xs text-charcoal font-mono outline-none focus:border-charcoal flex-1"
-                    />
+                      <input
+                        type="text"
+                        placeholder="TRK000000000"
+                        value={selectedOrder.trackingNumber || ''}
+                        onChange={(e) => handleUpdateOrderTracking(selectedOrder.id, e.target.value)}
+                        className="bg-white border border-gray-300 rounded px-2.5 py-1.5 text-xs text-charcoal font-mono outline-none focus:border-charcoal flex-1"
+                      />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Order Status</label>
                   <select
-                    value={selectedOrderDetails.status}
-                    onChange={(e) => {
-                      updateOrderStatus(selectedOrderDetails.id, e.target.value);
-                      setSelectedOrderDetails(prev => ({ ...prev, status: e.target.value }));
-                    }}
+                    value={selectedOrder.status}
+                    onChange={(e) => handleUpdateOrderStatus(selectedOrder.id, e.target.value)}
                     className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-xs font-semibold text-[#000] outline-none focus:border-charcoal"
                   >
                     <option value="processing">Processing</option>
@@ -1703,7 +1774,7 @@ const Admin = () => {
               {/* Checkout details breakdown and total */}
               <div className="flex justify-between items-center bg-gray-50 p-4 border border-gray-200 text-xs">
                 <span className="font-bold text-gray-400 uppercase tracking-wider">Grand Total Billing</span>
-                <span className="text-lg font-bold font-mono text-[#D4AF37]">${selectedOrderDetails.total.toFixed(2)}</span>
+                <span className="text-lg font-bold font-mono text-[#D4AF37]">${selectedOrder.total.toFixed(2)}</span>
               </div>
             </div>
           </div>

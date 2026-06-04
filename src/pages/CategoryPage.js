@@ -33,7 +33,7 @@ const CategoryPage = ({ category, title, description, icon }) => {
         reviews: 445,
         inStock: true,
         description: "Essential concepts and practical applications in data science.",
-        cover: "https://images-na.ssl-images-amazon.com/images/I/71mLG6A4TFL.jpg",
+        cover: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=80",
         coverColor: "from-indigo-400 to-purple-600"
       },
       {
@@ -46,7 +46,7 @@ const CategoryPage = ({ category, title, description, icon }) => {
         reviews: 234,
         inStock: true,
         description: "Comprehensive guide to advanced mathematical concepts.",
-        cover: "https://images-na.ssl-images-amazon.com/images/I/815b-9GjS4L.jpg",
+        cover: "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=400&q=80",
         coverColor: "from-blue-400 to-cyan-600"
       },
       {
@@ -74,7 +74,7 @@ const CategoryPage = ({ category, title, description, icon }) => {
         reviews: 412,
         inStock: true,
         description: "Transform your leadership style through mindfulness.",
-        cover: "https://images-na.ssl-images-amazon.com/images/I/41D5sJ1bX8L.jpg",
+        cover: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=400&q=80",
         coverColor: "from-purple-400 to-pink-600"
       },
       {

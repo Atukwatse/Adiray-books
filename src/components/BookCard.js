@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart, useWishlist } from '../context/AppContext';
-import { toTitleCase, formatAuthor, getBookCover } from '../utils/coverGenerator';
+import { toTitleCase, formatAuthor, getBookCover, handleBookCoverError } from '../utils/coverGenerator';
 
 const BookCard = ({
   book,
@@ -108,6 +108,7 @@ const BookCard = ({
             alt={book.title}
             className="w-full h-full object-cover hover:opacity-95 transition-opacity"
             loading="lazy"
+            onError={handleBookCoverError}
           />
         </Link>
         

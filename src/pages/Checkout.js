@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart, useOrders } from '../context/AppContext';
+import { getBookCover, handleBookCoverError } from '../utils/coverGenerator';
 
 const Checkout = () => {
   const { cart, cartTotal, clearCart } = useCart();
@@ -355,7 +356,12 @@ const Checkout = () => {
                   <div key={item.id} className="py-4 flex space-x-4 items-center">
                     <div className="w-12 h-16 bg-gradient-to-br from-charcoal/20 to-black/20 flex-shrink-0 relative flex items-center justify-center text-white">
                       {item.cover ? (
-                        <img src={item.cover} alt="" className="w-full h-full object-cover" />
+                        <img
+                          src={getBookCover(item)}
+                          alt=""
+                          className="w-full h-full object-cover"
+                          onError={handleBookCoverError}
+                        />
                       ) : (
                         <span className="text-[10px]">Book</span>
                       )}

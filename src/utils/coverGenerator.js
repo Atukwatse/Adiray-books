@@ -1,3 +1,17 @@
+export const DEFAULT_BOOK_COVER = 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&q=80';
+
+export const handleBookCoverError = (event) => {
+  const image = event.currentTarget;
+
+  if (image.dataset.fallbackApplied === 'true') {
+    image.style.display = 'none';
+    return;
+  }
+
+  image.dataset.fallbackApplied = 'true';
+  image.src = DEFAULT_BOOK_COVER;
+};
+
 // Helper to convert completely uppercase strings to Title Case with minor words handled
 export const toTitleCase = (str) => {
   if (!str) return '';
@@ -22,7 +36,7 @@ export const formatAuthor = (author) => {
 };
 
 export const getBookCover = (book) => {
-  if (!book) return 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&q=80';
+  if (!book) return DEFAULT_BOOK_COVER;
 
   const titleKey = book.title ? book.title.toLowerCase().trim() : '';
 
@@ -40,12 +54,12 @@ export const getBookCover = (book) => {
     'echoes of eternity': 'https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&w=400&q=80',
 
     // Business
-    'business mastery': 'https://images-na.ssl-images-amazon.com/images/I/711yL-E3nFL.jpg',
+    'business mastery': 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=400&q=80',
     'mindful leadership': 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=400&q=80',
     'digital transformation': 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=400&q=80',
     'leadership excellence': 'https://covers.openlibrary.org/b/isbn/9781604919134-L.jpg',
     'startup success': 'https://books.google.com/books/content?id=S3p2DwAAQBAJ&printsec=frontcover&img=1&zoom=1',
-    'the mindful leader': 'https://images-na.ssl-images-amazon.com/images/I/41D5sJ1bX8L.jpg',
+    'the mindful leader': 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=400&q=80',
 
     // History
     'ancient wisdom': 'https://upload.wikimedia.org/wikipedia/commons/e/ea/The_Meditations_of_the_Emperor_Marcus_Aurelius_Antoninus.jpg',
@@ -56,8 +70,8 @@ export const getBookCover = (book) => {
     'the human mind': 'https://images.unsplash.com/photo-1557264337-e8a93017fe9f?auto=format&fit=crop&w=400&q=80',
 
     // Educational
-    'data science fundamentals': 'https://images-na.ssl-images-amazon.com/images/I/71mLG6A4TFL.jpg',
-    'advanced mathematics': 'https://images-na.ssl-images-amazon.com/images/I/815b-9GjS4L.jpg',
+    'data science fundamentals': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=80',
+    'advanced mathematics': 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=400&q=80',
     'physics for engineers': 'https://covers.openlibrary.org/b/isbn/9780131495081-L.jpg',
 
     // Inspirational
@@ -98,5 +112,5 @@ export const getBookCover = (book) => {
   }
 
   // Fallback for user-created books: use a beautiful Unsplash book cover photo
-  return 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&q=80';
+  return DEFAULT_BOOK_COVER;
 };
