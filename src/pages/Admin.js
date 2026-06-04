@@ -514,41 +514,15 @@ const Admin = () => {
             {/* Notification Drawer Button */}
             <div className="relative">
               <button 
-                onClick={() => setShowNotifications(!showNotifications)}
+                onClick={() => setShowNotifications(true)}
                 className="w-9 h-9 rounded-none bg-white border border-gray-200 hover:bg-gray-50 flex items-center justify-center text-gray-600 transition-colors relative"
+                title="Open notifications"
               >
                 <i className="far fa-bell text-sm"></i>
                 {notifications.length > 0 && (
                   <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 border border-white"></span>
                 )}
               </button>
-
-              {/* Popup notifications */}
-              {showNotifications && (
-                <div className="absolute top-full right-0 mt-2 w-85 bg-white border border-gray-200 shadow-lg rounded-none p-3 z-50">
-                  <div className="flex justify-between items-center pb-2 border-b border-gray-150 mb-2">
-                    <span className="text-xs font-bold text-charcoal uppercase tracking-widest">Syslog Alerts</span>
-                    <button 
-                      onClick={handleClearNotifications}
-                      className="text-[10px] text-gray-400 hover:text-charcoal uppercase font-bold"
-                    >
-                      Clear All
-                    </button>
-                  </div>
-                  {notifications.length === 0 ? (
-                    <p className="text-xs text-gray-400 py-4 text-center">No recent system notifications.</p>
-                  ) : (
-                    <div className="space-y-2 max-h-60 overflow-y-auto">
-                      {notifications.map(n => (
-                        <div key={n.id} className="p-2 bg-gray-50 rounded border border-gray-250/50 flex flex-col text-xs">
-                          <span className="text-gray-600 font-light">{n.text}</span>
-                          <span className="text-[9px] text-gray-400 mt-1 self-end font-mono">{n.time}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
             </div>
 
             {/* User Profile Badge */}
@@ -1306,6 +1280,119 @@ const Admin = () => {
           )}
         </main>
       </div>
+
+      {/* ========================================================== */}
+      {/* FULLSCREEN NOTIFICATION CENTER */}
+      {/* ========================================================== */}
+      {showNotifications && (
+        <div className="fixed inset-0 bg-[#F8F9FA] z-50 flex flex-col animate-fadeIn">
+          <header className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 md:px-10 shrink-0">
+            <div className="flex items-center space-x-4 min-w-0">
+              <div className="w-10 h-10 rounded-none bg-charcoal text-white flex items-center justify-center shrink-0">
+                <i className="far fa-bell text-sm"></i>
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-base md:text-lg font-bold font-serif uppercase tracking-widest text-charcoal truncate">
+                  Notification Center
+                </h3>
+                <span className="block text-[10px] text-gray-400 font-mono uppercase tracking-wider">
+                  {notifications.length} active admin alert{notifications.length === 1 ? '' : 's'}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={handleClearNotifications}
+                disabled={notifications.length === 0}
+                className={`px-4 py-2 border text-xs font-bold uppercase tracking-wider rounded-none transition-colors ${
+                  notifications.length === 0
+                    ? 'border-gray-100 text-gray-300 cursor-not-allowed'
+                    : 'border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-charcoal'
+                }`}
+              >
+                Clear All
+              </button>
+              <button
+                onClick={() => setShowNotifications(false)}
+                className="w-10 h-10 rounded-none bg-white border border-gray-300 hover:bg-charcoal hover:text-white flex items-center justify-center text-gray-600 transition-colors"
+                title="Close notifications"
+              >
+                <i className="fas fa-times text-sm"></i>
+              </button>
+            </div>
+          </header>
+
+          <main className="flex-1 overflow-y-auto px-6 md:px-10 py-8">
+            <div className="max-w-5xl mx-auto space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {[
+                  { label: 'Total Alerts', value: notifications.length, icon: 'far fa-bell', classes: 'border-gray-200 text-charcoal bg-white' },
+                  { label: 'Warnings', value: notifications.filter(n => n.type === 'warning').length, icon: 'fas fa-exclamation-triangle', classes: 'border-amber-200 text-amber-700 bg-amber-50' },
+                  { label: 'Updates', value: notifications.filter(n => n.type !== 'warning').length, icon: 'fas fa-check-circle', classes: 'border-emerald-200 text-emerald-700 bg-emerald-50' }
+                ].map(item => (
+                  <div key={item.label} className={`border rounded-none p-5 flex items-center justify-between ${item.classes}`}>
+                    <div>
+                      <span className="block text-[10px] font-bold uppercase tracking-widest opacity-70">{item.label}</span>
+                      <span className="block text-3xl font-extrabold font-serif mt-1">{item.value}</span>
+                    </div>
+                    <i className={`${item.icon} text-lg opacity-70`}></i>
+                  </div>
+                ))}
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded-none overflow-hidden">
+                <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-charcoal uppercase tracking-widest font-serif">Syslog Alerts</h4>
+                  <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-none ${accentBadge}`}>
+                    Live Feed
+                  </span>
+                </div>
+
+                {notifications.length === 0 ? (
+                  <div className="min-h-80 flex flex-col items-center justify-center text-center px-6">
+                    <div className="w-14 h-14 rounded-none border border-gray-200 bg-gray-50 flex items-center justify-center text-gray-300 mb-4">
+                      <i className="far fa-bell-slash text-lg"></i>
+                    </div>
+                    <p className="text-sm font-semibold text-charcoal uppercase tracking-wide">No recent system notifications.</p>
+                    <span className="text-xs text-gray-400 mt-1 font-light">New admin activity will appear here.</span>
+                  </div>
+                ) : (
+                  <div className="divide-y divide-gray-100">
+                    {notifications.map(n => {
+                      const tone = n.type === 'warning'
+                        ? 'bg-amber-50 text-amber-700 border-amber-200'
+                        : n.type === 'success'
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                          : 'bg-blue-50 text-blue-700 border-blue-200';
+                      const icon = n.type === 'warning'
+                        ? 'fas fa-exclamation-triangle'
+                        : n.type === 'success'
+                          ? 'fas fa-check'
+                          : 'fas fa-info';
+
+                      return (
+                        <article key={n.id} className="p-5 md:p-6 flex items-start gap-4 hover:bg-gray-50 transition-colors">
+                          <div className={`w-10 h-10 rounded-none border flex items-center justify-center shrink-0 ${tone}`}>
+                            <i className={`${icon} text-xs`}></i>
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm md:text-base text-charcoal font-light leading-relaxed">{n.text}</p>
+                            <span className="text-[10px] text-gray-400 mt-2 block font-mono uppercase tracking-wider">{n.time}</span>
+                          </div>
+                          <span className={`hidden sm:inline-flex text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-none border ${tone}`}>
+                            {n.type}
+                          </span>
+                        </article>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+          </main>
+        </div>
+      )}
 
       {/* ========================================================== */}
       {/* DIALOG DRAWERS: BOOK CREATION / MODIFICATION */}
