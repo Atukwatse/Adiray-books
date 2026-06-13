@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth, useCart } from '../context/AppContext';
+import Logo from './Logo';
 
 const Header = ({ 
   cartCount, 
@@ -207,14 +208,9 @@ const Header = ({
         <div className="responsive-container h-20 flex items-center justify-between">
           
           {/* Logo */}
-          <div className="flex items-center space-x-2 md:space-x-3 shrink-0">
-            <div className="w-8 h-8 md:w-10 md:h-10 bg-charcoal flex items-center justify-center">
-              <span className="text-white font-bold text-sm md:text-lg font-serif">AB</span>
-            </div>
-            <h1 className="text-base sm:text-2xl md:text-3xl font-bold text-charcoal font-serif tracking-tight uppercase">
-              Adiray <span className="text-gold font-light">&</span> Books
-            </h1>
-          </div>
+          <Link to="/" className="flex items-center shrink-0">
+            <Logo variant="horizontal" theme="light" className="h-10 sm:h-11 w-auto" />
+          </Link>
 
           {/* Search Bar (Desktop) */}
           <div className="hidden md:flex flex-1 max-w-3xl mx-4 lg:mx-8 relative">
@@ -358,7 +354,7 @@ const Header = ({
 
       {/* Mobile Navigation Dropdown */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-gray-200 absolute top-full left-0 w-full z-50 shadow-xl">
+        <div className="md:hidden bg-white border-b border-gray-200 absolute top-full left-0 w-full z-50 shadow-xl max-h-[calc(100vh-8.5rem)] overflow-y-auto">
           {/* Mobile Search Input if opened */}
           <div className="p-4 border-b border-gray-100 bg-gray-50 md:hidden">
              <form onSubmit={handleSearch} className="flex border border-gray-300">

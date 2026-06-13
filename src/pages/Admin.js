@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useBooks, useOrders, useUsers, useAuth } from '../context/AppContext';
+import Logo from '../components/Logo';
 
 const DEFAULT_STORE_SETTINGS = {
   storeName: 'Adiray Books',
@@ -434,14 +435,8 @@ const Admin = () => {
       <aside className="w-64 border-r border-gray-200 bg-white shrink-0 flex flex-col justify-between py-6">
         <div>
           {/* Logo Brand matching Header.js */}
-          <div className="px-6 flex items-center space-x-3 mb-10">
-            <div className="w-9 h-9 bg-charcoal text-white font-bold font-serif flex items-center justify-center text-sm shadow-sm">
-              AB
-            </div>
-            <div>
-              <span className="font-bold text-sm tracking-widest text-charcoal font-serif uppercase">ADIRAY HUB</span>
-              <span className="block text-[10px] uppercase font-bold tracking-wider text-gray-400">Admin Portal</span>
-            </div>
+          <div className="px-5 mb-10 flex items-center">
+            <Logo variant="horizontal" theme="light" className="h-9 w-auto" />
           </div>
 
           {/* Navigation Links */}
