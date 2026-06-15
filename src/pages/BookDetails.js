@@ -19,6 +19,7 @@ const BookDetails = () => {
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
   const [similarBooks, setSimilarBooks] = useState([]);
+  const sellerPhone = '+15551234567';
 
   useEffect(() => {
     // Find the book from our master dataset
@@ -53,6 +54,8 @@ const BookDetails = () => {
     setIsAddedToCart(true);
     setTimeout(() => setIsAddedToCart(false), 2000);
   };
+
+  const whatsappMessage = encodeURIComponent(`Hi Adiray Books, I want to buy "${book.title}" by ${book.author}.`);
 
   return (
     <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
@@ -167,6 +170,25 @@ const BookDetails = () => {
               </button>
             </div>
 
+            <div className="grid grid-cols-2 gap-4 mb-10">
+              <a
+                href={`tel:${sellerPhone}`}
+                className="h-12 border border-gray-200 hover:border-gold hover:bg-[#FFFDF7] text-charcoal flex items-center justify-center gap-3 font-semibold uppercase tracking-widest text-xs transition-colors"
+              >
+                <i className="fas fa-phone text-xl text-gold"></i>
+                <span>Call Seller</span>
+              </a>
+              <a
+                href={`https://wa.me/${sellerPhone.replace('+', '')}?text=${whatsappMessage}`}
+                target="_blank"
+                rel="noreferrer"
+                className="h-12 border border-gray-200 hover:border-green-600 hover:bg-green-50 text-charcoal flex items-center justify-center gap-3 font-semibold uppercase tracking-widest text-xs transition-colors"
+              >
+                <i className="fab fa-whatsapp text-2xl text-green-600"></i>
+                <span>WhatsApp</span>
+              </a>
+            </div>
+
             {/* Delivery Guarantees */}
             <div className="grid grid-cols-2 gap-6 pt-8 border-t border-gray-100 text-sm">
               <div className="flex items-start space-x-3">
@@ -251,7 +273,7 @@ const BookDetails = () => {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {similarBooks.map(item => (
                 <div key={item.id}>
-                  <BookCard book={item} onAddToCart={handleAddToCart} />
+                  <BookCard book={item} onAddToCart={() => addToCart(item)} />
                 </div>
               ))}
             </div>

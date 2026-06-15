@@ -19,6 +19,8 @@ const BookCard = ({
   const { cart, addToCart, updateCartQuantity, removeFromCart } = useCart();
   const cartItem = cart.find(item => item.id === book.id);
   const cartQuantity = cartItem?.quantity || 0;
+  const sellerPhone = '+15551234567';
+  const whatsappMessage = encodeURIComponent(`Hi Adiray Books, I want to buy "${book.title}" by ${book.author}.`);
 
   const handleAddToCart = () => {
     if (!book.inStock) return;
@@ -179,6 +181,27 @@ const BookCard = ({
             Added on {new Date(dateAdded).toLocaleDateString()}
           </p>
         )}
+
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          <a
+            href={`tel:${sellerPhone}`}
+            className="h-9 border border-slate-200 text-slate-600 hover:border-[#b35900] hover:text-[#b35900] rounded-lg flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wide transition-colors"
+            aria-label={`Call seller about ${book.title}`}
+          >
+            <i className="fas fa-phone text-base"></i>
+            <span>Call</span>
+          </a>
+          <a
+            href={`https://wa.me/${sellerPhone.replace('+', '')}?text=${whatsappMessage}`}
+            target="_blank"
+            rel="noreferrer"
+            className="h-9 border border-slate-200 text-slate-600 hover:border-green-600 hover:text-green-600 rounded-lg flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wide transition-colors"
+            aria-label={`WhatsApp seller about ${book.title}`}
+          >
+            <i className="fab fa-whatsapp text-lg"></i>
+            <span>Chat</span>
+          </a>
+        </div>
         
         {/* Actions Button Bar */}
         <div className="flex items-center space-x-2 mt-auto">

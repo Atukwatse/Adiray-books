@@ -3,6 +3,20 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth, useCart } from '../context/AppContext';
 import Logo from './Logo';
 
+const CartIcon = ({ className = '' }) => (
+  <svg
+    viewBox="0 0 64 64"
+    aria-hidden="true"
+    focusable="false"
+    className={className}
+  >
+    <path
+      fill="currentColor"
+      d="M8.5 9.5c0-2 1.6-3.5 3.5-3.5h12.4c5.5 0 7 3.1 8 7.7l1.3 6.1h22.6c4.3 0 7.2 3.9 6.3 8.1l-4.1 18.4c-.7 3.2-3.4 5.4-6.7 5.4H32.1c-5.8 0-8.3-2.7-9.5-8.2L16.4 15H12c-1.9 0-3.5-1.6-3.5-3.5Zm25.3 48c0 3.6-2.9 6.5-6.5 6.5s-6.5-2.9-6.5-6.5 2.9-6.5 6.5-6.5 6.5 2.9 6.5 6.5Zm23.7 0c0 3.6-2.9 6.5-6.5 6.5s-6.5-2.9-6.5-6.5S47.4 51 51 51s6.5 2.9 6.5 6.5ZM28.1 43.7c.4 1.9 1.4 2.5 3.7 2.5h20.4c1.7 0 3.1 1.4 3.1 3.1s-1.4 3.1-3.1 3.1H31.8c-5.3 0-8.4-2.4-9.5-7.5l-.4-1.9h6l.2.7Z"
+    />
+  </svg>
+);
+
 const Header = ({ 
   cartCount, 
   cartTotal, 
@@ -12,11 +26,8 @@ const Header = ({
   onMobileMenuToggle 
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchCategory, setSearchCategory] = useState('All');
-  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-  const searchCategories = ['All', 'Books', 'eBooks', 'Audiobooks'];
   
   const location = useLocation();
   const isActive = (path) => {
@@ -41,14 +52,11 @@ const Header = ({
       if (isAuthDropdownOpen && !event.target.closest('.auth-dropdown')) {
         setIsAuthDropdownOpen(false);
       }
-      if (isSearchDropdownOpen && !event.target.closest('.search-dropdown')) {
-        setIsSearchDropdownOpen(false);
-      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isAuthDropdownOpen, isSearchDropdownOpen]);
+  }, [isAuthDropdownOpen]);
 
   // Handle scroll detection for sticky header effects
   useEffect(() => {
@@ -96,12 +104,7 @@ const Header = ({
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      let targetPath = '/shop';
-      if (searchCategory === 'eBooks') targetPath = '/categories/ebooks';
-      if (searchCategory === 'Audiobooks') targetPath = '/categories/audiobooks';
-      
-      navigate(`${targetPath}?q=${encodeURIComponent(searchQuery)}`);
-      setIsSearchDropdownOpen(false);
+      navigate(`/shop?q=${encodeURIComponent(searchQuery)}`);
     }
   };
 
@@ -215,40 +218,6 @@ const Header = ({
           {/* Search Bar (Desktop) */}
           <div className="hidden md:flex flex-1 max-w-3xl mx-4 lg:mx-8 relative">
             <form onSubmit={handleSearch} className="w-full flex border border-gray-300 focus-within:border-charcoal focus-within:ring-1 focus-within:ring-charcoal transition-all">
-              {/* Custom Category Dropdown inside search */}
-              <div className="relative hidden lg:block border-r border-gray-300 search-dropdown">
-                <button
-                  type="button"
-                  onClick={() => setIsSearchDropdownOpen(!isSearchDropdownOpen)}
-                  className="bg-gray-50 text-gray-600 text-sm px-4 py-2 flex items-center justify-between min-w-[100px] h-full hover:bg-gray-100 transition-colors"
-                >
-                  {searchCategory}
-                  <i className="fas fa-chevron-down text-[10px] ml-3 text-gray-500"></i>
-                </button>
-                
-                {isSearchDropdownOpen && (
-                  <div className="absolute top-full left-0 w-40 bg-white border border-gray-200 shadow-lg z-50">
-                    {searchCategories.map((cat) => (
-                      <button
-                        key={cat}
-                        type="button"
-                        className={`w-full text-left px-4 py-2 text-sm transition-colors ${
-                          cat === searchCategory 
-                            ? 'bg-gray-600 text-white' 
-                            : 'bg-white text-[#1a56db] hover:bg-gray-50'
-                        }`}
-                        onClick={() => {
-                          setSearchCategory(cat);
-                          setIsSearchDropdownOpen(false);
-                        }}
-                      >
-                        {cat}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-              
               <input
                 type="text"
                 value={searchQuery}
@@ -276,13 +245,14 @@ const Header = ({
             {/* Shopping Cart */}
             <button
               onClick={onCartClick}
+              aria-label="Open shopping cart"
               className={`relative transition-colors duration-200 group flex items-center p-1 ${
                 isActive('/cart') ? 'text-orange-600' : 'text-charcoal hover:text-orange-600'
               }`}
             >
-              <i className="fas fa-shopping-bag text-xl sm:text-2xl group-hover:scale-105 transition-transform"></i>
+              <CartIcon className="w-8 h-8 sm:w-9 sm:h-9 group-hover:scale-105 transition-transform" />
               {displayCartCount > 0 && (
-                <span className="absolute -top-1.5 -right-2 bg-orange-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center border border-white">
+                <span className="absolute -top-1 -right-2 bg-orange-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center border border-white">
                   {displayCartCount}
                 </span>
               )}

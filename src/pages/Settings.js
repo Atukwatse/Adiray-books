@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AppContext';
 
 const Settings = () => {
+  const navigate = useNavigate();
+  const { user, deleteAccount } = useAuth();
+
   useEffect(() => {
     document.title = "Account Settings | Adiray Books";
   }, []);
 
   const [activeTab, setActiveTab] = useState('account');
-  const [settings, setSettings] = useState({
+  const defaultSettings = {
     email: 'john.doe@example.com',
     language: 'English',
     currency: 'USD',
@@ -23,7 +28,17 @@ const Settings = () => {
       showActivity: true,
       allowRecommendations: true
     }
+  };
+  const [settings, setSettings] = useState(() => {
+    const saved = localStorage.getItem('adiray_account_settings');
+    return saved ? JSON.parse(saved) : defaultSettings;
   });
+  const [statusMessage, setStatusMessage] = useState('');
+
+  useEffect(() => {
+    if (!user) return;
+    setSettings(prev => ({ ...prev, email: user.email || prev.email }));
+  }, [user]);
 
   const handleSettingChange = (section, key, value) => {
     setSettings(prev => ({
@@ -49,6 +64,38 @@ const Settings = () => {
     { id: 'preferences', label: 'Preferences', icon: 'fa-cog' }
   ];
 
+  const handleSaveSettings = () => {
+    localStorage.setItem('adiray_account_settings', JSON.stringify(settings));
+    setStatusMessage('Settings saved successfully.');
+  };
+
+  const handleCancelSettings = () => {
+    const saved = localStorage.getItem('adiray_account_settings');
+    setSettings(saved ? JSON.parse(saved) : defaultSettings);
+    setStatusMessage('Changes reverted.');
+  };
+
+  const handleDownloadData = () => {
+    const data = {
+      profile: user,
+      settings,
+      exportedAt: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'adiray-account-data.json';
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!window.confirm('Delete your account permanently? This cannot be undone.')) return;
+    await deleteAccount();
+    navigate('/');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
 
@@ -57,6 +104,11 @@ const Settings = () => {
       <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="bg-white rounded-2xl shadow-xl border border-amber-200 overflow-hidden">
+            {statusMessage && (
+              <div className="m-4 sm:m-6 mb-0 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-lg text-sm">
+                {statusMessage}
+              </div>
+            )}
             {/* Tabs */}
             <div className="border-b border-gray-200 overflow-x-auto">
               <nav className="flex space-x-1 sm:space-x-8 px-4 sm:px-8 min-w-max" aria-label="Tabs">
@@ -154,11 +206,17 @@ const Settings = () => {
                   <div className="border-t pt-6">
                     <h3 className="text-lg sm:text-xl font-semibold text-amber-900 mb-4">Account Actions</h3>
                     <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                      <button className="px-4 sm:px-6 py-2 sm:py-3 bg-amber-600 text-white rounded-lg font-semibold hover:bg-amber-700 transition-colors text-sm sm:text-base">
+                      <button
+                        onClick={handleDownloadData}
+                        className="px-4 sm:px-6 py-2 sm:py-3 bg-amber-600 text-white rounded-lg font-semibold hover:bg-amber-700 transition-colors text-sm sm:text-base"
+                      >
                         <i className="fas fa-download mr-2"></i>
                         Download My Data
                       </button>
-                      <button className="px-4 sm:px-6 py-2 sm:py-3 border border-red-500 text-red-500 rounded-lg font-semibold hover:bg-red-50 transition-colors text-sm sm:text-base">
+                      <button
+                        onClick={handleDeleteAccount}
+                        className="px-4 sm:px-6 py-2 sm:py-3 border border-red-500 text-red-500 rounded-lg font-semibold hover:bg-red-50 transition-colors text-sm sm:text-base"
+                      >
                         <i className="fas fa-trash-alt mr-2"></i>
                         Delete Account
                       </button>
@@ -298,7 +356,10 @@ const Settings = () => {
 
                     <div className="border-t pt-6">
                       <h4 className="font-semibold text-gray-900 mb-4 text-sm sm:text-base">Data & Cookies</h4>
-                      <button className="px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors text-sm sm:text-base">
+                      <button
+                        onClick={() => setStatusMessage('Cookie preferences are saved with your browser settings.')}
+                        className="px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors text-sm sm:text-base"
+                      >
                         <i className="fas fa-cookie-bite mr-2"></i>
                         Manage Cookies
                       </button>
@@ -311,11 +372,17 @@ const Settings = () => {
             {/* Save Button */}
             <div className="p-4 sm:p-6 lg:p-8 border-t bg-gray-50">
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <button className="flex-1 bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors text-sm sm:text-base">
+                <button
+                  onClick={handleSaveSettings}
+                  className="flex-1 bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors text-sm sm:text-base"
+                >
                   <i className="fas fa-save mr-2"></i>
                   Save Changes
                 </button>
-                <button className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors text-sm sm:text-base">
+                <button
+                  onClick={handleCancelSettings}
+                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors text-sm sm:text-base"
+                >
                   <i className="fas fa-times mr-2"></i>
                   Cancel
                 </button>

@@ -12,5 +12,23 @@ class BookSerializer(serializers.ModelSerializer):
 class BookListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ['id', 'title', 'author', 'price', 'original_price', 'category', 
-                  'rating', 'reviews', 'in_stock', 'cover', 'cover_color', 'featured']
+        fields = [
+            'id',
+            'title',
+            'author',
+            'price',
+            'original_price',
+            'category',
+            'rating',
+            'reviews',
+            'in_stock',
+            'cover',
+            'cover_color',
+            'description',
+            'publisher',
+            'published_date',
+            'pages',
+            'isbn',
+            'featured',
+            'created_at',
+        ]

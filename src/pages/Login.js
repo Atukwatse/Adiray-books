@@ -19,6 +19,9 @@ const Login = () => {
       navigate('/');
     } catch (error) {
       console.error('Google sign-in failed:', error);
+      if ((error.message || '').toLowerCase().includes('cancelled')) {
+        return;
+      }
       setErrors({ general: error.message || 'Google sign-in failed. Please try again.' });
     } finally {
       setIsGoogleLoading(false);
@@ -34,7 +37,6 @@ const Login = () => {
             <span className="text-white font-bold text-lg font-serif">AB</span>
           </div>
           <h2 className="text-2xl font-bold text-charcoal mb-2 font-serif uppercase tracking-tight">Welcome to Adiray Books</h2>
-          <p className="text-gray-500 font-light text-sm">Sign in to your account using social authentication</p>
         </div>
 
         {/* General Error Message */}
@@ -45,7 +47,6 @@ const Login = () => {
           </div>
         )}
 
-        {/* Social Authentication System */}
         <div className="space-y-4">
           <button
             type="button"
@@ -57,14 +58,6 @@ const Login = () => {
           >
             <i className={`fab ${isGoogleLoading ? 'fa-spinner fa-spin' : 'fa-google'} text-red-500 mr-2.5 text-base`}></i>
             {isGoogleLoading ? 'Connecting to Google' : 'Continue with Google'}
-          </button>
-
-          <button
-            type="button"
-            className="w-full inline-flex justify-center items-center py-3.5 px-4 border border-gray-200 rounded-none bg-white text-xs font-semibold uppercase tracking-wider text-charcoal hover:bg-gray-50 hover:border-charcoal transition-all duration-200"
-          >
-            <i className="fab fa-facebook text-blue-500 mr-2.5 text-base"></i>
-            Continue with Facebook
           </button>
         </div>
       </div>

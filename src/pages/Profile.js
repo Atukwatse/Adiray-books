@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AppContext';
 
 const Profile = () => {
+  const { user, updateProfile, changePassword } = useAuth();
+
   useEffect(() => {
     document.title = "Customer Account Profile | Adiray Books";
   }, []);
@@ -30,6 +33,22 @@ const Profile = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [tempFormData, setTempFormData] = useState({});
+  const [statusMessage, setStatusMessage] = useState('');
+  const [passwordForm, setPasswordForm] = useState({
+    current: '',
+    next: '',
+    confirm: ''
+  });
+
+  useEffect(() => {
+    if (!user) return;
+    setFormData(prev => ({
+      ...prev,
+      firstName: user.firstName || prev.firstName,
+      lastName: user.lastName || prev.lastName,
+      email: user.email || prev.email
+    }));
+  }, [user]);
 
   const handleEdit = () => {
     setTempFormData(formData);
@@ -41,10 +60,14 @@ const Profile = () => {
     setIsEditing(false);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIsEditing(false);
-    // Save logic would go here
-    console.log('Profile saved:', formData);
+    await updateProfile({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email
+    });
+    setStatusMessage('Profile saved successfully.');
   };
 
   const handleChange = (e) => {
@@ -76,6 +99,34 @@ const Profile = () => {
     }));
   };
 
+  const handleSavePreferences = () => {
+    localStorage.setItem('adiray_profile_preferences', JSON.stringify({
+      favoriteGenres: formData.favoriteGenres,
+      notifications: formData.notifications
+    }));
+    setStatusMessage('Preferences saved.');
+  };
+
+  const handlePasswordUpdate = async () => {
+    if (!passwordForm.current || !passwordForm.next || !passwordForm.confirm) {
+      setStatusMessage('Complete all password fields.');
+      return;
+    }
+
+    if (passwordForm.next !== passwordForm.confirm) {
+      setStatusMessage('New passwords do not match.');
+      return;
+    }
+
+    try {
+      await changePassword(passwordForm.current, passwordForm.next);
+      setPasswordForm({ current: '', next: '', confirm: '' });
+      setStatusMessage('Password updated successfully.');
+    } catch (error) {
+      setStatusMessage(error.message || 'Password update failed.');
+    }
+  };
+
   const tabs = [
     { id: 'personal', label: 'Personal Info', icon: 'fa-user' },
     { id: 'reading', label: 'Reading Preferences', icon: 'fa-book' },
@@ -93,6 +144,11 @@ const Profile = () => {
           
           {/* Profile Header */}
           <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border-2 border-amber-200">
+            {statusMessage && (
+              <div className="mb-4 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-lg text-sm">
+                {statusMessage}
+              </div>
+            )}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-6">
                 <div className="w-24 h-24 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
@@ -368,7 +424,10 @@ const Profile = () => {
                     />
                   </div>
 
-                  <button className="bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-amber-800 transition-colors">
+                  <button
+                    onClick={handleSavePreferences}
+                    className="bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-amber-800 transition-colors"
+                  >
                     Save Preferences
                   </button>
                 </div>
@@ -465,7 +524,10 @@ const Profile = () => {
                     </label>
                   </div>
 
-                  <button className="bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-amber-800 transition-colors">
+                  <button
+                    onClick={handleSavePreferences}
+                    className="bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-amber-800 transition-colors"
+                  >
                     Update Notifications
                   </button>
                 </div>
@@ -486,6 +548,8 @@ const Profile = () => {
                           </label>
                           <input
                             type="password"
+                            value={passwordForm.current}
+                            onChange={(e) => setPasswordForm(prev => ({ ...prev, current: e.target.value }))}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                           />
                         </div>
@@ -495,6 +559,8 @@ const Profile = () => {
                           </label>
                           <input
                             type="password"
+                            value={passwordForm.next}
+                            onChange={(e) => setPasswordForm(prev => ({ ...prev, next: e.target.value }))}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                           />
                         </div>
@@ -504,10 +570,15 @@ const Profile = () => {
                           </label>
                           <input
                             type="password"
+                            value={passwordForm.confirm}
+                            onChange={(e) => setPasswordForm(prev => ({ ...prev, confirm: e.target.value }))}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                           />
                         </div>
-                        <button className="bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-amber-800 transition-colors">
+                        <button
+                          onClick={handlePasswordUpdate}
+                          className="bg-amber-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-amber-800 transition-colors"
+                        >
                           Update Password
                         </button>
                       </div>
@@ -520,7 +591,10 @@ const Profile = () => {
                           <p className="font-medium text-gray-900">Enable 2FA</p>
                           <p className="text-sm text-gray-500">Add an extra layer of security to your account</p>
                         </div>
-                        <button className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-400 transition-colors">
+                        <button
+                          onClick={() => setStatusMessage('Two-factor authentication setup is not available in this backend yet.')}
+                          className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-semibold hover:bg-gray-400 transition-colors"
+                        >
                           Enable
                         </button>
                       </div>

@@ -34,11 +34,11 @@ class CreateOrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['shipping_address', 'items']
+        fields = ['shipping_address', 'tracking_number', 'estimated_delivery', 'items']
 
     def create(self, validated_data):
         items_data = validated_data.pop('items')
-        order = Order.objects.create(**validated_data)
+        order = Order.objects.create(total=0, **validated_data)
         
         for item_data in items_data:
             OrderItem.objects.create(order=order, **item_data)

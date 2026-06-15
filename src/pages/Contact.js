@@ -1,347 +1,159 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Contact = () => {
   useEffect(() => {
-    document.title = "Get in Touch with Our Librarians | Adiray Books";
+    document.title = "Contact Adiray Books";
   }, []);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: ''
-  });
+  const [showChat, setShowChat] = useState(false);
+  const [chatInput, setChatInput] = useState('');
+  const [chatMessages, setChatMessages] = useState([
+    {
+      id: 1,
+      sender: 'seller',
+      text: 'Hi, welcome to Adiray Books. Tell us which book you want and we will help you buy it.'
+    }
+  ]);
 
-  const [errors, setErrors] = useState({});
+  const phoneNumber = '+15551234567';
+  const whatsappMessage = encodeURIComponent('Hi Adiray Books, I want help buying a book.');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Clear error for this field when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    
-    if (!formData.subject.trim()) {
-      newErrors.subject = 'Subject is required';
-    }
-    
-    if (!formData.message.trim()) {
-      newErrors.message = 'Message is required';
-    }
-    
-    return newErrors;
-  };
-
-  const handleSubmit = (e) => {
+  const handleSendMessage = (e) => {
     e.preventDefault();
-    const newErrors = validateForm();
-    
-    if (Object.keys(newErrors).length === 0) {
-      // Form is valid, submit it
-      console.log('Form submitted:', formData);
-      alert('Thank you for your message! We will get back to you soon.');
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: ''
-      });
-    } else {
-      setErrors(newErrors);
-    }
+    const message = chatInput.trim();
+    if (!message) return;
+
+    setChatMessages(prev => [
+      ...prev,
+      { id: Date.now(), sender: 'buyer', text: message },
+      {
+        id: Date.now() + 1,
+        sender: 'seller',
+        text: 'Thanks. A seller will respond shortly. You can also share the book title, author, or screenshot here.'
+      }
+    ]);
+    setChatInput('');
   };
+
+  const contactOptions = [
+    {
+      label: 'Call Us',
+      icon: 'fas fa-phone',
+      href: `tel:${phoneNumber}`,
+    },
+    {
+      label: 'Email Us',
+      icon: 'fas fa-envelope',
+      href: 'mailto:info@adiraybooks.com?subject=Book%20Buying%20Help',
+    },
+    {
+      label: 'WhatsApp',
+      icon: 'fab fa-whatsapp',
+      href: `https://wa.me/${phoneNumber.replace('+', '')}?text=${whatsappMessage}`,
+      external: true,
+    },
+    {
+      label: 'Live Chat',
+      icon: 'fas fa-comments',
+      action: () => setShowChat(true),
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <main className="min-h-screen bg-[#F5F2EB] flex items-start justify-center px-4 py-16 sm:py-20">
+      <section className="w-full max-w-5xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          {contactOptions.map(option => {
+            const content = (
+              <>
+                <i className={`${option.icon} text-2xl leading-none w-10 shrink-0 text-[#B8860B] group-hover:text-[#D4AF37] transition-colors`}></i>
+                <span className="ml-2 text-sm font-bold tracking-wide">{option.label}</span>
+              </>
+            );
+            const className = "h-16 bg-white border border-gray-200 hover:border-[#D4AF37] hover:bg-[#FFFDF7] text-charcoal flex items-center px-5 sm:px-6 transition-colors group shadow-sm";
 
+            return option.action ? (
+              <button
+                key={option.label}
+                type="button"
+                onClick={option.action}
+                className={className}
+              >
+                {content}
+              </button>
+            ) : (
+              <a
+                key={option.label}
+                href={option.href}
+                target={option.external ? '_blank' : undefined}
+                rel={option.external ? 'noreferrer' : undefined}
+                className={className}
+              >
+                {content}
+              </a>
+            );
+          })}
+        </div>
+      </section>
 
-      {/* Contact Content */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12">
-            
-            {/* Contact Form */}
-            <div>
-              <div className="bg-white p-8 border border-gray-100 shadow-sm">
-                <h2 className="text-3xl font-bold text-charcoal mb-6 font-serif">Send Us a Message</h2>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2 font-light tracking-wide">
-                        Name *
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        className={`w-full px-4 py-3 border rounded-none focus:ring-1 focus:ring-charcoal focus:border-charcoal ${
-                          errors.name ? 'border-red-500' : 'border-gray-300'
-                        }`}
-                        placeholder="Your full name"
-                      />
-                      {errors.name && (
-                        <p className="mt-1 text-sm text-red-600 font-light">{errors.name}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2 font-light tracking-wide">
-                        Email *
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        className={`w-full px-4 py-3 border rounded-none focus:ring-1 focus:ring-charcoal focus:border-charcoal ${
-                          errors.email ? 'border-red-500' : 'border-gray-300'
-                        }`}
-                        placeholder="your@email.com"
-                      />
-                      {errors.email && (
-                        <p className="mt-1 text-sm text-red-600 font-light">{errors.email}</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2 font-light tracking-wide">
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-none focus:ring-1 focus:ring-charcoal focus:border-charcoal"
-                      placeholder="+1 (555) 123-4567"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2 font-light tracking-wide">
-                      Subject *
-                    </label>
-                    <input
-                      type="text"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-none focus:ring-1 focus:ring-charcoal focus:border-charcoal ${
-                        errors.subject ? 'border-red-500' : 'border-gray-300'
-                      }`}
-                      placeholder="How can we help you?"
-                    />
-                    {errors.subject && (
-                      <p className="mt-1 text-sm text-red-600 font-light">{errors.subject}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2 font-light tracking-wide">
-                      Message *
-                    </label>
-                    <textarea
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      rows={6}
-                      className={`w-full px-4 py-3 border rounded-none focus:ring-1 focus:ring-charcoal focus:border-charcoal ${
-                        errors.message ? 'border-red-500' : 'border-gray-300'
-                      }`}
-                      placeholder="Tell us more about how we can help you..."
-                    ></textarea>
-                    {errors.message && (
-                      <p className="mt-1 text-sm text-red-600 font-light">{errors.message}</p>
-                    )}
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full bg-charcoal text-white py-3 px-6 rounded-none font-semibold uppercase tracking-widest text-xs hover:bg-black transition-all border border-charcoal mt-4"
-                  >
-                    Send Message
-                  </button>
-                </form>
-              </div>
-            </div>
-
-            {/* Contact Information */}
-            <div className="space-y-8">
-              {/* Store Information */}
-              <div className="bg-white p-8 border border-gray-100 shadow-sm">
-                <h3 className="text-2xl font-bold text-charcoal mb-6 font-serif">Visit Our Store</h3>
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <i className="fas fa-map-marker-alt text-charcoal mt-1"></i>
-                    <div>
-                      <p className="font-semibold text-charcoal uppercase tracking-widest text-xs mb-1">Address</p>
-                      <p className="text-gray-500 font-light">
-                        123 Book Street<br />
-                        Reading District, RD 12345<br />
-                        United States
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-3">
-                    <i className="fas fa-phone text-charcoal mt-1"></i>
-                    <div>
-                      <p className="font-semibold text-charcoal uppercase tracking-widest text-xs mb-1">Phone</p>
-                      <p className="text-gray-500 font-light">+1 (555) 123-4567</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-3">
-                    <i className="fas fa-envelope text-charcoal mt-1"></i>
-                    <div>
-                      <p className="font-semibold text-charcoal uppercase tracking-widest text-xs mb-1">Email</p>
-                      <p className="text-gray-500 font-light">info@adiraybooks.com</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-3">
-                    <i className="fas fa-clock text-charcoal mt-1"></i>
-                    <div>
-                      <p className="font-semibold text-charcoal uppercase tracking-widest text-xs mb-1">Store Hours</p>
-                      <p className="text-gray-500 font-light">
-                        Monday - Friday: 9:00 AM - 8:00 PM<br />
-                        Saturday: 10:00 AM - 6:00 PM<br />
-                        Sunday: 12:00 PM - 5:00 PM
-                      </p>
-                    </div>
-                  </div>
+      {showChat && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-end sm:items-center justify-center p-4">
+          <section className="w-full max-w-md bg-white border border-gray-200 shadow-2xl">
+            <header className="h-14 bg-charcoal text-white flex items-center justify-between px-4">
+              <div className="flex items-center gap-3">
+                <i className="fas fa-comments text-[#D4AF37] text-lg"></i>
+                <div>
+                  <h2 className="text-sm font-bold uppercase tracking-wide">Adiray Live Chat</h2>
+                  <p className="text-[10px] text-gray-300">Seller support</p>
                 </div>
               </div>
+              <button
+                type="button"
+                onClick={() => setShowChat(false)}
+                className="w-8 h-8 flex items-center justify-center text-gray-300 hover:text-white"
+                aria-label="Close live chat"
+              >
+                <i className="fas fa-times"></i>
+              </button>
+            </header>
 
-              {/* Quick Contact */}
-              <div className="bg-charcoal border border-gray-800 rounded-none p-8 text-white shadow-sm">
-                <h3 className="text-2xl font-bold mb-6 font-serif">Quick Contact</h3>
-                <div className="space-y-4">
-                  <p className="text-gray-300 font-light tracking-wide">
-                    Have a quick question? Reach out to us through any of these channels:
+            <div className="h-80 overflow-y-auto bg-[#F5F2EB] p-4 space-y-3">
+              {chatMessages.map(message => (
+                <div
+                  key={message.id}
+                  className={`flex ${message.sender === 'buyer' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <p className={`max-w-[82%] px-4 py-2 text-sm leading-relaxed ${
+                    message.sender === 'buyer'
+                      ? 'bg-charcoal text-white'
+                      : 'bg-white border border-gray-200 text-charcoal'
+                  }`}>
+                    {message.text}
                   </p>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <a
-                      href="tel:+15551234567"
-                      className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 p-3 rounded-none transition-colors border border-gray-700"
-                    >
-                      <i className="fas fa-phone text-gold"></i>
-                      <span className="font-light text-sm tracking-wide">Call Us</span>
-                    </a>
-                    
-                    <a
-                      href="mailto:info@adiraybooks.com"
-                      className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 p-3 rounded-none transition-colors border border-gray-700"
-                    >
-                      <i className="fas fa-envelope text-gold"></i>
-                      <span className="font-light text-sm tracking-wide">Email Us</span>
-                    </a>
-                    
-                    <a
-                      href="#"
-                      className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 p-3 rounded-none transition-colors border border-gray-700"
-                    >
-                      <i className="fab fa-whatsapp text-gold"></i>
-                      <span className="font-light text-sm tracking-wide">WhatsApp</span>
-                    </a>
-                    
-                    <a
-                      href="#"
-                      className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 p-3 rounded-none transition-colors border border-gray-700"
-                    >
-                      <i className="fas fa-comments text-gold"></i>
-                      <span className="font-light text-sm tracking-wide">Live Chat</span>
-                    </a>
-                  </div>
                 </div>
-              </div>
-
-              {/* Social Media */}
-              <div className="bg-white p-8 border border-gray-100 shadow-sm">
-                <h3 className="text-2xl font-bold text-charcoal mb-6 font-serif">Follow Us</h3>
-                <p className="text-gray-500 mb-4 font-light tracking-wide">
-                  Stay connected with us on social media for updates, recommendations, and special offers!
-                </p>
-                <div className="flex space-x-4">
-                  <a
-                    href="#"
-                    className="w-12 h-12 bg-gray-50 border border-gray-200 hover:border-charcoal hover:text-charcoal rounded-none flex items-center justify-center transition-colors text-gray-400"
-                  >
-                    <i className="fab fa-facebook-f"></i>
-                  </a>
-                  <a
-                    href="#"
-                    className="w-12 h-12 bg-gray-50 border border-gray-200 hover:border-charcoal hover:text-charcoal rounded-none flex items-center justify-center transition-colors text-gray-400"
-                  >
-                    <i className="fab fa-twitter"></i>
-                  </a>
-                  <a
-                    href="#"
-                    className="w-12 h-12 bg-gray-50 border border-gray-200 hover:border-charcoal hover:text-charcoal rounded-none flex items-center justify-center transition-colors text-gray-400"
-                  >
-                    <i className="fab fa-instagram"></i>
-                  </a>
-                  <a
-                    href="#"
-                    className="w-12 h-12 bg-gray-50 border border-gray-200 hover:border-charcoal hover:text-charcoal rounded-none flex items-center justify-center transition-colors text-gray-400"
-                  >
-                    <i className="fab fa-linkedin-in"></i>
-                  </a>
-                </div>
-              </div>
+              ))}
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Map Section */}
-      <section className="py-20 bg-gray-50 border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-charcoal mb-6 font-serif">Find Us</h2>
-            <p className="text-xl text-gray-500 max-w-3xl mx-auto font-light tracking-wide">
-              Conveniently located in the heart of Reading District
-            </p>
-          </div>
-          
-          <div className="bg-gray-200 rounded-none h-96 flex items-center justify-center border border-gray-300">
-            <div className="text-center">
-              <i className="fas fa-map-marked-alt text-6xl text-charcoal mb-4"></i>
-              <p className="text-charcoal font-semibold tracking-widest uppercase text-sm mb-2">Interactive Map</p>
-              <p className="text-gray-500 font-light">Map integration would go here</p>
-            </div>
-          </div>
+            <form onSubmit={handleSendMessage} className="p-3 border-t border-gray-200 flex gap-2">
+              <input
+                type="text"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                placeholder="Type your message..."
+                className="flex-1 h-11 border border-gray-300 px-3 text-sm outline-none focus:border-charcoal"
+              />
+              <button
+                type="submit"
+                className="h-11 w-12 bg-charcoal text-white flex items-center justify-center hover:bg-[#D4AF37] hover:text-charcoal transition-colors"
+                aria-label="Send message"
+              >
+                <i className="fas fa-paper-plane text-sm"></i>
+              </button>
+            </form>
+          </section>
         </div>
-      </section>
-    </div>
+      )}
+    </main>
   );
 };
 

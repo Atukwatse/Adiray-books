@@ -92,8 +92,8 @@ const Checkout = () => {
     if (Object.keys(validationErrors).length === 0) {
       setIsProcessing(true);
 
-      // Simulate payment network processing delay
-      setTimeout(() => {
+      // Simulate payment network processing delay, then persist the order through the API context.
+      setTimeout(async () => {
         const orderId = `ORD-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
         const today = new Date().toISOString().split('T')[0];
         
@@ -120,12 +120,19 @@ const Checkout = () => {
           estimatedDelivery: deliveryDateStr
         };
 
-        // Add order to context and clear cart
-        addOrder(newOrder);
-        clearCart();
-        
-        setIsProcessing(false);
-        navigate('/checkout/success', { state: { orderId, total, email: formData.email } });
+        try {
+          const savedOrder = await addOrder(newOrder);
+          clearCart();
+          navigate('/checkout/success', {
+            state: {
+              orderId: savedOrder?.id || orderId,
+              total: savedOrder?.total || total,
+              email: formData.email
+            }
+          });
+        } finally {
+          setIsProcessing(false);
+        }
       }, 2500);
     } else {
       setErrors(validationErrors);
