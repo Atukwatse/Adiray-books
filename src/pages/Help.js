@@ -198,8 +198,8 @@ const Help = () => {
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-amber-900 mb-2">Call Us</h3>
               <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4">Available Mon-Fri, 9am-6pm</p>
-              <a href="tel:+15551234567" className="text-amber-600 font-semibold hover:text-amber-700 text-sm sm:text-base">
-                +1 (555) 123-4567
+              <a href="tel:+256744219162" className="text-amber-600 font-semibold hover:text-amber-700 text-sm sm:text-base">
+                +254 744 219 162
               </a>
             </div>
 

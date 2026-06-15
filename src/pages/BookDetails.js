@@ -19,7 +19,7 @@ const BookDetails = () => {
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
   const [similarBooks, setSimilarBooks] = useState([]);
-  const sellerPhone = '+15551234567';
+  const sellerPhone = '+256744219162';
 
   useEffect(() => {
     // Find the book from our master dataset

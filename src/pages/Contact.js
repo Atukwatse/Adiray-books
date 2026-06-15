@@ -15,7 +15,7 @@ const Contact = () => {
     }
   ]);
 
-  const phoneNumber = '+15551234567';
+  const phoneNumber = '+256744219162';
   const whatsappMessage = encodeURIComponent('Hi Adiray Books, I want help buying a book.');
 
   const handleSendMessage = (e) => {

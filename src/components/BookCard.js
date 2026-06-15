@@ -19,7 +19,7 @@ const BookCard = ({
   const { cart, addToCart, updateCartQuantity, removeFromCart } = useCart();
   const cartItem = cart.find(item => item.id === book.id);
   const cartQuantity = cartItem?.quantity || 0;
-  const sellerPhone = '+15551234567';
+  const sellerPhone = '+256744219162';
   const whatsappMessage = encodeURIComponent(`Hi Adiray Books, I want to buy "${book.title}" by ${book.author}.`);
 
   const handleAddToCart = () => {

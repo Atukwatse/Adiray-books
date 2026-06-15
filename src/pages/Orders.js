@@ -248,8 +248,8 @@ const Orders = () => {
               </div>
               <h3 className="text-xl font-bold text-amber-900 mb-2">Call Us</h3>
               <p className="text-gray-600 mb-4">Get immediate assistance</p>
-              <a href="tel:+15551234567" className="text-amber-700 font-semibold hover:text-amber-800">
-                +1 (555) 123-4567
+              <a href="tel:+256744219162" className="text-amber-700 font-semibold hover:text-amber-800">
+                +254 744 219 162
               </a>
             </div>
 
