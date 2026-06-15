@@ -34,7 +34,7 @@ const Login = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="mx-auto mb-4">
-            <img src="/images/web log.png" alt="Adiray Books" className="h-12 w-auto mx-auto" />
+            <img src="/images/web log.png" alt="Adiray Books" className="h-10 w-auto mx-auto block" />
           </div>
           <h2 className="text-2xl font-bold text-charcoal mb-2 font-serif uppercase tracking-tight">Welcome to Adiray Books</h2>
         </div>

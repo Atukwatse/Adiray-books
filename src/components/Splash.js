@@ -23,8 +23,7 @@ const Splash = ({ onComplete }) => {
     <div 
       className={`fixed inset-0 z-[100] flex items-center justify-center p-6 sm:p-10 transition-opacity duration-700 ${
         fadeOut ? 'opacity-0' : 'opacity-100'
-      }`}
-      style={{ backgroundColor: '#FFFFFF' }}
+      } bg-white`}
     >
       <img 
         src="/images/logo.png" 

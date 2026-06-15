@@ -212,7 +212,7 @@ const Header = ({
           
           {/* Logo */}
           <Link to="/" className="flex items-center shrink-0">
-            <Logo variant="horizontal" theme="light" className="h-10 sm:h-11 w-auto" />
+            <Logo variant="horizontal" theme="light" className="h-7 sm:h-8 w-auto" />
           </Link>
 
           {/* Search Bar (Desktop) */}

@@ -13,7 +13,7 @@ const Logo = ({
       <img 
         src="/images/web%20log.png" 
         alt="Adiray Books" 
-        className={`${className} object-contain`} 
+        className={`${className} block`} 
         style={style}
       />
     );
@@ -24,7 +24,7 @@ const Logo = ({
     <img 
       src="/images/logo.png" 
       alt="Adiray Books" 
-      className={`${className} object-contain`} 
+      className={`${className} block`} 
       style={style}
     />
   );
