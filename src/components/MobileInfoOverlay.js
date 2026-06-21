@@ -55,25 +55,25 @@ const MobileInfoOverlay = () => {
               <p className="text-gray-500 text-sm mb-8">Follow us on social media for latest updates and collections.</p>
               
               <div className="grid grid-cols-4 gap-4">
-                <a href="#" className="flex flex-col items-center space-y-2 group">
+                <a href="https://facebook.com/adiraybooks" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center space-y-2 group">
                   <div className="w-12 h-12 rounded-xl bg-[#1877F2]/10 text-[#1877F2] flex items-center justify-center group-active:scale-95 transition-transform">
                     <i className="fab fa-facebook-f text-xl"></i>
                   </div>
                   <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Facebook</span>
                 </a>
-                <a href="#" className="flex flex-col items-center space-y-2 group">
+                <a href="https://instagram.com/adiraybooks" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center space-y-2 group">
                   <div className="w-12 h-12 rounded-xl bg-[#E4405F]/10 text-[#E4405F] flex items-center justify-center group-active:scale-95 transition-transform">
                     <i className="fab fa-instagram text-xl"></i>
                   </div>
                   <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Instagram</span>
                 </a>
-                <a href="#" className="flex flex-col items-center space-y-2 group">
-                  <div className="w-12 h-12 rounded-xl bg-[#1DA1F2]/10 text-[#1DA1F2] flex items-center justify-center group-active:scale-95 transition-transform">
-                    <i className="fab fa-twitter text-xl"></i>
+                <a href="https://tiktok.com/@adiraybooks" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center space-y-2 group">
+                  <div className="w-12 h-12 rounded-xl bg-[#000000]/10 text-black flex items-center justify-center group-active:scale-95 transition-transform">
+                    <i className="fab fa-tiktok text-xl"></i>
                   </div>
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Twitter</span>
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">TikTok</span>
                 </a>
-                <a href="#" className="flex flex-col items-center space-y-2 group">
+                <a href="https://wa.me/211920889342" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center space-y-2 group">
                   <div className="w-12 h-12 rounded-xl bg-[#25D366]/10 text-[#25D366] flex items-center justify-center group-active:scale-95 transition-transform">
                     <i className="fab fa-whatsapp text-xl"></i>
                   </div>

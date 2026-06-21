@@ -60,7 +60,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative bg-white overflow-hidden pt-0 pb-8 lg:pt-0 lg:pb-12 group">
+    <section className="relative bg-white overflow-hidden pt-0 pb-0 lg:pt-0 lg:pb-12 group">
       {/* Slider Controls */}
 
       {/* Slide Content */}
@@ -74,7 +74,7 @@ const Hero = () => {
             >
               <div className="hero-grid">
                 {/* Left Content - Typography */}
-                <div className="hero-text-col">
+                <div className="hero-text-col hidden lg:block">
                   <div className="space-y-6">
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-charcoal leading-tight font-serif">
                       {slide.title}

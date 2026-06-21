@@ -23,13 +23,22 @@ const Home = () => {
     setIsMobileMenuOpen
   } = useOutletContext();
 
+  const carouselRef1 = React.useRef(null);
+  const carouselRef2 = React.useRef(null);
+
   // Slice exactly 8 books for the two-row homepage grid
   const booksToDisplay = (filteredBooks || []).slice(0, 8);
+
+  useEffect(() => {
+    // Force scroll to start on mount and when data changes
+    if (carouselRef1.current) carouselRef1.current.scrollLeft = 0;
+    if (carouselRef2.current) carouselRef2.current.scrollLeft = 0;
+  }, [booksToDisplay.length, (filteredBooks || []).length]);
 
   return (
     <>
       <Hero />
-      <main className="py-16">
+      <main className="pt-0 pb-8 lg:py-16">
         <div className="responsive-container">
           <div className="flex flex-col lg:flex-row lg:gap-8 lg:items-start">
             <aside className="hidden lg:block lg:w-60 xl:w-64 lg:shrink-0 lg:sticky lg:top-[200px] lg:z-30">
@@ -91,7 +100,11 @@ const Home = () => {
                 ) : (
                   <div className="mb-16">
                     {/* Refined Carousel Layout */}
-                    <div className="flex overflow-x-auto snap-x-mandatory scrollbar-hide gap-6 pb-4 md:pb-8 scroll-smooth px-1">
+                    <div 
+                      ref={carouselRef1}
+                      dir="ltr"
+                      className="flex overflow-x-auto snap-x-mandatory scrollbar-hide gap-6 pb-4 md:pb-8 scroll-smooth px-1"
+                    >
                       {booksToDisplay.map((book, index) => (
                         <div
                           key={book.id}
@@ -131,7 +144,11 @@ const Home = () => {
 
                 <div className="mb-16">
                   {/* Refined Carousel Layout for Best Sellers */}
-                  <div className="flex overflow-x-auto snap-x-mandatory scrollbar-hide gap-6 pb-4 md:pb-8 scroll-smooth px-1">
+                  <div 
+                    ref={carouselRef2}
+                    dir="ltr"
+                    className="flex overflow-x-auto snap-x-mandatory scrollbar-hide gap-6 pb-4 md:pb-8 scroll-smooth px-1"
+                  >
                     {filteredBooks.filter(b => b.rating >= 4.7).slice(0, 8).map((book, index) => (
                       <div
                         key={`bestseller-${book.id}`}

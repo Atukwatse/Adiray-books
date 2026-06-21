@@ -138,18 +138,21 @@
     position: relative;
     width: 100%;
     z-index: 10;
-    height: 780px;
+    height: auto;
+    min-height: 350px;
   }
 
   @media (min-width: 480px) {
     .hero-content-container {
-      height: 720px;
+      height: auto;
+      min-height: 400px;
     }
   }
 
   @media (min-width: 640px) {
     .hero-content-container {
-      height: 760px;
+      height: auto;
+      min-height: 450px;
     }
   }
 
