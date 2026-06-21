@@ -123,6 +123,24 @@ const Contact = () => {
             );
           })}
         </div>
+
+        {/* Additional Content: Our Promise */}
+        <div className="mt-12 flex justify-center">
+          <div className="max-w-2xl bg-charcoal text-white p-8 shadow-lg relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 -rotate-45 translate-x-16 -translate-y-16 group-hover:bg-white/10 transition-colors"></div>
+            <h3 className="text-lg font-bold uppercase tracking-widest mb-4 flex items-center gap-2">
+              <i className="fas fa-shield-alt text-[#D4AF37]"></i>
+              Our Commitment
+            </h3>
+            <p className="text-sm text-gray-300 leading-relaxed font-light italic">
+              "We are dedicated to bringing the finest literature to your doorstep. Every book is curated for quality, and our team is here to ensure your reading journey is seamless and inspiring."
+            </p>
+            <div className="mt-4 flex items-center gap-2 text-[#D4AF37] text-xs font-bold uppercase tracking-tighter">
+              <span className="w-8 h-[1px] bg-[#D4AF37]"></span>
+              The Adiray Team
+            </div>
+          </div>
+        </div>
       </section>
 
       {showChat && (

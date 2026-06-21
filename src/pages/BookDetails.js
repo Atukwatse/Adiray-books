@@ -58,15 +58,6 @@ const BookDetails = () => {
   return (
     <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* Breadcrumbs */}
-        <div className="text-xs text-gray-500 uppercase tracking-widest mb-8 flex items-center space-x-2">
-          <Link to="/" className="hover:text-gold transition-colors">Home</Link>
-          <span>/</span>
-          <Link to="/shop" className="hover:text-gold transition-colors">Books</Link>
-          <span>/</span>
-          <span className="text-charcoal font-semibold">{book.category}</span>
-        </div>
-
         {/* Product Panel */}
         <div className="flex flex-col lg:flex-row gap-16 mb-16">
           {/* Left Column: Image/Cover */}
