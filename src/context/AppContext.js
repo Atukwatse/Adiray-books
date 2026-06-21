@@ -283,6 +283,12 @@ export const AppProvider = ({ children }) => {
   };
 
   const register = async (userData) => {
+    // Ensure clean state before registration
+    clearAuthTokens();
+    localStorage.removeItem('userData');
+    setUser(null);
+    setIsAuthenticated(false);
+    
     try {
       await apiRequest('/auth/register/', {
         method: 'POST',
@@ -293,16 +299,22 @@ export const AppProvider = ({ children }) => {
           password: userData.password || 'AdirayBooks123!'
         }
       });
+      // Force logout after registration to ensure manual sign-in
+      clearAuthTokens();
+      localStorage.removeItem('userData');
+      setUser(null);
+      setIsAuthenticated(false);
       return true;
     } catch (error) {
       if (error.status) throw error;
-      const addedUser = await addUser({ ...userData, role: 'Customer' });
-      localStorage.setItem('authToken', 'offline-dev-token');
-      localStorage.setItem('userData', JSON.stringify(addedUser));
-      setUser(addedUser);
-      setIsAuthenticated(true);
+      await addUser({ ...userData, role: 'Customer' });
+      // Ensure clean state even in fallback mode
+      clearAuthTokens();
+      localStorage.removeItem('userData');
+      setUser(null);
+      setIsAuthenticated(false);
       markApiOffline();
-      return addedUser;
+      return true;
     }
   };
 
