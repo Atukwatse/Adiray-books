@@ -69,6 +69,7 @@ const Admin = () => {
     { id: 3, text: 'Customer review report: 5 stars on "Silent Algorithm"', type: 'info', time: '3h ago' }
   ]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [toast, setToast] = useState(null);
 
   const showToast = (message, type = 'success') => {
@@ -439,10 +440,20 @@ const Admin = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] text-charcoal font-sans flex overflow-hidden">
+    <div className="min-h-screen bg-[#F8F9FA] text-charcoal font-sans flex relative overflow-hidden">
       
-      {/* 1. Sidebar Navigation - Styled light and clean consistency */}
-      <aside className="w-64 border-r border-gray-200 bg-white shrink-0 flex flex-col justify-between py-6">
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-sm animate-fadeIn"
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
+
+      {/* 1. Sidebar Navigation - Responsive Drawer */}
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 border-r border-gray-200 bg-white flex flex-col justify-between py-6 transition-transform duration-300 transform lg:relative lg:translate-x-0 ${
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
         <div>
           {/* Logo Brand matching Header.js */}
           <div className="px-5 mb-10 flex items-center">
@@ -490,12 +501,20 @@ const Admin = () => {
       </aside>
 
       {/* 2. Main content container */}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col h-screen overflow-hidden w-full relative">
         
         {/* Top Header */}
-        <header className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-8 z-10 shrink-0">
-          <div className="flex items-center space-x-2">
-            <h2 className="text-lg font-bold font-serif text-charcoal uppercase tracking-wide">
+        <header className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-4 sm:px-8 z-10 shrink-0">
+          <div className="flex items-center space-x-3">
+            {/* Mobile Menu Trigger */}
+            <button 
+              onClick={() => setIsSidebarOpen(true)}
+              className="lg:hidden w-10 h-10 flex items-center justify-center text-charcoal bg-gray-50 border border-gray-200 rounded-none transition-all active:scale-95"
+            >
+              <i className="fas fa-bars text-lg"></i>
+            </button>
+
+            <h2 className="text-sm sm:text-lg font-bold font-serif text-charcoal uppercase tracking-wide truncate max-w-[150px] sm:max-w-none">
               {activeTab === 'dashboard' ? 'Overview Statistics' : 
                activeTab === 'books' ? 'Store Books Inventory' :
                activeTab === 'orders' ? 'Transactions & Shipments' :
@@ -509,9 +528,9 @@ const Admin = () => {
             )}
           </div>
 
-          <div className="flex items-center space-x-6">
-            {/* System Status Ticker */}
-            <div className="hidden lg:flex items-center space-x-2 text-[10px] text-gray-500 tracking-wider uppercase font-bold bg-gray-50 px-3 py-1 rounded border border-gray-200">
+          <div className="flex items-center space-x-3 sm:space-x-6">
+            {/* System Status Ticker - Hidden on smaller screens */}
+            <div className="hidden xl:flex items-center space-x-2 text-[10px] text-gray-500 tracking-wider uppercase font-bold bg-gray-50 px-3 py-1 rounded border border-gray-200">
               <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
               <span>Sync Status: Active</span>
             </div>
@@ -544,7 +563,7 @@ const Admin = () => {
         </header>
 
         {/* 3. Sub-pages contents viewports */}
-        <main className="flex-1 overflow-y-auto p-8 bg-[#F8F9FA]">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-8 bg-[#F8F9FA]">
 
           {/* ========================================================== */}
           {/* TAB 1: DASHBOARD OVERVIEW */}
@@ -553,7 +572,7 @@ const Admin = () => {
             <div className="space-y-8 animate-fadeIn">
               
               {/* Grid 4 Stats Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {[
                   { label: 'Store Sales Revenue', val: `${currencySymbol}${stats.sales.toFixed(2)}`, icon: 'fas fa-dollar-sign', trend: '+14.2% mtd', iconColor: 'text-[#D4AF37]', border: 'border-amber-100' },
                   { label: 'Dynamic Orders Placed', val: stats.orders, icon: 'fas fa-shopping-bag', trend: '+8.4% weekly', iconColor: 'text-charcoal', border: 'border-gray-200' },
@@ -577,10 +596,10 @@ const Admin = () => {
               </div>
 
               {/* Grid Area Chart & Bar Chart */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                 
                 {/* SVG Area Chart: Sales curves */}
-                <div className={`lg:col-span-2 bg-white border p-6 rounded-none ${accentGlow}`}>
+                <div className={`xl:col-span-2 bg-white border p-6 rounded-none order-2 xl:order-1 ${accentGlow}`}>
                   <div className="flex justify-between items-center mb-6">
                     <div>
                       <h3 className="text-sm font-bold text-charcoal uppercase tracking-wider font-serif">Dynamic Sales Volume Trend</h3>
@@ -675,7 +694,7 @@ const Admin = () => {
                 </div>
 
                 {/* SVG Bar Chart: Category distribution */}
-                <div className="bg-white border border-gray-200 p-6 rounded-none">
+                <div className="bg-white border border-gray-200 p-6 rounded-none order-1 xl:order-2">
                   <h3 className="text-sm font-bold text-charcoal uppercase tracking-wider mb-6 font-serif">Inventory by Category</h3>
                   
                   <div className="space-y-4">
@@ -705,10 +724,10 @@ const Admin = () => {
               </div>
 
               {/* Grid Recent Orders & Activity logs */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
                 
                 {/* Recent Orders table */}
-                <div className="lg:col-span-2 bg-white border border-gray-200 p-6 rounded-none overflow-hidden">
+                <div className="xl:col-span-2 bg-white border border-gray-200 p-6 rounded-none overflow-hidden">
                   <div className="flex justify-between items-center mb-6">
                     <h3 className="text-sm font-bold text-charcoal uppercase tracking-wider font-serif">Recent Orders</h3>
                     <button 
@@ -719,13 +738,13 @@ const Admin = () => {
                     </button>
                   </div>
 
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left text-xs text-charcoal divide-y divide-gray-200">
+                  <div className="overflow-x-auto -mx-6 px-6">
+                    <table className="w-full text-left text-[11px] sm:text-xs text-charcoal divide-y divide-gray-200 min-w-[500px]">
                       <thead>
                         <tr className="text-gray-400 uppercase tracking-widest font-bold">
-                          <th className="pb-3">Order ID</th>
-                          <th className="pb-3">Customer</th>
-                          <th className="pb-3">Date</th>
+                          <th className="pb-3 px-1">ID</th>
+                          <th className="pb-3 text-center">Customer</th>
+                          <th className="pb-3 hidden sm:table-cell">Date</th>
                           <th className="pb-3">Total</th>
                           <th className="pb-3 text-right">Status</th>
                         </tr>
@@ -733,10 +752,10 @@ const Admin = () => {
                       <tbody className="divide-y divide-gray-100">
                         {orders.slice(0, 4).map((o, idx) => (
                           <tr key={idx} className="hover:bg-gray-50 transition-colors group">
-                            <td className="py-3.5 font-mono font-bold text-gray-500 group-hover:text-charcoal transition-colors">{o.id}</td>
-                            <td className="py-3.5 font-semibold text-charcoal">{o.customerName}</td>
-                            <td className="py-3.5 font-light text-gray-500">{o.date}</td>
-                            <td className="py-3.5 font-bold font-mono text-charcoal">${o.total.toFixed(2)}</td>
+                            <td className="py-3.5 px-1 font-mono font-bold text-gray-500 group-hover:text-charcoal transition-colors">#{o.id.slice(-4)}</td>
+                            <td className="py-3.5 font-semibold text-charcoal text-center">{o.customerName}</td>
+                            <td className="py-3.5 font-light text-gray-500 hidden sm:table-cell">{o.date}</td>
+                            <td className="py-3.5 font-bold font-mono text-charcoal">${o.total.toFixed(0)}</td>
                             <td className="py-3.5 text-right">
                               <button
                                 onClick={() => handleOpenOrderDetails(o)}
@@ -846,8 +865,8 @@ const Admin = () => {
 
               {/* Books Inventory Grid */}
               <div className="bg-white border border-gray-200 rounded-none overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs text-charcoal divide-y divide-gray-200">
+                <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+                  <table className="w-full text-left text-xs text-charcoal divide-y divide-gray-200 min-w-[700px]">
                     <thead>
                       <tr className="text-gray-400 uppercase tracking-widest font-bold">
                         <th className="p-4">Cover</th>
@@ -979,8 +998,8 @@ const Admin = () => {
 
               {/* Orders datagrid */}
               <div className="bg-white border border-gray-200 rounded-none overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs text-charcoal divide-y divide-gray-200">
+                <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+                  <table className="w-full text-left text-xs text-charcoal divide-y divide-gray-200 min-w-[800px]">
                     <thead>
                       <tr className="text-gray-400 uppercase tracking-widest font-bold">
                         <th className="p-4">Order ID</th>
@@ -1080,8 +1099,8 @@ const Admin = () => {
 
               {/* Users catalog */}
               <div className="bg-white border border-gray-200 rounded-none overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs text-charcoal divide-y divide-gray-200">
+                <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+                  <table className="w-full text-left text-xs text-charcoal divide-y divide-gray-200 min-w-[900px]">
                     <thead>
                       <tr className="text-gray-400 uppercase tracking-widest font-bold">
                         <th className="p-4">Initials</th>
@@ -1410,8 +1429,8 @@ const Admin = () => {
             
             {/* Modal Header */}
             <div className="flex justify-between items-center pb-4 border-b border-gray-200 mb-6">
-              <h3 className="text-base font-bold font-serif uppercase tracking-widest text-charcoal">
-                {editingBook ? `Edit catalog record: ${editingBook.title}` : 'Catalog New Masterpiece'}
+              <h3 className="text-sm sm:text-base font-bold font-serif uppercase tracking-widest text-charcoal truncate pr-4">
+                {editingBook ? `Edit: ${editingBook.title}` : 'Catalog New Masterpiece'}
               </h3>
               <button 
                 onClick={() => setShowBookModal(false)}
@@ -1422,10 +1441,10 @@ const Admin = () => {
             </div>
 
             {/* Form body */}
-            <form onSubmit={handleSaveBook} className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <form onSubmit={handleSaveBook} className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 max-h-[70vh] overflow-y-auto pr-2">
               
               {/* Left visual cover preview */}
-              <div className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-none border border-gray-200">
+              <div className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-none border border-gray-200 lg:sticky lg:top-0">
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Masterpiece Preview</span>
                             {/* Visual cover card */}
                 <div className={`relative w-40 h-56 bg-gradient-to-br ${bookForm.coverColor} rounded-none shadow-md flex flex-col justify-between items-center p-3 border border-white/10 text-white overflow-hidden`}>
@@ -1475,7 +1494,7 @@ const Admin = () => {
               </div>
 
               {/* Middle and Right edit fields */}
-              <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
                 <div className="space-y-1">
                   <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Book Title *</label>
@@ -1770,10 +1789,10 @@ const Admin = () => {
             </div>
 
             {/* Invoice fields breakdown */}
-            <div className="space-y-6">
+            <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
               
               {/* Customer and shipping details */}
-              <div className="grid grid-cols-2 gap-6 text-xs bg-gray-50 p-4 border border-gray-200">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 text-xs bg-gray-50 p-4 border border-gray-200">
                 <div>
                   <h4 className="font-bold text-gray-400 uppercase tracking-wider mb-2">Customer Profile</h4>
                   <span className="block font-bold text-charcoal">{selectedOrder.customerName}</span>
@@ -1812,7 +1831,7 @@ const Admin = () => {
               </div>
 
               {/* Shipping settings & tracking updater */}
-              <div className="grid grid-cols-2 gap-6 items-center pt-4 border-t border-gray-250">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 items-center pt-4 border-t border-gray-250">
                 <div className="space-y-1.5">
                   <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tracking Number</label>
                   <div className="flex space-x-2">
