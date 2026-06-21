@@ -57,20 +57,20 @@ const BookCard = ({
 
     for (let i = 0; i < fullStars; i++) {
       stars.push(
-        <i key={`full-${i}`} className="fas fa-star text-amber-400 text-sm"></i>
+        <i key={`full-${i}`} className="fas fa-star text-gold text-sm"></i>
       );
     }
     
     if (hasHalfStar) {
       stars.push(
-        <i key="half" className="fas fa-star-half-alt text-amber-400 text-sm"></i>
+        <i key="half" className="fas fa-star-half-alt text-gold text-sm"></i>
       );
     }
     
     const emptyStars = 5 - Math.ceil(rating || 0);
     for (let i = 0; i < emptyStars; i++) {
       stars.push(
-        <i key={`empty-${i}`} className="far fa-star text-amber-400 text-sm"></i>
+        <i key={`empty-${i}`} className="far fa-star text-gold text-sm"></i>
       );
     }
     
@@ -125,7 +125,7 @@ const BookCard = ({
 
         {/* Featured Badge (if no checkbox) */}
         {!showCheckbox && book.featured && (
-          <div className="absolute top-3 left-3 bg-[#b35900] text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded shadow-sm">
+          <div className="absolute top-3 left-3 bg-gold text-white px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded shadow-sm">
             Featured
           </div>
         )}
@@ -138,42 +138,43 @@ const BookCard = ({
 
       {/* Book Details Info */}
       <div className="p-5 flex flex-col flex-grow">
-        <Link to={`/book/${book.id}`} className="hover:underline">
-          <h3 className="font-serif font-bold text-lg text-slate-800 mb-1 line-clamp-1 hover:text-[#b35900] transition-colors">
+        {/* Content Link */}
+        <Link to={`/book/${book.id}`} className="flex flex-col flex-grow group">
+          <h3 className="font-serif font-bold text-lg text-slate-800 mb-1 line-clamp-1 group-hover:text-gold transition-colors">
             {toTitleCase(book.title)}
           </h3>
-        </Link>
-        
-        <p className="text-slate-500 text-sm mb-3">
-          by {formatAuthor(book.author)}
-        </p>
-        
-        {/* Rating Stars & Count */}
-        <div className="flex items-center space-x-1 mb-3">
-          <div className="flex items-center space-x-0.5">
-            {renderStars(book.rating)}
-          </div>
-          <span className="text-slate-500 text-xs font-light">
-            ({book.reviews || 0})
-          </span>
-        </div>
-        
-        {/* Price Row */}
-        <div className="flex items-center space-x-2 mb-3">
-          <span className="text-xl font-bold text-[#b35900]">
-            ${book.price.toFixed(2)}
-          </span>
-          {book.originalPrice > book.price && (
-            <span className="text-sm text-slate-400 line-through">
-              ${book.originalPrice.toFixed(2)}
+          
+          <p className="text-slate-500 text-sm mb-3">
+            by {formatAuthor(book.author)}
+          </p>
+          
+          {/* Rating Stars & Count */}
+          <div className="flex items-center space-x-1 mb-3">
+            <div className="flex items-center space-x-0.5">
+              {renderStars(book.rating)}
+            </div>
+            <span className="text-slate-500 text-xs font-light">
+              ({book.reviews || 0})
             </span>
-          )}
-        </div>
+          </div>
+          
+          {/* Price Row */}
+          <div className="flex items-center space-x-2 mb-3">
+            <span className="text-xl font-bold text-gold">
+              ${book.price.toFixed(2)}
+            </span>
+            {book.originalPrice > book.price && (
+              <span className="text-sm text-slate-400 line-through">
+                ${book.originalPrice.toFixed(2)}
+              </span>
+            )}
+          </div>
 
-        {/* Short Description */}
-        <p className="text-slate-600 text-sm font-light mb-4 line-clamp-2 leading-relaxed">
-          {book.description || 'A beautiful story.'}
-        </p>
+          {/* Short Description */}
+          <p className="text-slate-600 text-sm font-light mb-4 line-clamp-2 leading-relaxed">
+            {book.description || 'A beautiful story.'}
+          </p>
+        </Link>
 
         {/* Date Added (Wishlist context) */}
         {showDateAdded && dateAdded && (
@@ -181,86 +182,6 @@ const BookCard = ({
             Added on {new Date(dateAdded).toLocaleDateString()}
           </p>
         )}
-
-        <div className="grid grid-cols-2 gap-2 mb-3">
-          <a
-            href={`tel:${sellerPhone}`}
-            className="h-9 border border-slate-200 text-slate-600 hover:border-[#b35900] hover:text-[#b35900] rounded-lg flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wide transition-colors"
-            aria-label={`Call seller about ${book.title}`}
-          >
-            <i className="fas fa-phone text-base"></i>
-            <span>Call</span>
-          </a>
-          <a
-            href={`https://wa.me/${sellerPhone.replace('+', '')}?text=${whatsappMessage}`}
-            target="_blank"
-            rel="noreferrer"
-            className="h-9 border border-slate-200 text-slate-600 hover:border-green-600 hover:text-green-600 rounded-lg flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wide transition-colors"
-            aria-label={`WhatsApp seller about ${book.title}`}
-          >
-            <i className="fab fa-whatsapp text-lg"></i>
-            <span>Chat</span>
-          </a>
-        </div>
-        
-        {/* Actions Button Bar */}
-        <div className="flex items-center space-x-2 mt-auto">
-          {!book.inStock ? (
-            <button
-              type="button"
-              disabled
-              className="flex-1 flex items-center justify-center py-2.5 px-4 rounded-lg font-semibold text-sm bg-slate-100 text-slate-400 cursor-not-allowed"
-            >
-              <span>Out of Stock</span>
-            </button>
-          ) : cartQuantity > 0 ? (
-            <div className="flex-1 h-10 grid grid-cols-[42px_1fr_42px] items-center overflow-hidden rounded-lg bg-green-600 text-white shadow-sm">
-              <button
-                type="button"
-                onClick={handleDecreaseCartQuantity}
-                className="h-full flex items-center justify-center bg-green-700 hover:bg-green-800 transition-colors"
-                aria-label={`Remove one ${book.title} from cart`}
-              >
-                <i className="fas fa-minus text-xs"></i>
-              </button>
-              <span className="text-center text-sm font-bold tracking-wide">
-                {cartQuantity} in Cart
-              </span>
-              <button
-                type="button"
-                onClick={handleAddToCart}
-                className="h-full flex items-center justify-center bg-green-700 hover:bg-green-800 transition-colors"
-                aria-label={`Add one more ${book.title} to cart`}
-              >
-                <i className="fas fa-plus text-xs"></i>
-              </button>
-            </div>
-          ) : (
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              className="flex-1 flex items-center justify-center space-x-2 py-2.5 px-4 rounded-lg font-semibold text-sm transition-all duration-200 bg-[#b35900] hover:bg-[#9c4d00] text-white shadow-sm hover:shadow"
-            >
-              <>
-                <i className="fas fa-shopping-cart text-xs"></i>
-                <span>Add to Cart</span>
-              </>
-            </button>
-          )}
-          
-          {showWishlistToggle && (
-            <button
-              onClick={handleAddToWishlist}
-              className={`w-10 h-10 flex items-center justify-center border rounded-lg transition-colors flex-shrink-0 ${
-                isInWishlist(book.id)
-                  ? 'border-red-200 text-red-500 bg-red-50 hover:bg-red-150'
-                  : 'border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-600 bg-white'
-              }`}
-            >
-              <i className={`${isInWishlist(book.id) ? 'fas' : 'far'} fa-heart text-base`}></i>
-            </button>
-          )}
-        </div>
       </div>
     </div>
   );

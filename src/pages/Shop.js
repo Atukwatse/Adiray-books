@@ -116,70 +116,7 @@ const Shop = () => {
       <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           
-          {/* Filters and Search Bar */}
-          <div className="bg-white p-6 mb-8 border border-gray-100 shadow-sm">
-            <div className="grid md:grid-cols-4 gap-4">
-              {/* Search */}
-              <div className="md:col-span-1">
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search books or authors..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-none focus:ring-1 focus:ring-charcoal focus:border-charcoal"
-                  />
-                  <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                </div>
-              </div>
 
-              {/* Category Filter */}
-              <div>
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-none focus:ring-1 focus:ring-charcoal focus:border-charcoal"
-                >
-                  {categories.map(category => (
-                    <option key={category.value} value={category.value}>
-                      {category.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Sort */}
-              <div>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-none focus:ring-1 focus:ring-charcoal focus:border-charcoal"
-                >
-                  {sortOptions.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Results Count */}
-          <div className="flex justify-between items-center mb-6">
-            <p className="text-gray-700">
-              Showing <span className="font-semibold">{filteredBooks.length}</span> of{' '}
-              <span className="font-semibold">{books.length}</span> books
-            </p>
-            <div className="flex space-x-2">
-              <button className="px-4 py-2 border border-gray-300 rounded-none hover:bg-gray-50 transition-colors">
-                <i className="fas fa-th-large mr-2"></i>Grid
-              </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-none hover:bg-gray-50 transition-colors">
-                <i className="fas fa-list mr-2"></i>List
-              </button>
-            </div>
-          </div>
 
           {/* Books Grid */}
           {loading ? (

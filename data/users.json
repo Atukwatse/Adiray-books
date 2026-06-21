@@ -38,5 +38,15 @@
     "ordersCount": 0,
     "totalSpent": 0.0,
     "joinedDate": "2023-09-01"
+  },
+  {
+    "id": "5",
+    "firstName": "Adiray",
+    "lastName": "Master",
+    "email": "adiray_admin@adiraybooks.com",
+    "role": "Admin",
+    "ordersCount": 0,
+    "totalSpent": 0.0,
+    "joinedDate": "2024-06-19"
   }
 ]

@@ -60,40 +60,25 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative bg-white overflow-hidden py-8 lg:py-12 group">
+    <section className="relative bg-white overflow-hidden pt-0 pb-8 lg:pt-0 lg:pb-12 group">
       {/* Slider Controls */}
-      <button 
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/80 hover:bg-charcoal text-charcoal hover:text-white border border-gray-200 hover:border-charcoal flex items-center justify-center transition-all shadow-sm opacity-0 group-hover:opacity-100"
-        aria-label="Previous slide"
-      >
-        <i className="fas fa-chevron-left text-xl"></i>
-      </button>
-      <button 
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-white/80 hover:bg-charcoal text-charcoal hover:text-white border border-gray-200 hover:border-charcoal flex items-center justify-center transition-all shadow-sm opacity-0 group-hover:opacity-100"
-        aria-label="Next slide"
-      >
-        <i className="fas fa-chevron-right text-xl"></i>
-      </button>
 
       {/* Slide Content */}
       <div className="hero-content-container responsive-container">
         <div className="relative w-full h-full">
           {slides.map((slide, index) => (
-            <div 
+            <div
               key={slide.id}
-              className={`transition-opacity duration-1000 absolute inset-0 flex items-center w-full h-full ${
-                index === currentSlide ? 'opacity-100 z-20 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'
-              }`}
+              className={`transition-opacity duration-1000 absolute inset-0 flex items-center w-full h-full ${index === currentSlide ? 'opacity-100 z-20 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'
+                }`}
             >
               <div className="hero-grid">
                 {/* Left Content - Typography */}
                 <div className="hero-text-col">
                   <div className="space-y-6">
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-charcoal leading-tight font-serif">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-charcoal leading-tight font-serif">
                       {slide.title}
-                      <span className="block italic font-light mt-2 text-gray-800">{slide.subtitle}</span>
+                      <span className="block italic font-light mt-2 text-gray-800 text-base sm:text-lg md:text-2xl lg:text-3xl">{slide.subtitle}</span>
                     </h1>
                     <p className="hero-desc">
                       {slide.description}
@@ -104,16 +89,13 @@ const Hero = () => {
                     <Link to={slide.primaryLink} className="bg-charcoal text-white border border-charcoal py-3 px-8 font-semibold tracking-widest text-sm uppercase hover:bg-white hover:text-charcoal transition-all text-center">
                       {slide.primaryText}
                     </Link>
-                    <Link to={slide.secondaryLink} className="bg-white text-charcoal border border-gray-300 py-3 px-8 font-semibold tracking-widest text-sm uppercase hover:border-charcoal transition-all text-center">
-                      {slide.secondaryText}
-                    </Link>
                   </div>
                 </div>
 
                 {/* Right Content - Generated Image */}
                 <div className="hero-img-col">
                   <div className="hero-img-wrapper">
-                    <img 
+                    <img
                       src={slide.image}
                       alt={slide.title}
                       className="hero-img"
@@ -135,9 +117,8 @@ const Hero = () => {
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 transition-all ${
-              index === currentSlide ? 'bg-charcoal scale-110' : 'bg-gray-300 hover:bg-gray-400'
-            }`}
+            className={`w-3 h-3 transition-all ${index === currentSlide ? 'bg-charcoal scale-110' : 'bg-gray-300 hover:bg-gray-400'
+              }`}
             aria-label={`Go to slide ${index + 1}`}
           ></button>
         ))}

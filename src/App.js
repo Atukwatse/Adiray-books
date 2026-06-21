@@ -6,6 +6,8 @@ import Splash from './components/Splash';
 import Admin from './pages/Admin';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import MobileTabBar from './components/MobileTabBar';
+import MobileInfoOverlay from './components/MobileInfoOverlay';
 import SkeletonLayout from './components/SkeletonLayout';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -17,10 +19,13 @@ import Orders from './pages/Orders';
 import Wishlist from './pages/Wishlist';
 import Settings from './pages/Settings';
 import Help from './pages/Help';
+import RefundPolicy from './pages/RefundPolicy';
 import Cart from './pages/Cart';
 import BookDetails from './pages/BookDetails';
 import Checkout from './pages/Checkout';
 import CheckoutSuccess from './pages/CheckoutSuccess';
+import Account from './pages/Account';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 import Educational from './pages/categories/Educational';
 import Inspirational from './pages/categories/Inspirational';
 import Novels from './pages/categories/Novels';
@@ -68,21 +73,21 @@ function MainLayout() {
 
     return () => clearTimeout(timer);
   }, [currentKey, showSplash]);
-  
+
   // Use Centralized Cart Context
-  const { 
-    cart, 
-    cartCount, 
-    cartTotal, 
-    addToCart: ctxAddToCart, 
-    removeFromCart: ctxRemoveFromCart, 
-    updateCartQuantity: ctxUpdateCartQuantity 
+  const {
+    cart,
+    cartCount,
+    cartTotal,
+    addToCart: ctxAddToCart,
+    removeFromCart: ctxRemoveFromCart,
+    updateCartQuantity: ctxUpdateCartQuantity
   } = useCart();
 
   const { books } = useBooks();
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   // Debounce the search input by 300ms
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
@@ -90,21 +95,22 @@ function MainLayout() {
   const [maxPrice, setMaxPrice] = useState(100);
   const [sortBy, setSortBy] = useState('featured');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isCategoryOverlayOpen, setIsCategoryOverlayOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Keep filteredBooks in sync when books catalog updates or filters change
   useEffect(() => {
     let filtered = books.filter(book => {
       const bookGenre = (book.genre || book.category || '').toLowerCase();
-      const matchesSearch = debouncedSearchTerm === '' || 
+      const matchesSearch = debouncedSearchTerm === '' ||
         book.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
         book.author.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
         bookGenre.includes(debouncedSearchTerm.toLowerCase());
-      
-      const matchesGenre = selectedGenres.length === 0 || 
+
+      const matchesGenre = selectedGenres.length === 0 ||
         selectedGenres.some(g => g.toLowerCase() === bookGenre);
       const matchesPrice = book.price <= maxPrice;
-      
+
       return matchesSearch && matchesGenre && matchesPrice;
     });
 
@@ -150,8 +156,8 @@ function MainLayout() {
 
   // Genre filter handlers
   const handleGenreChange = (genreId) => {
-    setSelectedGenres(prev => 
-      prev.includes(genreId) 
+    setSelectedGenres(prev =>
+      prev.includes(genreId)
         ? prev.filter(id => id !== genreId)
         : [...prev, genreId]
     );
@@ -178,48 +184,30 @@ function MainLayout() {
     <>
       {/* Splash Page */}
       {showSplash && <Splash onComplete={handleSplashComplete} />}
-      
+
       {/* Main App */}
-      <div className="min-h-screen bg-[#F5F2EB] flex flex-col relative">
+      <div className="min-h-screen bg-[#F5F2EB] flex flex-col relative w-full overflow-x-hidden">
         {/* Skeleton loading overlay */}
         <SkeletonLayout isLoading={isAppLoading} variant={skeletonVariant} />
 
         {/* Actual content container with cross-fade transition */}
-        <div className={`min-h-screen flex flex-col ${
-          isAppLoading 
-            ? 'opacity-0 pointer-events-none' 
-            : 'opacity-100 transition-opacity duration-700 ease-in-out'
-        }`}>
+        <div className={`min-h-screen flex flex-col ${isAppLoading
+          ? 'opacity-0 pointer-events-none'
+          : 'opacity-100 transition-opacity duration-700 ease-in-out'
+          }`}>
           <Header
             cartCount={getCartCount()}
             cartTotal={getCartTotal()}
             onSearchOpen={openSearch}
+            onSearchClose={closeSearch}
+            isSearchOpen={isSearchOpen}
             onCartClick={() => navigate('/cart')}
             isMobileMenuOpen={isMobileMenuOpen}
             onMobileMenuToggle={toggleMobileMenu}
+            isCategoryOverlayOpen={isCategoryOverlayOpen}
+            setIsCategoryOverlayOpen={setIsCategoryOverlayOpen}
           />
 
-          {/* Search Overlay */}
-          {isSearchOpen && (
-            <div className="fixed inset-0 bg-charcoal bg-opacity-95 z-50 flex items-center justify-center">
-              <div className="relative w-full max-w-2xl px-4">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search for books, authors, or genres..."
-                  className="w-full px-6 py-4 text-lg bg-transparent border-b-2 border-mustard text-white placeholder-gray-400 outline-none"
-                  autoFocus
-                />
-                <button
-                  onClick={closeSearch}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-2xl hover:text-mustard transition-colors"
-                >
-                  <i className="fas fa-times"></i>
-                </button>
-              </div>
-            </div>
-          )}
 
           <div className="flex-grow main-content-offset">
             <Outlet context={{
@@ -241,6 +229,11 @@ function MainLayout() {
           </div>
 
           <Footer />
+          <MobileTabBar
+            onSearchOpen={openSearch}
+            setIsCategoryOverlayOpen={setIsCategoryOverlayOpen}
+          />
+          <MobileInfoOverlay />
         </div>
       </div>
     </>
@@ -265,6 +258,9 @@ function App() {
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/help" element={<Help />} />
+            <Route path="/refund-policy" element={<RefundPolicy />} />
+            <Route path="/account" element={<Account />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/book/:id" element={<BookDetails />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/checkout/success" element={<CheckoutSuccess />} />

@@ -15,8 +15,8 @@ const Contact = () => {
     }
   ]);
 
-  const phoneNumber = '+256744219162';
-  const whatsappMessage = encodeURIComponent('Hi Adiray Books, I want help buying a book.');
+  const phoneNumber = '+211920889342';
+  const emails = ['info@adiraybooks.com', 'marketingandsales@adiraybooks.com'];
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -37,25 +37,50 @@ const Contact = () => {
 
   const contactOptions = [
     {
-      label: 'Call Us',
-      icon: 'fas fa-phone',
-      href: `tel:${phoneNumber}`,
-    },
-    {
       label: 'Email Us',
       icon: 'fas fa-envelope',
-      href: 'mailto:info@adiraybooks.com?subject=Book%20Buying%20Help',
+      href: `mailto:${emails[0]}`,
+      sublabel: emails[0]
+    },
+    {
+      label: 'Sales & Marketing',
+      icon: 'fas fa-bullhorn',
+      href: `mailto:${emails[1]}`,
+      sublabel: emails[1]
     },
     {
       label: 'WhatsApp',
       icon: 'fab fa-whatsapp',
-      href: `https://wa.me/${phoneNumber.replace('+', '')}?text=${whatsappMessage}`,
+      href: `https://wa.me/${phoneNumber.replace('+', '')}`,
+      sublabel: phoneNumber,
+      external: true,
+    },
+    {
+      label: 'Instagram',
+      icon: 'fab fa-instagram',
+      href: 'https://instagram.com/adiraybooks',
+      sublabel: '@adiraybooks',
+      external: true,
+    },
+    {
+      label: 'Facebook',
+      icon: 'fab fa-facebook',
+      href: 'https://facebook.com/adiraybooks',
+      sublabel: 'adiraybooks',
+      external: true,
+    },
+    {
+      label: 'TikTok',
+      icon: 'fab fa-tiktok',
+      href: 'https://tiktok.com/@adiraybooks',
+      sublabel: '@adiraybooks',
       external: true,
     },
     {
       label: 'Live Chat',
       icon: 'fas fa-comments',
       action: () => setShowChat(true),
+      sublabel: 'Talk to a seller'
     },
   ];
 
@@ -67,10 +92,13 @@ const Contact = () => {
             const content = (
               <>
                 <i className={`${option.icon} text-2xl leading-none w-10 shrink-0 text-[#B8860B] group-hover:text-[#D4AF37] transition-colors`}></i>
-                <span className="ml-2 text-sm font-bold tracking-wide">{option.label}</span>
+                <div className="ml-2 flex flex-col items-start text-left">
+                  <span className="text-sm font-bold tracking-wide">{option.label}</span>
+                  {option.sublabel && <span className="text-[10px] text-gray-500 font-medium">{option.sublabel}</span>}
+                </div>
               </>
             );
-            const className = "h-16 bg-white border border-gray-200 hover:border-[#D4AF37] hover:bg-[#FFFDF7] text-charcoal flex items-center px-5 sm:px-6 transition-colors group shadow-sm";
+            const className = "h-20 bg-white border border-gray-200 hover:border-[#D4AF37] hover:bg-[#FFFDF7] text-charcoal flex items-center px-5 sm:px-6 transition-all group shadow-sm hover:shadow-md";
 
             return option.action ? (
               <button

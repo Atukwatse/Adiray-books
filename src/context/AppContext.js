@@ -263,12 +263,14 @@ export const AppProvider = ({ children }) => {
     } catch (error) {
       if (error.status) throw error;
 
-      const fallbackUser = users.find(profile => profile.email.toLowerCase() === email.toLowerCase()) || {
+      const existingUser = users.find(profile => profile.email.toLowerCase() === email.toLowerCase());
+
+      const fallbackUser = existingUser || {
         firstName: email.split('@')[0],
         lastName: 'User',
         email,
         id: '99',
-        role: email.toLowerCase() === 'admin@adiraybooks.com' ? 'Admin' : 'Customer'
+        role: 'Customer'
       };
 
       localStorage.setItem('authToken', 'offline-dev-token');

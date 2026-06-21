@@ -56,8 +56,11 @@ const FilterSidebar = ({
 
       {/* Genre Filter */}
       <div className="mb-8">
-        <h3 className="text-lg font-bold text-charcoal mb-4">GENRE</h3>
-        <ul className="space-y-2">
+        <h3 className="text-xs font-black text-charcoal mb-5 uppercase tracking-[0.2em] flex items-center">
+          <span className="w-1.5 h-1.5 bg-gold rounded-full mr-2"></span>
+          Genre
+        </h3>
+        <ul className="space-y-2.5">
           {genres.map((genre) => (
             <li key={genre.id}>
               <label className="flex items-center cursor-pointer group">
@@ -67,7 +70,7 @@ const FilterSidebar = ({
                   onChange={() => onGenreChange(genre.id)}
                   className="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold focus:ring-2"
                 />
-                <span className="ml-3 text-charcoal group-hover:text-gold transition-colors duration-200">
+                <span className="ml-3 text-sm text-gray-600 group-hover:text-gold transition-colors duration-200 font-medium">
                   {genre.label}
                 </span>
               </label>
@@ -76,15 +79,70 @@ const FilterSidebar = ({
         </ul>
       </div>
 
+      {/* Type / Format Filter (Placeholder) */}
+      <div className="mb-8">
+        <h3 className="text-xs font-black text-charcoal mb-5 uppercase tracking-[0.2em] flex items-center">
+          <span className="w-1.5 h-1.5 bg-gold rounded-full mr-2"></span>
+          Format
+        </h3>
+        <ul className="space-y-2.5">
+          {['Paperback', 'Hardcover', 'E-Book', 'Audiobook'].map((type) => (
+            <li key={type}>
+              <label className="flex items-center cursor-pointer group opacity-60">
+                <input
+                  type="checkbox"
+                  disabled
+                  className="w-4 h-4 text-gray-300 border-gray-300 rounded cursor-not-allowed"
+                />
+                <span className="ml-3 text-sm text-gray-600 font-medium">{type}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Feature Filter */}
+      <div className="mb-8">
+        <h3 className="text-xs font-black text-charcoal mb-5 uppercase tracking-[0.2em] flex items-center">
+          <span className="w-1.5 h-1.5 bg-gold rounded-full mr-2"></span>
+          Features
+        </h3>
+        <ul className="space-y-2.5">
+          <li>
+            <label className="flex items-center cursor-pointer group">
+              <input
+                type="checkbox"
+                checked={sortBy === 'featured'}
+                onChange={() => onSortChange(sortBy === 'featured' ? 'newest' : 'featured')}
+                className="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold focus:ring-2"
+              />
+              <span className="ml-3 text-sm text-gray-600 group-hover:text-gold transition-colors duration-200 font-medium">Featured Items</span>
+            </label>
+          </li>
+          <li>
+            <label className="flex items-center cursor-pointer group">
+              <input
+                type="checkbox"
+                defaultChecked
+                className="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold focus:ring-2"
+              />
+              <span className="ml-3 text-sm text-gray-600 group-hover:text-gold transition-colors duration-200 font-medium">Search In Stock</span>
+            </label>
+          </li>
+        </ul>
+      </div>
 
       {/* Rating Filter */}
       <div className="mb-8">
-        <h3 className="text-lg font-bold text-charcoal mb-4">RATING</h3>
-        <div className="space-y-2">
+        <h3 className="text-xs font-black text-charcoal mb-5 uppercase tracking-[0.2em] flex items-center">
+          <span className="w-1.5 h-1.5 bg-gold rounded-full mr-2"></span>
+          Rating
+        </h3>
+        <div className="space-y-3">
           {[5, 4, 3, 2, 1].map((rating) => (
-            <div key={rating} className="flex items-center justify-between">
-              <span className="text-sm text-gray-600">
-                {rating} {rating === 1 ? 'Star' : 'Stars'} & Up
+            <div key={rating} className="flex items-center justify-between group cursor-pointer" onClick={() => handleRatingClick(rating)}>
+              <span className={`text-xs ${selectedRating === rating ? 'text-gold font-bold' : 'text-gray-500'} group-hover:text-gold transition-colors`}>
+                {rating} Stars & Up
               </span>
               {renderStars(rating, true)}
             </div>

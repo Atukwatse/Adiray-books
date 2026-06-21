@@ -9,13 +9,13 @@ module.exports = {
       colors: {
         'white': '#F5F2EB', // elegant eye-friendly cream
         'cream': '#F5F2EB',
-        'gold': '#EEDC82', // subtle yellow
+        'gold': '#EA580C', // dark orange brand accent
         'charcoal': '#0A0A0A', // sharp black
-        'mustard': '#EEDC82',
+        'mustard': '#EA580C',
         'light-gray': '#EBE6DC', // elegant warm border/gray
         'medium-gray': '#6C757D',
         'dark-gray': '#343A40',
-        'orange-accent': '#E65F2B'
+        'orange-accent': '#EA580C'
       },
       fontFamily: {
         'serif': ['Playfair Display', 'serif'],
@@ -29,7 +29,8 @@ module.exports = {
       animation: {
         'fade-in-up': 'fadeInUp 0.8s ease-out',
         'slide-in-right': 'slideInRight 0.3s ease-out',
-        'bounce-subtle': 'bounceSubtle 0.5s ease-out'
+        'bounce-subtle': 'bounceSubtle 0.5s ease-out',
+        'slideUp': 'slideUp 0.4s ease-out'
       },
       keyframes: {
         fadeInUp: {
@@ -53,12 +54,12 @@ module.exports = {
           }
         },
         bounceSubtle: {
-          '0%, 100%': {
-            transform: 'translateY(0)'
-          },
-          '50%': {
-            transform: 'translateY(-2px)'
-          }
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-2px)' }
+        },
+        slideUp: {
+          '0%': { transform: 'translate(calc(-50%), 100%)', opacity: '0' },
+          '100%': { transform: 'translate(calc(-50%), 0)', opacity: '1' }
         }
       }
     },

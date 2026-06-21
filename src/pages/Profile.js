@@ -142,49 +142,11 @@ const Profile = () => {
       <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           
-          {/* Profile Header */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border-2 border-amber-200">
-            {statusMessage && (
-              <div className="mb-4 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-lg text-sm">
-                {statusMessage}
-              </div>
-            )}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-6">
-                <div className="w-24 h-24 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-3xl font-bold">
-                    {formData.firstName[0]}{formData.lastName[0]}
-                  </span>
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    {formData.firstName} {formData.lastName}
-                  </h2>
-                  <p className="text-gray-600">{formData.email}</p>
-                  <div className="flex items-center mt-2 space-x-4">
-                    <span className="text-sm text-amber-600">
-                      <i className="fas fa-book mr-1"></i>
-                      Member since 2023
-                    </span>
-                    <span className="text-sm text-amber-600">
-                      <i className="fas fa-shopping-bag mr-1"></i>
-                      23 Orders
-                    </span>
-                    <span className="text-sm text-amber-600">
-                      <i className="fas fa-heart mr-1"></i>
-                      47 Wishlist
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <button
-                onClick={isEditing ? handleSave : handleEdit}
-                className="bg-amber-700 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-800 transition-colors"
-              >
-                {isEditing ? 'Save Changes' : 'Edit Profile'}
-              </button>
+          {statusMessage && (
+            <div className="mb-4 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-3 rounded-lg text-sm">
+              {statusMessage}
             </div>
-          </div>
+          )}
 
           {/* Tabs */}
           <div className="bg-white rounded-2xl shadow-xl border-2 border-amber-200">

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Contact from './Contact';
 
 const Help = () => {
   useEffect(() => {
@@ -8,6 +9,17 @@ const Help = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
   const [expandedFaq, setExpandedFaq] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  if (isMobile) {
+    return <Contact />;
+  }
 
   const categories = [
     { id: 'all', label: 'All Topics', icon: 'fa-th-large' },
@@ -59,7 +71,7 @@ const Help = () => {
       id: 7,
       category: 'returns',
       question: 'What is your return policy?',
-      answer: 'We offer a 30-day return policy for most items. Books must be in original condition with no damage or markings. To initiate a return, go to "My Orders" and click "Return Item" next to the order you want to return.'
+      answer: <>We offer a <a href="/refund-policy" className="text-amber-600 font-bold hover:underline">2-day return policy</a> for most items. Books must be in original condition with no damage or markings. Please contact us at info@adiraybooks.com to initiate a return.</>
     },
     {
       id: 8,

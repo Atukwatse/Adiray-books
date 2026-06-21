@@ -46,7 +46,7 @@ const Checkout = () => {
 
     if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
     if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -58,7 +58,7 @@ const Checkout = () => {
     if (!formData.zipCode.trim()) newErrors.zipCode = 'ZIP / Postal code is required';
 
     if (!formData.cardName.trim()) newErrors.cardName = 'Name on card is required';
-    
+
     if (!formData.cardNumber.trim()) {
       newErrors.cardNumber = 'Card number is required';
     } else if (!/^\d{16}$/.test(formData.cardNumber.replace(/\s/g, ''))) {
@@ -96,7 +96,7 @@ const Checkout = () => {
       setTimeout(async () => {
         const orderId = `ORD-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
         const today = new Date().toISOString().split('T')[0];
-        
+
         // Calculate estimated delivery: 5 days from now
         const deliveryDate = new Date();
         deliveryDate.setDate(deliveryDate.getDate() + 5);
@@ -168,13 +168,13 @@ const Checkout = () => {
           {/* Billing Form Column */}
           <div className="lg:w-2/3">
             <form onSubmit={handleSubmit} className="space-y-10">
-              
+
               {/* Section 1: Customer & Shipping */}
               <div>
                 <h2 className="text-xl font-bold font-serif text-charcoal pb-3 border-b border-gray-100 mb-6 uppercase tracking-wider">
                   Shipping Coordinates
                 </h2>
-                
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">First Name</label>
@@ -183,9 +183,8 @@ const Checkout = () => {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${
-                        errors.firstName ? 'border-red-500' : 'border-gray-200'
-                      }`}
+                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.firstName ? 'border-red-500' : 'border-gray-200'
+                        }`}
                       placeholder="John"
                     />
                     {errors.firstName && <p className="text-xs text-red-500 mt-1">{errors.firstName}</p>}
@@ -198,9 +197,8 @@ const Checkout = () => {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${
-                        errors.lastName ? 'border-red-500' : 'border-gray-200'
-                      }`}
+                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.lastName ? 'border-red-500' : 'border-gray-200'
+                        }`}
                       placeholder="Doe"
                     />
                     {errors.lastName && <p className="text-xs text-red-500 mt-1">{errors.lastName}</p>}
@@ -213,9 +211,8 @@ const Checkout = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${
-                        errors.email ? 'border-red-500' : 'border-gray-200'
-                      }`}
+                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.email ? 'border-red-500' : 'border-gray-200'
+                        }`}
                       placeholder="johndoe@example.com"
                     />
                     {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
@@ -228,9 +225,8 @@ const Checkout = () => {
                       name="address"
                       value={formData.address}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${
-                        errors.address ? 'border-red-500' : 'border-gray-200'
-                      }`}
+                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.address ? 'border-red-500' : 'border-gray-200'
+                        }`}
                       placeholder="123 Book Lane, Library District"
                     />
                     {errors.address && <p className="text-xs text-red-500 mt-1">{errors.address}</p>}
@@ -243,9 +239,8 @@ const Checkout = () => {
                       name="city"
                       value={formData.city}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${
-                        errors.city ? 'border-red-500' : 'border-gray-200'
-                      }`}
+                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.city ? 'border-red-500' : 'border-gray-200'
+                        }`}
                       placeholder="Reading"
                     />
                     {errors.city && <p className="text-xs text-red-500 mt-1">{errors.city}</p>}
@@ -258,9 +253,8 @@ const Checkout = () => {
                       name="zipCode"
                       value={formData.zipCode}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${
-                        errors.zipCode ? 'border-red-500' : 'border-gray-200'
-                      }`}
+                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.zipCode ? 'border-red-500' : 'border-gray-200'
+                        }`}
                       placeholder="10001"
                     />
                     {errors.zipCode && <p className="text-xs text-red-500 mt-1">{errors.zipCode}</p>}
@@ -282,9 +276,8 @@ const Checkout = () => {
                       name="cardName"
                       value={formData.cardName}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-white border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${
-                        errors.cardName ? 'border-red-500' : 'border-gray-200'
-                      }`}
+                      className={`w-full px-4 py-3 bg-white border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.cardName ? 'border-red-500' : 'border-gray-200'
+                        }`}
                       placeholder="JOHN DOE"
                     />
                     {errors.cardName && <p className="text-xs text-red-500 mt-1">{errors.cardName}</p>}
@@ -297,9 +290,8 @@ const Checkout = () => {
                       name="cardNumber"
                       value={formData.cardNumber}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-white border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${
-                        errors.cardNumber ? 'border-red-500' : 'border-gray-200'
-                      }`}
+                      className={`w-full px-4 py-3 bg-white border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.cardNumber ? 'border-red-500' : 'border-gray-200'
+                        }`}
                       placeholder="1111 2222 3333 4444"
                       maxLength={19}
                     />
@@ -313,9 +305,8 @@ const Checkout = () => {
                       name="cardExpiry"
                       value={formData.cardExpiry}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-white border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${
-                        errors.cardExpiry ? 'border-red-500' : 'border-gray-200'
-                      }`}
+                      className={`w-full px-4 py-3 bg-white border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.cardExpiry ? 'border-red-500' : 'border-gray-200'
+                        }`}
                       placeholder="MM/YY"
                       maxLength={5}
                     />
@@ -329,9 +320,8 @@ const Checkout = () => {
                       name="cardCvv"
                       value={formData.cardCvv}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 bg-white border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${
-                        errors.cardCvv ? 'border-red-500' : 'border-gray-200'
-                      }`}
+                      className={`w-full px-4 py-3 bg-white border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.cardCvv ? 'border-red-500' : 'border-gray-200'
+                        }`}
                       placeholder="***"
                       maxLength={4}
                     />
@@ -388,7 +378,7 @@ const Checkout = () => {
                   <span>Subtotal</span>
                   <span className="text-charcoal font-semibold">${subtotal.toFixed(2)}</span>
                 </div>
-                
+
                 <div className="flex justify-between">
                   <span>Shipping</span>
                   <span className="text-charcoal font-semibold">

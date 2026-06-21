@@ -80,18 +80,6 @@ const BookDetails = () => {
                 className="w-full h-full object-cover"
                 onError={handleBookCoverError}
               />
-
-              {/* Wishlist Icon Overlay */}
-              <button
-                onClick={() => toggleWishlist(book)}
-                className={`absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 hover:bg-white shadow-lg flex items-center justify-center transition-all duration-300 border z-10 ${
-                  isInWishlist(book.id)
-                    ? 'border-red-100 text-red-500'
-                    : 'border-gray-100 text-gray-400 hover:text-charcoal'
-                }`}
-              >
-                <i className={`${isInWishlist(book.id) ? 'fas' : 'far'} fa-heart text-lg`}></i>
-              </button>
             </div>
           </div>
 
@@ -137,37 +125,33 @@ const BookDetails = () => {
               {book.description}
             </p>
 
-            {/* Quantity Selector & Add to Cart */}
+            {/* Add to Cart & Wishlist */}
             <div className="flex flex-col sm:flex-row gap-4 mb-10">
-              <div className="flex items-center border border-gray-200 h-14 w-32 justify-between">
+              <div className="flex flex-1 gap-3">
                 <button
-                  onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-                  className="px-4 py-2 text-gray-500 hover:text-charcoal hover:bg-gray-50 transition-colors h-full flex items-center justify-center font-bold text-lg"
+                  onClick={handleAddToCart}
+                  className={`flex-1 h-14 font-bold uppercase tracking-widest transition-all duration-300 rounded-full flex items-center justify-center space-x-3 shadow-md hover:shadow-lg active:scale-[0.98] ${
+                    isAddedToCart
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gold text-white hover:bg-orange-700 shadow-orange-900/10'
+                  }`}
                 >
-                  -
+                  <i className={`fas ${isAddedToCart ? 'fa-check' : 'fa-shopping-cart'} text-lg`}></i>
+                  <span>{isAddedToCart ? 'Added!' : 'Add to Cart'}</span>
                 </button>
-                <span className="text-charcoal font-semibold text-base w-8 text-center">
-                  {quantity}
-                </span>
+
                 <button
-                  onClick={() => setQuantity(prev => prev + 1)}
-                  className="px-4 py-2 text-gray-500 hover:text-charcoal hover:bg-gray-50 transition-colors h-full flex items-center justify-center font-bold text-lg"
+                  onClick={() => toggleWishlist(book)}
+                  className={`w-14 h-14 flex items-center justify-center rounded-2xl transition-all duration-300 shadow-sm border ${
+                    isInWishlist(book.id)
+                      ? 'bg-red-50 text-red-500 border-red-100'
+                      : 'bg-white text-gray-400 border-gray-100 hover:bg-red-50 hover:text-red-400 hover:border-red-100'
+                  }`}
+                  aria-label={isInWishlist(book.id) ? "Remove from wishlist" : "Add to wishlist"}
                 >
-                  +
+                  <i className={`${isInWishlist(book.id) ? 'fas' : 'far'} fa-heart text-2xl`}></i>
                 </button>
               </div>
-
-              <button
-                onClick={handleAddToCart}
-                className={`flex-1 h-14 font-semibold uppercase tracking-widest transition-all duration-300 border flex items-center justify-center space-x-2 ${
-                  isAddedToCart
-                    ? 'bg-green-500 text-white border-green-500'
-                    : 'bg-charcoal text-white border-charcoal hover:bg-gold hover:text-charcoal'
-                }`}
-              >
-                <i className={`fas ${isAddedToCart ? 'fa-check' : 'fa-shopping-bag'} text-sm`}></i>
-                <span>{isAddedToCart ? 'Added to Cart!' : 'Add to Shopping Bag'}</span>
-              </button>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-10">
@@ -189,21 +173,38 @@ const BookDetails = () => {
               </a>
             </div>
 
-            {/* Delivery Guarantees */}
-            <div className="grid grid-cols-2 gap-6 pt-8 border-t border-gray-100 text-sm">
-              <div className="flex items-start space-x-3">
-                <i className="fas fa-truck text-gold mt-1"></i>
-                <div>
-                  <h4 className="font-semibold text-charcoal font-serif">Free Shipping</h4>
-                  <p className="text-xs text-gray-500 font-light mt-0.5">Complimentary delivery over $50</p>
+            {/* Means of Delivery */}
+            <div className="pt-8 border-t border-gray-100">
+              <h3 className="text-sm font-bold text-charcoal uppercase tracking-widest mb-4 font-serif">Means of Delivery</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                <div className="flex items-center space-x-3 p-3 border border-gray-100 rounded-lg hover:border-gold transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center text-gold flex-shrink-0">
+                    <i className="fas fa-motorcycle"></i>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-charcoal">Home Delivery</h4>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wide">Juba Area • $2.00 • Same Day</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-start space-x-3">
-                <i className="fas fa-undo text-gold mt-1"></i>
-                <div>
-                  <h4 className="font-semibold text-charcoal font-serif">Easy Return Policy</h4>
-                  <p className="text-xs text-gray-500 font-light mt-0.5">30-day money-back assurance</p>
+                <div className="flex items-center space-x-3 p-3 border border-gray-100 rounded-lg hover:border-gold transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 flex-shrink-0">
+                    <i className="fas fa-truck-fast"></i>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-charcoal">State Delivery</h4>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wide">Outside Juba • $10.00 • 2-4 Days</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3 p-3 border border-gray-100 rounded-lg hover:border-gold transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600 flex-shrink-0">
+                    <i className="fas fa-store"></i>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-charcoal">Store Pickup</h4>
+                    <p className="text-[10px] text-gray-500 uppercase tracking-wide">Juba Town • Free • Immediate</p>
+                  </div>
                 </div>
               </div>
             </div>

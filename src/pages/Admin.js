@@ -56,7 +56,9 @@ const Admin = () => {
   const currencySymbol = {
     USD: '$',
     EUR: '€',
-    GBP: '£'
+    GBP: '£',
+    UGX: 'UGX ',
+    SDG: 'SDG '
   }[storeSettings.currency];
 
   // System states
@@ -67,12 +69,19 @@ const Admin = () => {
     { id: 3, text: 'Customer review report: 5 stars on "Silent Algorithm"', type: 'info', time: '3h ago' }
   ]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   const pushNotification = (text, type = 'info') => {
     setNotifications(prev => [
       { id: Date.now(), text, type, time: 'Just now' },
       ...prev
     ]);
+    showToast(text, type);
   };
 
   // Books State & Forms
@@ -239,7 +248,7 @@ const Admin = () => {
       category: 'technology',
       coverColor: 'from-blue-600 to-indigo-900',
       rating: '4.5',
-      reviews: '12',
+      reviews: '0',
       inStock: true,
       description: '',
       publisher: 'Adiray Library Press',
@@ -307,8 +316,9 @@ const Admin = () => {
       originalPrice: originalPriceNum,
       category: bookForm.category,
       coverColor: bookForm.coverColor,
-      rating: parseFloat(bookForm.rating) || 4.5,
-      reviews: parseInt(bookForm.reviews) || 0,
+      // Automatic values
+      rating: editingBook ? editingBook.rating : (parseFloat(bookForm.rating) || 4.5),
+      reviews: editingBook ? editingBook.reviews : (parseInt(bookForm.reviews) || 0),
       inStock: bookForm.inStock,
       description: bookForm.description,
       publisher: bookForm.publisher,
@@ -1188,6 +1198,8 @@ const Admin = () => {
                         <option value="USD">US Dollar ($ USD)</option>
                         <option value="EUR">Euro (€ EUR)</option>
                         <option value="GBP">British Pound (£ GBP)</option>
+                        <option value="UGX">Uganda Shilling (UGX)</option>
+                        <option value="SDG">Sudanese Pound (SDG)</option>
                       </select>
                     </div>
                     <div className="space-y-1.5">
@@ -1515,31 +1527,7 @@ const Admin = () => {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="space-y-1">
-                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Rating</label>
-                    <input
-                      type="number"
-                      step="0.1"
-                      min="1"
-                      max="5"
-                      placeholder="4.5"
-                      value={bookForm.rating}
-                      onChange={(e) => setBookForm(prev => ({ ...prev, rating: e.target.value }))}
-                      className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-xs text-charcoal font-mono placeholder-gray-400 outline-none focus:border-charcoal"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Reviews Count</label>
-                    <input
-                      type="number"
-                      placeholder="0"
-                      value={bookForm.reviews}
-                      onChange={(e) => setBookForm(prev => ({ ...prev, reviews: e.target.value }))}
-                      className="w-full bg-white border border-gray-300 rounded px-3 py-2 text-xs text-charcoal font-mono placeholder-gray-400 outline-none focus:border-charcoal"
-                    />
-                  </div>
-                </div>
+                {/* Rating and Reviews are now automatic based on user feedback */}
 
                 <div className="space-y-1">
                   <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider">Category</label>
@@ -1859,6 +1847,23 @@ const Admin = () => {
                 <span className="text-lg font-bold font-mono text-[#D4AF37]">${selectedOrder.total.toFixed(2)}</span>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+      {/* Success Toast Notification */}
+      {toast && (
+        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-[100] animate-slideUp">
+          <div className={`px-6 py-4 rounded-none shadow-2xl flex items-center space-x-3 border-l-4 ${
+            toast.type === 'success' ? 'bg-white border-emerald-500 text-charcoal' : 
+            toast.type === 'warning' ? 'bg-white border-amber-500 text-charcoal' : 
+            'bg-white border-charcoal text-charcoal'
+          }`}>
+            <i className={`fas ${
+              toast.type === 'success' ? 'fa-check-circle text-emerald-500' : 
+              toast.type === 'warning' ? 'fa-exclamation-triangle text-amber-500' : 
+              'fa-info-circle text-charcoal'
+            }`}></i>
+            <span className="text-sm font-bold uppercase tracking-wider">{toast.message}</span>
           </div>
         </div>
       )}
