@@ -42,8 +42,10 @@ const Login = () => {
 
       if (!formData.password) {
         newErrors.password = 'Password is required';
-      } else if (formData.password.length < 6) {
-        newErrors.password = 'Password must be at least 6 characters';
+      } else if (formData.password.length < 8) {
+        newErrors.password = 'Password must be at least 8 characters long';
+      } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/.test(formData.password)) {
+        newErrors.password = 'Password must include uppercase, lowercase, and a number';
       }
 
       if (formData.password !== formData.confirmPassword) {
@@ -78,7 +80,16 @@ const Login = () => {
     setIsLoading(true);
     try {
       if (isSignUp) {
-        await register(formData);
+        // Map username to first/last name for backend if needed
+        const nameParts = formData.username.trim().split(/\s+/);
+        const firstName = nameParts[0] || formData.username;
+        const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : 'User';
+        
+        await register({
+          ...formData,
+          firstName,
+          lastName
+        });
       } else {
         const authUser = await login(formData.email, formData.password);
         if (authUser?.role === 'Admin') {

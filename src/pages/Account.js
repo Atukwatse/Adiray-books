@@ -12,7 +12,7 @@ const Account = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 w-full overflow-x-hidden">
+    <div className="min-h-screen bg-[#F5F2EB] py-12 px-4 sm:px-6 lg:px-8 w-full overflow-x-hidden">
       <div className="max-w-md mx-auto space-y-6 w-full">
 
         {/* Header */}
@@ -24,7 +24,7 @@ const Account = () => {
         </div>
 
         {/* Card 1: Auth / Profile */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden transition-all hover:shadow-md">
+        <div className="bg-[#F5F2EB] rounded-2xl shadow-sm border border-slate-200 overflow-hidden transition-all hover:shadow-md">
           <div className="p-4 sm:p-6">
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
@@ -71,8 +71,8 @@ const Account = () => {
         </div>
 
         {/* Card 2: App Settings */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-50 bg-slate-50/30">
+        <div className="bg-[#F5F2EB] rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-slate-200 bg-slate-500/5">
             <h3 className="text-xs font-black text-charcoal uppercase tracking-[0.2em]">App Settings</h3>
           </div>
 
