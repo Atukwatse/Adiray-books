@@ -77,12 +77,6 @@ const Contact = () => {
       sublabel: '@adiraybooks',
       external: true,
     },
-    {
-      label: 'Live Chat',
-      icon: 'fas fa-comments',
-      action: () => setShowChat(true),
-      sublabel: 'Talk to a seller'
-    },
   ];
 
   return (
@@ -142,64 +136,6 @@ const Contact = () => {
           </div>
         </div>
       </section>
-
-      {showChat && (
-        <div className="fixed inset-0 z-50 bg-black/40 flex items-end sm:items-center justify-center p-4">
-          <section className="w-full max-w-md bg-white border border-gray-200 shadow-2xl">
-            <header className="h-14 bg-charcoal text-white flex items-center justify-between px-4">
-              <div className="flex items-center gap-3">
-                <i className="fas fa-comments text-[#D4AF37] text-lg"></i>
-                <div>
-                  <h2 className="text-sm font-bold uppercase tracking-wide">Adiray Live Chat</h2>
-                  <p className="text-[10px] text-gray-300">Seller support</p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowChat(false)}
-                className="w-8 h-8 flex items-center justify-center text-gray-300 hover:text-white"
-                aria-label="Close live chat"
-              >
-                <i className="fas fa-times"></i>
-              </button>
-            </header>
-
-            <div className="h-80 overflow-y-auto bg-[#F5F2EB] p-4 space-y-3">
-              {chatMessages.map(message => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.sender === 'buyer' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <p className={`max-w-[82%] px-4 py-2 text-sm leading-relaxed ${
-                    message.sender === 'buyer'
-                      ? 'bg-charcoal text-white'
-                      : 'bg-white border border-gray-200 text-charcoal'
-                  }`}>
-                    {message.text}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <form onSubmit={handleSendMessage} className="p-3 border-t border-gray-200 flex gap-2">
-              <input
-                type="text"
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                placeholder="Type your message..."
-                className="flex-1 h-11 border border-gray-300 px-3 text-sm outline-none focus:border-charcoal"
-              />
-              <button
-                type="submit"
-                className="h-11 w-12 bg-charcoal text-white flex items-center justify-center hover:bg-[#D4AF37] hover:text-charcoal transition-colors"
-                aria-label="Send message"
-              >
-                <i className="fas fa-paper-plane text-sm"></i>
-              </button>
-            </form>
-          </section>
-        </div>
-      )}
     </main>
   );
 };

@@ -57,6 +57,21 @@ const Cart = () => {
       <div className="max-w-7xl mx-auto">
         <h1 className="text-4xl font-bold text-charcoal mb-10 font-serif">Shopping Cart</h1>
 
+        {/* Payment Caution Warning */}
+        <div className="mb-10 bg-amber-50 border border-amber-200 p-6 flex gap-4 items-center animate-pulse shadow-sm rounded-lg max-w-4xl mx-auto sm:mx-0">
+          <i className="fas fa-exclamation-triangle text-amber-600 text-xl"></i>
+          <div className="text-sm leading-relaxed text-amber-800 flex-1">
+            <p className="font-bold uppercase tracking-wider mb-1">Important Payment Notice</p>
+            <p>Our online payment integration is currently under maintenance. Please <span className="font-bold underline cursor-pointer hover:text-amber-900" onClick={() => window.location.href='/contact'}>Contact Us</span> directly to coordinate your order and payment with our sales team.</p>
+          </div>
+          <button 
+            onClick={() => window.location.href='/contact'}
+            className="hidden sm:block bg-amber-600 text-white px-4 py-2 text-xs font-bold uppercase tracking-widest hover:bg-amber-700 transition-colors rounded shadow-sm"
+          >
+            Contact Sales
+          </button>
+        </div>
+
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Cart Items */}
           <div className="lg:w-2/3">
@@ -153,7 +168,7 @@ const Cart = () => {
                   <span className="text-2xl font-bold text-charcoal">${total.toFixed(2)}</span>
                 </div>
               </div>
-
+              
               <button 
                 onClick={handleProceedToCheckout} 
                 className="w-full bg-charcoal text-white py-4 font-semibold uppercase tracking-widest hover:bg-orange-accent hover:text-white transition-colors mb-4 flex items-center justify-center border border-charcoal hover:border-orange-accent"
