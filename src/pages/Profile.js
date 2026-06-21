@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AppContext';
+import { PROJECT_PHONE } from '../utils/constants';
 
 const Profile = () => {
   const { user, updateProfile, changePassword } = useAuth();

@@ -1,3 +1,9 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useCart, useWishlist, useBooks } from '../context/AppContext';
+import StarRating from '../components/StarRating';
+import BookCard from '../components/BookCard';
+import { getBookCover, handleBookCoverError } from '../utils/coverGenerator';
 import { PROJECT_PHONE, PROJECT_PHONE_CLEAN, WHATSAPP_CONFIG } from '../utils/constants';
 
 const BookDetails = () => {

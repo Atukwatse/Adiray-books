@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import { PROJECT_PHONE } from '../utils/constants';
 
 const Contact = () => {

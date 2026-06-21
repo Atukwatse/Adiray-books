@@ -1,3 +1,7 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useCart, useWishlist } from '../context/AppContext';
+import { toTitleCase, formatAuthor, getBookCover, handleBookCoverError } from '../utils/coverGenerator';
 import { PROJECT_PHONE, PROJECT_PHONE_CLEAN } from '../utils/constants';
 
 const BookCard = ({
