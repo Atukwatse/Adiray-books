@@ -17,6 +17,8 @@ const Login = () => {
 
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
@@ -231,30 +233,48 @@ const Login = () => {
 
           <div>
             <label className="block text-[10px] font-black text-charcoal uppercase tracking-widest mb-1.5 ml-1">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              className={`w-full px-5 py-3 rounded-xl border transition-all outline-none text-sm ${errors.password ? 'border-red-300 bg-red-50' : 'border-gray-200 focus:border-mustard'
-                }`}
-              placeholder="••••••••"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                className={`w-full px-5 py-3 rounded-xl border transition-all outline-none text-sm pr-12 ${errors.password ? 'border-red-300 bg-red-50' : 'border-gray-200 focus:border-mustard'
+                  }`}
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-charcoal transition-colors p-1"
+              >
+                <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+              </button>
+            </div>
             {errors.password && <p className="text-red-500 text-[10px] mt-1 ml-1 font-bold">{errors.password}</p>}
           </div>
 
           {isSignUp && (
             <div>
               <label className="block text-[10px] font-black text-charcoal uppercase tracking-widest mb-1.5 ml-1">Confirm Password</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                className={`w-full px-5 py-3 rounded-xl border transition-all outline-none text-sm ${errors.confirmPassword ? 'border-red-300 bg-red-50' : 'border-gray-200 focus:border-mustard'
-                  }`}
-                placeholder="••••••••"
-              />
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  className={`w-full px-5 py-3 rounded-xl border transition-all outline-none text-sm pr-12 ${errors.confirmPassword ? 'border-red-300 bg-red-50' : 'border-gray-200 focus:border-mustard'
+                    }`}
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-charcoal transition-colors p-1"
+                >
+                  <i className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+                </button>
+              </div>
               {errors.confirmPassword && <p className="text-red-500 text-[10px] mt-1 ml-1 font-bold">{errors.confirmPassword}</p>}
             </div>
           )}

@@ -78,7 +78,7 @@ const MobileTabBar = ({ onSearchOpen, setIsCategoryOverlayOpen }) => {
       )}
 
       {/* Tab Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 h-[72px] bg-[#fff7ed] border-t border-orange-100 z-[70] sm:hidden flex items-center justify-around px-4 shadow-[0_-4px_20px_rgba(234,88,12,0.1)]">
+      <nav className="fixed bottom-0 left-0 right-0 h-[72px] bg-white border-t border-gray-100 z-[70] sm:hidden flex items-center justify-around px-4 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
         {navItems.map(item => {
           const isActive = location.pathname === item.path;
           return (
@@ -86,19 +86,19 @@ const MobileTabBar = ({ onSearchOpen, setIsCategoryOverlayOpen }) => {
               key={item.id}
               onClick={() => handleNavClick(item)}
               className={`flex flex-col items-center justify-center w-16 h-16 transition-all relative ${
-                isActive || (item.id === 'shop' && showCategories) ? 'text-[#EA580C]' : 'text-orange-900/40'
+                isActive || (item.id === 'shop' && showCategories) ? 'text-[#EA580C]' : 'text-black'
               }`}
             >
               <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 transition-all ${
-                isActive ? 'bg-[#ffedd5]' : 'bg-transparent'
+                isActive ? 'bg-orange-50' : 'bg-transparent'
               }`}>
                 <i className={`fas ${item.icon} text-lg`}></i>
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest">
+              <span className="text-[10px] font-black uppercase tracking-widest text-inherit">
                 {item.label}
               </span>
               {isActive && (
-                <div className="absolute -top-[1.5px] w-8 h-1 bg-[#d97706] rounded-full"></div>
+                <div className="absolute -top-[1.5px] w-8 h-1 bg-[#EA580C] rounded-full"></div>
               )}
             </button>
           );
