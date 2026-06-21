@@ -13,7 +13,7 @@ const Profile = () => {
     firstName: 'John',
     lastName: 'Doe',
     email: 'john.doe@example.com',
-    phone: '+256744219162',
+    phone: PROJECT_PHONE,
     address: '123 Book Street',
     city: 'Reading District',
     state: 'RD',

@@ -1,11 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useCart, useWishlist, useBooks } from '../context/AppContext';
-import StarRating from '../components/StarRating';
-import BookCard from '../components/BookCard';
-import { getBookCover, handleBookCoverError } from '../utils/coverGenerator';
-
-
+import { PROJECT_PHONE, PROJECT_PHONE_CLEAN, WHATSAPP_CONFIG } from '../utils/constants';
 
 const BookDetails = () => {
   const { id } = useParams();
@@ -19,7 +12,6 @@ const BookDetails = () => {
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
   const [similarBooks, setSimilarBooks] = useState([]);
-  const sellerPhone = '+256744219162';
 
   useEffect(() => {
     // Find the book from our master dataset
@@ -55,7 +47,7 @@ const BookDetails = () => {
     setTimeout(() => setIsAddedToCart(false), 2000);
   };
 
-  const whatsappMessage = encodeURIComponent(`Hi Adiray Books, I want to buy "${book.title}" by ${book.author}.`);
+  const whatsappMessage = encodeURIComponent(WHATSAPP_CONFIG.defaultMessage(book.title, book.author));
 
   return (
     <div className="min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
@@ -156,14 +148,14 @@ const BookDetails = () => {
 
             <div className="grid grid-cols-2 gap-4 mb-10">
               <a
-                href={`tel:${sellerPhone}`}
+                href={`tel:${PROJECT_PHONE}`}
                 className="h-12 border border-gray-200 hover:border-gold hover:bg-[#FFFDF7] text-charcoal flex items-center justify-center gap-3 font-semibold uppercase tracking-widest text-xs transition-colors"
               >
                 <i className="fas fa-phone text-xl text-gold"></i>
                 <span>Call Seller</span>
               </a>
               <a
-                href={`https://wa.me/${sellerPhone.replace('+', '')}?text=${whatsappMessage}`}
+                href={`https://wa.me/${PROJECT_PHONE_CLEAN}?text=${whatsappMessage}`}
                 target="_blank"
                 rel="noreferrer"
                 className="h-12 border border-gray-200 hover:border-green-600 hover:bg-green-50 text-charcoal flex items-center justify-center gap-3 font-semibold uppercase tracking-widest text-xs transition-colors"
@@ -241,7 +233,6 @@ const BookDetails = () => {
             {activeTab === 'description' ? (
               <div className="space-y-4">
                 <p>{book.description}</p>
-                <p>Curated and printed on premium acid-free cream paper, ensuring a luxury archival presence in your reading collection. Bound in clean tactile hardcover with refined aesthetic geometry designed to wow on any shelf layout.</p>
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-x-8 gap-y-4 border border-gray-100 p-6 bg-gray-50 max-w-2xl text-sm">

@@ -37,12 +37,12 @@ const MobileInfoOverlay = () => {
 
       {/* Backdrop with Blur */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/40 backdrop-blur-md z-[70] transition-all duration-300 animate-fade-in"
           onClick={() => setIsOpen(false)}
         >
           {/* Popover Card */}
-          <div 
+          <div
             className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden animate-scale-in"
             onClick={(e) => e.stopPropagation()}
           >
@@ -50,10 +50,10 @@ const MobileInfoOverlay = () => {
               <div className="w-20 h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-6 text-gold">
                 <i className="fas fa-share-alt text-3xl"></i>
               </div>
-              
+
               <h3 className="text-xl font-serif font-black text-charcoal uppercase tracking-tighter mb-2">Connect With <span className="text-gold">Us</span></h3>
               <p className="text-gray-500 text-sm mb-8">Follow us on social media for latest updates and collections.</p>
-              
+
               <div className="grid grid-cols-4 gap-4">
                 <a href="https://facebook.com/adiraybooks" target="_blank" rel="noopener noreferrer" className="flex flex-col items-center space-y-2 group">
                   <div className="w-12 h-12 rounded-xl bg-[#1877F2]/10 text-[#1877F2] flex items-center justify-center group-active:scale-95 transition-transform">
@@ -81,9 +81,9 @@ const MobileInfoOverlay = () => {
                 </a>
               </div>
             </div>
-            
+
             <div className="bg-slate-50 p-4 flex justify-center border-t border-slate-100">
-              <button 
+              <button
                 onClick={() => setIsOpen(false)}
                 className="text-xs font-black text-charcoal uppercase tracking-widest hover:text-gold transition-colors"
               >

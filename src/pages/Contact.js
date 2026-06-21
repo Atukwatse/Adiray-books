@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { PROJECT_PHONE } from '../utils/constants';
 
 const Contact = () => {
   useEffect(() => {
@@ -15,7 +15,7 @@ const Contact = () => {
     }
   ]);
 
-  const phoneNumber = '+211920889342';
+  const phoneNumber = PROJECT_PHONE;
   const emails = ['info@adiraybooks.com', 'marketingandsales@adiraybooks.com'];
 
   const handleSendMessage = (e) => {

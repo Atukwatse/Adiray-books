@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Contact from './Contact';
+import { PROJECT_PHONE } from '../utils/constants';
 
 const Help = () => {
   useEffect(() => {
@@ -210,8 +211,8 @@ const Help = () => {
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-amber-900 mb-2">Call Us</h3>
               <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4">Available Mon-Fri, 9am-6pm</p>
-              <a href="tel:+256744219162" className="text-amber-600 font-semibold hover:text-amber-700 text-sm sm:text-base">
-                +254 744 219 162
+              <a href={`tel:${PROJECT_PHONE}`} className="text-amber-600 font-semibold hover:text-amber-700 text-sm sm:text-base">
+                {PROJECT_PHONE}
               </a>
             </div>
 

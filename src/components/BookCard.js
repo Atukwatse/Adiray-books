@@ -1,7 +1,4 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useCart, useWishlist } from '../context/AppContext';
-import { toTitleCase, formatAuthor, getBookCover, handleBookCoverError } from '../utils/coverGenerator';
+import { PROJECT_PHONE, PROJECT_PHONE_CLEAN } from '../utils/constants';
 
 const BookCard = ({
   book,
@@ -19,7 +16,7 @@ const BookCard = ({
   const { cart, addToCart, updateCartQuantity, removeFromCart } = useCart();
   const cartItem = cart.find(item => item.id === book.id);
   const cartQuantity = cartItem?.quantity || 0;
-  const sellerPhone = '+256744219162';
+  const sellerPhone = PROJECT_PHONE;
   const whatsappMessage = encodeURIComponent(`Hi Adiray Books, I want to buy "${book.title}" by ${book.author}.`);
 
   const handleAddToCart = () => {
