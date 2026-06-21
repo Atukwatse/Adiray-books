@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useCart, useOrders } from '../context/AppContext';
+import { useCart, useOrders, useAuth } from '../context/AppContext';
 import { getBookCover, handleBookCoverError } from '../utils/coverGenerator';
 
 const Checkout = () => {
   const { cart, cartTotal, clearCart } = useCart();
   const { addOrder } = useOrders();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    username: '',
     email: '',
     address: '',
-    city: '',
-    zipCode: '',
     country: 'United States',
     cardName: '',
     cardNumber: '',
@@ -31,7 +29,16 @@ const Checkout = () => {
     if (cart.length === 0) {
       navigate('/cart');
     }
-  }, [cart, navigate]);
+    
+    // Auto-fill user data if available
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        username: prev.username || user.firstName || user.username || '',
+        email: prev.email || user.email || ''
+      }));
+    }
+  }, [cart, navigate, user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,8 +51,7 @@ const Checkout = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
-    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+    if (!formData.username.trim()) newErrors.username = 'Username is required';
 
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
@@ -54,8 +60,6 @@ const Checkout = () => {
     }
 
     if (!formData.address.trim()) newErrors.address = 'Street address is required';
-    if (!formData.city.trim()) newErrors.city = 'City is required';
-    if (!formData.zipCode.trim()) newErrors.zipCode = 'ZIP / Postal code is required';
 
     if (!formData.cardName.trim()) newErrors.cardName = 'Name on card is required';
 
@@ -115,7 +119,7 @@ const Checkout = () => {
             quantity: item.quantity,
             coverColor: item.coverColor || 'from-charcoal to-black'
           })),
-          shippingAddress: `${formData.address}, ${formData.city}, ${formData.zipCode}, ${formData.country}`,
+          shippingAddress: `${formData.address}, ${formData.country}`,
           trackingNumber: `TRK${Math.floor(100000000 + Math.random() * 900000000)}`,
           estimatedDelivery: deliveryDateStr
         };
@@ -176,32 +180,18 @@ const Checkout = () => {
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">First Name</label>
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Username</label>
                     <input
                       type="text"
-                      name="firstName"
-                      value={formData.firstName}
+                      name="username"
+                      value={formData.username}
                       onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.firstName ? 'border-red-500' : 'border-gray-200'
+                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.username ? 'border-red-500' : 'border-gray-200'
                         }`}
-                      placeholder="John"
+                      placeholder="Username"
                     />
-                    {errors.firstName && <p className="text-xs text-red-500 mt-1">{errors.firstName}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Last Name</label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.lastName ? 'border-red-500' : 'border-gray-200'
-                        }`}
-                      placeholder="Doe"
-                    />
-                    {errors.lastName && <p className="text-xs text-red-500 mt-1">{errors.lastName}</p>}
+                    {errors.username && <p className="text-xs text-red-500 mt-1">{errors.username}</p>}
                   </div>
 
                   <div className="sm:col-span-2">
@@ -230,34 +220,6 @@ const Checkout = () => {
                       placeholder="123 Book Lane, Library District"
                     />
                     {errors.address && <p className="text-xs text-red-500 mt-1">{errors.address}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">City</label>
-                    <input
-                      type="text"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.city ? 'border-red-500' : 'border-gray-200'
-                        }`}
-                      placeholder="Reading"
-                    />
-                    {errors.city && <p className="text-xs text-red-500 mt-1">{errors.city}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">ZIP / Postal Code</label>
-                    <input
-                      type="text"
-                      name="zipCode"
-                      value={formData.zipCode}
-                      onChange={handleChange}
-                      className={`w-full px-4 py-3 border rounded-none focus:outline-none focus:ring-1 focus:ring-charcoal ${errors.zipCode ? 'border-red-500' : 'border-gray-200'
-                        }`}
-                      placeholder="10001"
-                    />
-                    {errors.zipCode && <p className="text-xs text-red-500 mt-1">{errors.zipCode}</p>}
                   </div>
                 </div>
               </div>

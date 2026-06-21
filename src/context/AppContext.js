@@ -293,7 +293,7 @@ export const AppProvider = ({ children }) => {
           password: userData.password || 'AdirayBooks123!'
         }
       });
-      return login(userData.email, userData.password || 'AdirayBooks123!');
+      return true;
     } catch (error) {
       if (error.status) throw error;
       const addedUser = await addUser({ ...userData, role: 'Customer' });

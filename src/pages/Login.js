@@ -16,6 +16,7 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
@@ -90,6 +91,10 @@ const Login = () => {
           firstName,
           lastName
         });
+        
+        setSuccessMessage('Account created successfully! Please sign in with your credentials.');
+        setIsSignUp(false);
+        setFormData(prev => ({ ...prev, password: '', confirmPassword: '' }));
       } else {
         const authUser = await login(formData.email, formData.password);
         if (authUser?.role === 'Admin') {
@@ -180,6 +185,14 @@ const Login = () => {
           <div className="bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-xl text-sm mb-6 flex items-center animate-shake">
             <i className="fas fa-exclamation-circle mr-2"></i>
             {errors.general}
+          </div>
+        )}
+
+        {/* Success Message */}
+        {successMessage && (
+          <div className="bg-green-50 border border-green-100 text-green-600 px-4 py-3 rounded-xl text-sm mb-6 flex items-center animate-fade-in shadow-sm">
+            <i className="fas fa-check-circle mr-2"></i>
+            {successMessage}
           </div>
         )}
 
@@ -274,7 +287,7 @@ const Login = () => {
         <p className="mt-10 text-center text-sm text-gray-500">
           {isSignUp ? 'Already have an account?' : "Don't have an account?"}
           <button
-            onClick={() => { setIsSignUp(!isSignUp); setErrors({}); }}
+            onClick={() => { setIsSignUp(!isSignUp); setErrors({}); setSuccessMessage(''); }}
             className="ml-2 text-amber-600 font-bold hover:underline"
           >
             {isSignUp ? 'Sign In' : 'Create one'}
