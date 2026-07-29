@@ -4,7 +4,7 @@
   "description": "Modern online bookstore built with React and Tailwind CSS",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve --mode development",
+    "start": "webpack serve --mode development --open",
     "build": "webpack --mode production",
     "dev": "webpack serve --mode development --open"
   },

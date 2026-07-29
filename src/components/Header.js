@@ -413,6 +413,9 @@ const Header = ({
               className="relative transition-colors duration-200 group flex items-center p-1 text-charcoal hover:text-orange-600"
             >
               <CartIcon className="w-9 h-9 sm:w-10 sm:h-10 group-hover:scale-105 transition-transform" />
+              <span className="absolute top-full left-1/2 -translate-x-1/2 mt-1 rounded-full bg-charcoal text-white text-[10px] font-medium px-2 py-0.5 opacity-0 pointer-events-none transition-opacity duration-200 group-hover:opacity-100 whitespace-nowrap">
+                Add to Cart
+              </span>
               {displayCartCount > 0 && (
                 <span className="absolute -top-1 -right-2 bg-orange-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center border border-white">
                   {displayCartCount}
