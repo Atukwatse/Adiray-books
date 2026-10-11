@@ -215,7 +215,7 @@ App (State) → Props → Components → Events → App (State Update)
 - **E2E Testing**: Cypress or Playwright
 - **PWA**: Offline functionality and app-like experience
 
-## 📄 License
+# 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
 
