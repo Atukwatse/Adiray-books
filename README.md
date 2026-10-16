@@ -11,7 +11,7 @@ A high-fidelity, component-based online bookstore built with React.js and Tailwi
 - **Responsive**: Mobile-first design with seamless tablet and desktop experiences
 - **Modern Stack**: React 18, Tailwind CSS 3, Webpack 5
 
-### Component Structure
+### Component Structure.
 ```
 src/
 ├── components/
